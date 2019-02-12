@@ -6,8 +6,8 @@ namespace P4
     {
         public static void Main(string[] args)
         {
-            var whateber = "some";
-            Console.WriteLine(whateber);
+            var hvabehar = "ja mon ikke";
+            Console.WriteLine(hvabehar);
         }
     }
 }
