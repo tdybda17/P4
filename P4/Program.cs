@@ -8,6 +8,16 @@ namespace P4
         {
             Console.WriteLine("Hello World!");
             Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
+            Console.WriteLine("Hejsa");
         }
     }
 }
