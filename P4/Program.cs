@@ -8,6 +8,7 @@ namespace P4
         {
             var hej = "some";
             Console.WriteLine(hej);
+            Console.WriteLine("nyeste");
         }
     }
 }
