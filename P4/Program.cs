@@ -6,13 +6,8 @@ namespace P4
     {
         public static void Main(string[] args)
         {
-            var hej = "String";
-            Console.WriteLine(hej);
-            Console.WriteLine(hej);
-            Console.WriteLine(hej);
-            Console.WriteLine(hej);
-            Console.WriteLine(hej);
-            Console.WriteLine(hej);
+            var whateber = "some";
+            Console.WriteLine(whateber);
         }
     }
 }
