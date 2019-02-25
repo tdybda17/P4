@@ -1,5 +1,6 @@
 package Compiler.Scanner.jflexConfig;
 
+import java_cup.runtime.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +26,9 @@ class ScannerTest {
     @Test
     void scannerTest01() {
         try {
-            while(scanner.next_token().sym != 0) {
-                System.out.println(scanner.yytext());
+            Symbol sym;
+            while((sym = scanner.next_token()).sym != 0) {
+                System.out.println(scanner.yytext() + " : " + sym.sym);
             }
         } catch (IOException e) {
 

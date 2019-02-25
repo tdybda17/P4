@@ -16,10 +16,14 @@ import static Compiler.Scanner.Symbol.EduSymbols.*;
 %{
     /* Callable methods */
     private Symbol symbol(EduSymbols sym) { return new Symbol(sym.getValue(), yyline, yycolumn); }
+    private Symbol symbol(EduSymbols sym, Object value) { return new Symbol(sym.getValue(), yyline, yycolumn, value); }
+
 %}
 
-%%
+/* identifiers */
+Identifier = [a-zA-Z]*
 
+%%
 
 <YYINITIAL> {
 
@@ -43,6 +47,9 @@ import static Compiler.Scanner.Symbol.EduSymbols.*;
       "\n"                     { /* Ignore space and tab */ }
       "\t"                     { /* Ignore space and tab */ }
 
+
+      /* IDENTIFIER */
+      {Identifier}             { return symbol(IDENTIFIER); }
 }
 
 <<EOF>>                        { return symbol(EOF); }

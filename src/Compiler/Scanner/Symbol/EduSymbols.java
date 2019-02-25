@@ -8,7 +8,7 @@ public enum EduSymbols {
     EOF(0),
 
     /* KEYWORDS */
-    CREATE(3), IF(4), ELSE(5), FOR(6), WHILE(7), END(8),
+    CREATE(3), IF(4), ELSE(5), FOR(6), WHILE(7), END(8), IDENTIFIER(9),
 
     /* OPERATORS */
     PLUS(1), MINUS(2)
