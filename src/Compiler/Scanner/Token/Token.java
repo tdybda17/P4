@@ -21,6 +21,10 @@ public class Token {
         return javaCupSym.left + 1;
     }
 
+    public int getColumnNumber() {
+        return javaCupSym.right + 1;
+    }
+
     public Symbol getJavaCupSym() {
         return javaCupSym;
     }

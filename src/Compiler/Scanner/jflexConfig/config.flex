@@ -15,8 +15,13 @@ import static Compiler.Scanner.Symbol.EduSymbols.*;
 
 %{
     /* Callable methods */
-    private Symbol symbol(EduSymbols javaCupSym) { return new Symbol(javaCupSym.getValue(), yyline, yycolumn); }
-    private Symbol symbol(EduSymbols javaCupSym, Object value) { return new Symbol(javaCupSym.getValue(), yyline, yycolumn, value); }
+    private Symbol symbol(EduSymbols javaCupSym) {
+        return new Symbol(javaCupSym.getValue(), yyline, yycolumn);
+    }
+
+    private Symbol symbol(EduSymbols javaCupSym, Object value) {
+        return new Symbol(javaCupSym.getValue(), yyline, yycolumn, value);
+    }
 
 %}
 

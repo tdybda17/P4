@@ -2,9 +2,6 @@ package Exceptions;
 
 public class NoSuchEduSymbolException extends RuntimeException {
 
-    public NoSuchEduSymbolException() {
-    }
-
     public NoSuchEduSymbolException(String message) {
         super(message);
     }
