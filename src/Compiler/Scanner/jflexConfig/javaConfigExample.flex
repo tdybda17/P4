@@ -17,7 +17,7 @@ import java_cup.runtime.*;
 
 %public
 %class Scanner
-%implements sym
+%implements javaCupSym
 
 %unicode
 
