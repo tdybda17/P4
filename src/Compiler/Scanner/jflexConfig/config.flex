@@ -21,7 +21,7 @@ import static Compiler.Scanner.Symbol.EduSymbols.*;
 %}
 
 /* identifiers */
-Identifier = [a-zA-Z]*
+Identifier = [a-zA-Z]([0-9a-zA-Z])*
 
 %%
 
@@ -38,9 +38,12 @@ Identifier = [a-zA-Z]*
       /* OPERATORS */
       "+"                      { return symbol(PLUS); }
       "-"                      { return symbol(MINUS); }
+      "*"                      { return symbol(MULT); }
+      "/"                      { return symbol(DIV); }
 
       /* SEPARATORS */
-
+      "("                      { return symbol(LPAREN); }
+      ")"                      { return symbol(RPAREN); }
 
       /* IGNORE */
       " "                      { /* Ignore space and tab */ }
@@ -49,7 +52,7 @@ Identifier = [a-zA-Z]*
 
 
       /* IDENTIFIER */
-      {Identifier}             { return symbol(IDENTIFIER); }
+      {Identifier}             { return symbol(IDENTIFIER, yytext()); }
 }
 
 <<EOF>>                        { return symbol(EOF); }
