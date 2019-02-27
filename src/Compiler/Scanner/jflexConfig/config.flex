@@ -67,6 +67,7 @@ Comment         = "//"[^\n]*
       "*"                      { return symbol(MULT); }
       "/"                      { return symbol(DIV); }
       "=="                     { return symbol(EQEQ); }
+      "="                      { return symbol(EQUALS); }
 
       /* SEPARATORS */
       "("                      { return symbol(LPAREN); }

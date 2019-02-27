@@ -35,9 +35,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "javaCupSym=" + javaCupSym +
-                ", eduSymbol=" + eduSymbol +
-                '}';
+        return "Token{'" + getEduSymbol().toString() + "', value: '" + getValue() + "'}";
     }
 }

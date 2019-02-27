@@ -55,11 +55,11 @@ public class JFlexScanner implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\4\1\5\1\2\1\6"+
-    "\12\1\1\7\1\10\1\11\1\0\1\12\1\13\1\14"+
-    "\1\15\5\1\1\16\1\17\3\1\1\20\2\1\1\21"+
-    "\3\1\1\22\1\1\1\23\1\24\5\1\1\25\1\26"+
-    "\1\27\4\1\1\30\3\1\1\31\1\1\1\32\2\1"+
-    "\1\33\1\34\1\1\1\35";
+    "\12\1\1\7\1\10\1\11\1\12\1\13\1\14\1\15"+
+    "\1\16\5\1\1\17\1\20\3\1\1\21\2\1\1\22"+
+    "\3\1\1\23\1\1\1\24\1\25\5\1\1\26\1\27"+
+    "\1\30\4\1\1\31\3\1\1\32\1\1\1\33\2\1"+
+    "\1\34\1\35\1\1\1\36";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[72];
@@ -211,7 +211,7 @@ public class JFlexScanner implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\2\1\3\11\14\1\3\11\1\0\2\11\17\1"+
+    "\1\0\2\1\3\11\14\1\3\11\1\1\2\11\17\1"+
     "\1\11\40\1";
 
   private static int [] zzUnpackAttribute() {
@@ -699,147 +699,152 @@ public class JFlexScanner implements java_cup.runtime.Scanner {
             { return symbol(IDENTIFIER, yytext());
             } 
             // fall through
-          case 30: break;
+          case 31: break;
           case 2: 
             { return symbol(INTEGER_LITERAL, parseToInt(yytext()));
             } 
             // fall through
-          case 31: break;
+          case 32: break;
           case 3: 
             { return symbol(NEWLINE);
             } 
             // fall through
-          case 32: break;
+          case 33: break;
           case 4: 
             { /* Ignore tab */
             } 
             // fall through
-          case 33: break;
+          case 34: break;
           case 5: 
             { /* Ignore space */
             } 
             // fall through
-          case 34: break;
+          case 35: break;
           case 6: 
             { return symbol(DIV);
             } 
             // fall through
-          case 35: break;
+          case 36: break;
           case 7: 
             { return symbol(PLUS);
             } 
             // fall through
-          case 36: break;
+          case 37: break;
           case 8: 
             { return symbol(MINUS);
             } 
             // fall through
-          case 37: break;
+          case 38: break;
           case 9: 
             { return symbol(MULT);
             } 
             // fall through
-          case 38: break;
-          case 10: 
-            { return symbol(LPAREN);
-            } 
-            // fall through
           case 39: break;
-          case 11: 
-            { return symbol(RPAREN);
+          case 10: 
+            { return symbol(EQUALS);
             } 
             // fall through
           case 40: break;
-          case 12: 
-            { return symbol(REAL_LITERAL, parseToReal(yytext()));
+          case 11: 
+            { return symbol(LPAREN);
             } 
             // fall through
           case 41: break;
-          case 13: 
-            { return symbol(COMMENT);
+          case 12: 
+            { return symbol(RPAREN);
             } 
             // fall through
           case 42: break;
-          case 14: 
-            { return symbol(IF);
+          case 13: 
+            { return symbol(REAL_LITERAL, parseToReal(yytext()));
             } 
             // fall through
           case 43: break;
-          case 15: 
-            { return symbol(IN);
+          case 14: 
+            { return symbol(COMMENT);
             } 
             // fall through
           case 44: break;
-          case 16: 
-            { return symbol(DO);
+          case 15: 
+            { return symbol(IF);
             } 
             // fall through
           case 45: break;
-          case 17: 
-            { return symbol(EQEQ);
+          case 16: 
+            { return symbol(IN);
             } 
             // fall through
           case 46: break;
-          case 18: 
-            { return symbol(END);
+          case 17: 
+            { return symbol(DO);
             } 
             // fall through
           case 47: break;
-          case 19: 
-            { return symbol(INT);
+          case 18: 
+            { return symbol(EQEQ);
             } 
             // fall through
           case 48: break;
-          case 20: 
-            { return symbol(FOR);
+          case 19: 
+            { return symbol(END);
             } 
             // fall through
           case 49: break;
-          case 21: 
-            { return symbol(REAL);
+          case 20: 
+            { return symbol(INT);
             } 
             // fall through
           case 50: break;
-          case 22: 
-            { return symbol(ELSE);
+          case 21: 
+            { return symbol(FOR);
             } 
             // fall through
           case 51: break;
-          case 23: 
-            { return symbol(THEN);
+          case 22: 
+            { return symbol(REAL);
             } 
             // fall through
           case 52: break;
-          case 24: 
-            { return symbol(EDGE);
+          case 23: 
+            { return symbol(ELSE);
             } 
             // fall through
           case 53: break;
-          case 25: 
-            { return symbol(WHILE);
+          case 24: 
+            { return symbol(THEN);
             } 
             // fall through
           case 54: break;
-          case 26: 
-            { return symbol(CREATE);
+          case 25: 
+            { return symbol(EDGE);
             } 
             // fall through
           case 55: break;
-          case 27: 
-            { return symbol(VERTEX);
+          case 26: 
+            { return symbol(WHILE);
             } 
             // fall through
           case 56: break;
-          case 28: 
-            { return symbol(FOREACH);
+          case 27: 
+            { return symbol(CREATE);
             } 
             // fall through
           case 57: break;
-          case 29: 
-            { return symbol(FUNCTION);
+          case 28: 
+            { return symbol(VERTEX);
             } 
             // fall through
           case 58: break;
+          case 29: 
+            { return symbol(FOREACH);
+            } 
+            // fall through
+          case 59: break;
+          case 30: 
+            { return symbol(FUNCTION);
+            } 
+            // fall through
+          case 60: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

@@ -14,7 +14,7 @@ public enum EduSymbols {
     FOREACH(20), IN(21), THEN(22), INT(23), REAL(24), VERTEX(26), EDGE(27),
 
     /* OPERATORS */
-    PLUS(1), MINUS(2), MULT(12), DIV(13), EQEQ(16),
+    PLUS(1), MINUS(2), MULT(12), DIV(13), EQEQ(16), EQUALS(28),
 
     /* SEPARATORS */
     LPAREN(10), RPAREN(11), NEWLINE(17),

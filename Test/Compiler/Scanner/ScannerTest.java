@@ -115,4 +115,12 @@ class ScannerTest {
         // Throws SyntaxError because of overflow
         assertThrows(SyntaxError.class, () -> scanner.scan());
     }
+
+    @Test
+    void testProgram01() {
+        scanner = new Scanner("int a = 3\n" +
+                              "int b = 3\n" +
+                              "int c = a + b");
+        System.out.println(scanner.scan());
+    }
 }
