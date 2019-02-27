@@ -10,7 +10,8 @@ public enum EduSymbols {
     EOF(0),
 
     /* KEYWORDS */
-    CREATE(3), IF(4), ELSE(5), FOR(6), WHILE(7), END(8), IDENTIFIER(9), DO(18),
+    CREATE(3), IF(4), ELSE(5), FOR(6), WHILE(7), END(8), IDENTIFIER(9), DO(18), FUNCTION(19),
+    FOREACH(20), IN(21), THEN(22), INT(23), REAL(24), VERTEX(26), EDGE(27),
 
     /* OPERATORS */
     PLUS(1), MINUS(2), MULT(12), DIV(13), EQEQ(16),
@@ -19,7 +20,10 @@ public enum EduSymbols {
     LPAREN(10), RPAREN(11), NEWLINE(17),
 
     /* NUMBERS */
-    INTEGER(14), REAL(15)
+    INTEGER_LITERAL(14), REAL_LITERAL(15),
+
+    /* COMMENT */
+    COMMENT(25)
 
     ;
 

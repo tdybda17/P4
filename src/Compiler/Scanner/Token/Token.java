@@ -25,6 +25,10 @@ public class Token {
         return javaCupSym.right + 1;
     }
 
+    public Object getValue() {
+        return javaCupSym.value;
+    }
+
     public Symbol getJavaCupSym() {
         return javaCupSym;
     }

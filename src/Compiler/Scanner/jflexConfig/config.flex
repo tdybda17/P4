@@ -1,6 +1,5 @@
 package Compiler.Scanner.jflexConfig;
 
-import java_cup.sym;
 import java_cup.runtime.*;
 import Compiler.Scanner.Symbol.EduSymbols;
 import static Compiler.Scanner.Symbol.EduSymbols.*;
@@ -23,6 +22,14 @@ import static Compiler.Scanner.Symbol.EduSymbols.*;
         return new Symbol(javaCupSym.getValue(), yyline, yycolumn, value);
     }
 
+    private int parseToInt(String value) {
+        return Integer.parseInt(value);
+    }
+
+    private double parseToReal(String value) {
+        return Double.parseDouble(value);
+    }
+
 %}
 
 /* identifiers */
@@ -32,7 +39,7 @@ Identifier      = [a-zA-Z]([0-9a-zA-Z])*
 AfterNumber     = [\n] | [\t] | [" "]
 Integer         = 0 | [1-9][0-9]*
 Real            = {Integer}[.][0-9]*
-
+Comment         = "//"[^\n]*
 %%
 
 <YYINITIAL> {
@@ -45,6 +52,14 @@ Real            = {Integer}[.][0-9]*
       "for"                    { return symbol(FOR); }
       "end"                    { return symbol(END); }
       "do"                     { return symbol(DO); }
+      "function"               { return symbol(FUNCTION); }
+      "foreach"                { return symbol(FOREACH); }
+      "in"                     { return symbol(IN); }
+      "then"                   { return symbol(THEN); }
+      "int"                    { return symbol(INT); }
+      "real"                   { return symbol(REAL); }
+      "Vertex"                 { return symbol(VERTEX); }
+      "Edge"                   { return symbol(EDGE); }
 
       /* OPERATORS */
       "+"                      { return symbol(PLUS); }
@@ -63,11 +78,14 @@ Real            = {Integer}[.][0-9]*
       "\t"                     { /* Ignore tab */ }
 
       /* NUMBERS */
-      {Integer}                { return symbol(INTEGER); }
-      {Real}                   { return symbol(REAL); }
+      {Integer}                { return symbol(INTEGER_LITERAL, parseToInt(yytext())); }
+      {Real}                   { return symbol(REAL_LITERAL, parseToReal(yytext())); }
 
       /* IDENTIFIER */
       {Identifier}             { return symbol(IDENTIFIER, yytext()); }
+
+      /* COMMENT */
+      {Comment}                { return symbol(COMMENT); }
 
 
 }

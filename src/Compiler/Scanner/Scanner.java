@@ -37,8 +37,8 @@ public class Scanner extends JFlexScanner {
                 tokenList.add(token);
             }
         }
-        catch (Error e) {
-            if(token != null) throw new SyntaxError(token);
+        catch (Error | NumberFormatException e) {
+            if(token != null) throw new SyntaxError(token, e);
             else throw new SyntaxError("No tokens were created");
         }
         catch (IOException e) {
