@@ -29,4 +29,11 @@ public class Token {
         return javaCupSym;
     }
 
+    @Override
+    public String toString() {
+        return "Token{" +
+                "javaCupSym=" + javaCupSym +
+                ", eduSymbol=" + eduSymbol +
+                '}';
+    }
 }
