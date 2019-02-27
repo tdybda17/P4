@@ -10,28 +10,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static Compiler.Scanner.Symbol.EduSymbols.*;
 
 class ScannerTest {
 
     private Scanner scanner;
-    private List<Token> exceptedTokens;
 
-    @BeforeEach
-    void setUp() {
-        exceptedTokens = new ArrayList<>();
+    EduSymbols getSymbolFromResult(int index) {
+        return scanner.getTokenList().get(index).getEduSymbol();
     }
 
     @Test
     void scannerTest01() {
-        scanner = new Scanner("1end1111hhfhfhf");
-        assertThrows(SyntaxError.class, () -> scanner.scan());
+        scanner = new Scanner("create while if ()");
+        scanner.scan();
+        assertEquals(CREATE, getSymbolFromResult(0));
+        assertEquals(WHILE, getSymbolFromResult(1));
+        assertEquals(IF, getSymbolFromResult(2));
+        assertEquals(LPAREN, getSymbolFromResult(3));
+        assertEquals(RPAREN, getSymbolFromResult(4));
     }
 
     @Test
     void scannerTest02() {
-        scanner = new Scanner("22g");
-        // This should not be generated into two tokens
-        assertThrows(SyntaxError.class, () -> scanner.scan());
+        scanner = new Scanner("while 22g\n");
+        scanner.scan();
+        assertEquals(WHILE, getSymbolFromResult(0));
+        assertEquals(INTEGER, getSymbolFromResult(1));
     }
 
     @Test
