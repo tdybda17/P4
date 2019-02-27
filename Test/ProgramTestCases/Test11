@@ -1,0 +1,3 @@
+function main()
+    create PriorityQueue q end
+end
