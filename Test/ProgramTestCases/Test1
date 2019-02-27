@@ -1,0 +1,4 @@
+function main()
+    int a = 5
+    real b = 2.0
+end
