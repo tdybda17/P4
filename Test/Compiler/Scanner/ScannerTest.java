@@ -1,11 +1,12 @@
 package Compiler.Scanner;
 
-import Compiler.Scanner.Symbol.EduSymbols;
+import Compiler.Scanner.FlexScanner.Scanner;
+import Compiler.Scanner.FlexScanner.Symbol.EduSymbols;
 import Exceptions.SyntaxError;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static Compiler.Scanner.Symbol.EduSymbols.*;
+import static Compiler.Scanner.FlexScanner.Symbol.EduSymbols.*;
 
 class ScannerTest {
 

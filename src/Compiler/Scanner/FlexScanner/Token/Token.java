@@ -1,6 +1,6 @@
-package Compiler.Scanner.Token;
+package Compiler.Scanner.FlexScanner.Token;
 
-import Compiler.Scanner.Symbol.EduSymbols;
+import Compiler.Scanner.FlexScanner.Symbol.EduSymbols;
 import java_cup.runtime.Symbol;
 
 public class Token {

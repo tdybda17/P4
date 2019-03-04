@@ -1,6 +1,6 @@
 package Exceptions;
 
-import Compiler.Scanner.Token.Token;
+import Compiler.Scanner.FlexScanner.Token.Token;
 
 public class SyntaxError extends RuntimeException {
 

@@ -1,8 +1,8 @@
-package Compiler.Scanner.jflexConfig;
+package Compiler.Scanner.FlexScanner.jflexConfig;
 
 import java_cup.runtime.*;
-import Compiler.Scanner.Symbol.EduSymbols;
-import static Compiler.Scanner.Symbol.EduSymbols.*;
+import Compiler.Scanner.FlexScanner.Symbol.EduSymbols;
+import static Compiler.Scanner.FlexScanner.Symbol.EduSymbols.*;
 
 %%
 %public

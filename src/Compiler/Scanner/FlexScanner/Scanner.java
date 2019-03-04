@@ -1,8 +1,8 @@
-package Compiler.Scanner;
+package Compiler.Scanner.FlexScanner;
 
-import Compiler.Scanner.Symbol.EduSymbols;
-import Compiler.Scanner.Token.Token;
-import Compiler.Scanner.jflexConfig.JFlexScanner;
+import Compiler.Scanner.FlexScanner.Symbol.EduSymbols;
+import Compiler.Scanner.FlexScanner.Token.Token;
+import Compiler.Scanner.FlexScanner.jflexConfig.JFlexScanner;
 import Exceptions.SyntaxError;
 import java_cup.runtime.Symbol;
 

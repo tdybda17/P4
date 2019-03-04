@@ -1,4 +1,4 @@
-package Compiler.Scanner.Symbol;
+package Compiler.Scanner.FlexScanner.Symbol;
 
 /* Symbol specification for {{LanguageName}} */
 // TODO: Rename this class when program name found
