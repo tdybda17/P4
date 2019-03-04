@@ -1,4 +1,11 @@
-Package postfix;
+Package Compiler.SableCC.postfix;
+
+Helpers
+ digit = ['0' .. '9'];
+ tab = 9;
+ cr = 13;
+ lf = 10;
+ space = ' ';
 
 Tokens
  number = ['0' .. '9']+;
