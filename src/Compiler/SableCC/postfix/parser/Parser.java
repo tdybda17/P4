@@ -234,21 +234,15 @@ public class Parser
                 push(goTo(1), list, false);
             }
             break;
-            case 6: /* reduce AModFactor */
+            case 6: /* reduce ANumberTerm */
             {
                 ArrayList<Object> list = new6();
-                push(goTo(1), list, false);
-            }
-            break;
-            case 7: /* reduce ANumberTerm */
-            {
-                ArrayList<Object> list = new7();
                 push(goTo(2), list, false);
             }
             break;
-            case 8: /* reduce AExprTerm */
+            case 7: /* reduce AExprTerm */
             {
-                ArrayList<Object> list = new8();
+                ArrayList<Object> list = new7();
                 push(goTo(2), list, false);
             }
             break;
@@ -402,33 +396,7 @@ public class Parser
 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    ArrayList<Object> new6() /* reduce AModFactor */
-    {
-        @SuppressWarnings("hiding") ArrayList<Object> nodeList = new ArrayList<Object>();
-
-        @SuppressWarnings("unused") ArrayList<Object> nodeArrayList3 = pop();
-        @SuppressWarnings("unused") ArrayList<Object> nodeArrayList2 = pop();
-        @SuppressWarnings("unused") ArrayList<Object> nodeArrayList1 = pop();
-        PFactor pfactorNode1;
-        {
-            // Block
-        PFactor pfactorNode2;
-        TMod tmodNode3;
-        PTerm ptermNode4;
-        pfactorNode2 = (PFactor)nodeArrayList1.get(0);
-        tmodNode3 = (TMod)nodeArrayList2.get(0);
-        ptermNode4 = (PTerm)nodeArrayList3.get(0);
-
-        pfactorNode1 = new AModFactor(pfactorNode2, tmodNode3, ptermNode4);
-        }
-	nodeList.add(pfactorNode1);
-        return nodeList;
-    }
-
-
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    ArrayList<Object> new7() /* reduce ANumberTerm */
+    ArrayList<Object> new6() /* reduce ANumberTerm */
     {
         @SuppressWarnings("hiding") ArrayList<Object> nodeList = new ArrayList<Object>();
 
@@ -436,10 +404,10 @@ public class Parser
         PTerm ptermNode1;
         {
             // Block
-        TNumber tnumberNode2;
-        tnumberNode2 = (TNumber)nodeArrayList1.get(0);
+        TIntegerLiteral tintegerliteralNode2;
+        tintegerliteralNode2 = (TIntegerLiteral)nodeArrayList1.get(0);
 
-        ptermNode1 = new ANumberTerm(tnumberNode2);
+        ptermNode1 = new ANumberTerm(tintegerliteralNode2);
         }
 	nodeList.add(ptermNode1);
         return nodeList;
@@ -448,7 +416,7 @@ public class Parser
 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    ArrayList<Object> new8() /* reduce AExprTerm */
+    ArrayList<Object> new7() /* reduce AExprTerm */
     {
         @SuppressWarnings("hiding") ArrayList<Object> nodeList = new ArrayList<Object>();
 
@@ -458,14 +426,14 @@ public class Parser
         PTerm ptermNode1;
         {
             // Block
-        TLPar tlparNode2;
+        TLparen tlparenNode2;
         PExpr pexprNode3;
-        TRPar trparNode4;
-        tlparNode2 = (TLPar)nodeArrayList1.get(0);
+        TRparen trparenNode4;
+        tlparenNode2 = (TLparen)nodeArrayList1.get(0);
         pexprNode3 = (PExpr)nodeArrayList2.get(0);
-        trparNode4 = (TRPar)nodeArrayList3.get(0);
+        trparenNode4 = (TRparen)nodeArrayList3.get(0);
 
-        ptermNode1 = new AExprTerm(tlparNode2, pexprNode3, trparNode4);
+        ptermNode1 = new AExprTerm(tlparenNode2, pexprNode3, trparenNode4);
         }
 	nodeList.add(ptermNode1);
         return nodeList;
@@ -475,41 +443,39 @@ public class Parser
 
     private static int[][][] actionTable;
 /*      {
-			{{-1, ERROR, 0}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, REDUCE, 7}, },
-			{{-1, ERROR, 2}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, ERROR, 3}, {1, SHIFT, 7}, {2, SHIFT, 8}, {9, ACCEPT, -1}, },
-			{{-1, REDUCE, 0}, {3, SHIFT, 9}, {4, SHIFT, 10}, {5, SHIFT, 11}, },
+			{{-1, ERROR, 0}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, ERROR, 1}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, REDUCE, 6}, },
+			{{-1, ERROR, 3}, {16, SHIFT, 7}, {17, SHIFT, 8}, {29, ACCEPT, -1}, },
+			{{-1, REDUCE, 0}, {18, SHIFT, 9}, {19, SHIFT, 10}, },
 			{{-1, REDUCE, 3}, },
-			{{-1, ERROR, 6}, {1, SHIFT, 7}, {2, SHIFT, 8}, {7, SHIFT, 12}, },
-			{{-1, ERROR, 7}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, ERROR, 8}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, ERROR, 9}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, ERROR, 10}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, ERROR, 11}, {0, SHIFT, 1}, {6, SHIFT, 2}, },
-			{{-1, REDUCE, 8}, },
-			{{-1, REDUCE, 1}, {3, SHIFT, 9}, {4, SHIFT, 10}, {5, SHIFT, 11}, },
-			{{-1, REDUCE, 2}, {3, SHIFT, 9}, {4, SHIFT, 10}, {5, SHIFT, 11}, },
+			{{-1, ERROR, 6}, {16, SHIFT, 7}, {17, SHIFT, 8}, {24, SHIFT, 11}, },
+			{{-1, ERROR, 7}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, ERROR, 8}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, ERROR, 9}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, ERROR, 10}, {23, SHIFT, 1}, {27, SHIFT, 2}, },
+			{{-1, REDUCE, 7}, },
+			{{-1, REDUCE, 1}, {18, SHIFT, 9}, {19, SHIFT, 10}, },
+			{{-1, REDUCE, 2}, {18, SHIFT, 9}, {19, SHIFT, 10}, },
 			{{-1, REDUCE, 4}, },
 			{{-1, REDUCE, 5}, },
-			{{-1, REDUCE, 6}, },
         };*/
     private static int[][][] gotoTable;
 /*      {
-			{{-1, 3}, {2, 6}, },
-			{{-1, 4}, {7, 13}, {8, 14}, },
-			{{-1, 5}, {9, 15}, {10, 16}, {11, 17}, },
+			{{-1, 3}, {1, 6}, },
+			{{-1, 4}, {7, 12}, {8, 13}, },
+			{{-1, 5}, {9, 14}, {10, 15}, },
         };*/
     private static String[] errorMessages;
 /*      {
-			"expecting: number, '('",
-			"expecting: '+', '-', '*', '/', '%', ')', EOF",
+			"expecting: '(', integer literal",
+			"expecting: '+', '-', '*', '/', ')', EOF",
 			"expecting: '+', '-', EOF",
 			"expecting: '+', '-', ')'",
         };*/
     private static int[] errors;
 /*      {
-			0, 1, 0, 2, 1, 1, 3, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 
+			0, 0, 1, 2, 1, 1, 3, 0, 0, 0, 0, 1, 1, 1, 1, 1, 
         };*/
 
     static 

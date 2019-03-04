@@ -5,16 +5,16 @@ package Compiler.SableCC.postfix.node;
 import Compiler.SableCC.postfix.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TMod extends Token
+public final class TCreate extends Token
 {
-    public TMod()
+    public TCreate()
     {
-        super.setText("%");
+        super.setText("create");
     }
 
-    public TMod(int line, int pos)
+    public TCreate(int line, int pos)
     {
-        super.setText("%");
+        super.setText("create");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TMod extends Token
     @Override
     public Object clone()
     {
-      return new TMod(getLine(), getPos());
+      return new TCreate(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTMod(this);
+        ((Analysis) sw).caseTCreate(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TMod text.");
+        throw new RuntimeException("Cannot change TCreate text.");
     }
 }

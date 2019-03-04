@@ -5,16 +5,16 @@ package Compiler.SableCC.postfix.node;
 import Compiler.SableCC.postfix.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TRPar extends Token
+public final class TFor extends Token
 {
-    public TRPar()
+    public TFor()
     {
-        super.setText(")");
+        super.setText("for");
     }
 
-    public TRPar(int line, int pos)
+    public TFor(int line, int pos)
     {
-        super.setText(")");
+        super.setText("for");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TRPar extends Token
     @Override
     public Object clone()
     {
-      return new TRPar(getLine(), getPos());
+      return new TFor(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTRPar(this);
+        ((Analysis) sw).caseTFor(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TRPar text.");
+        throw new RuntimeException("Cannot change TFor text.");
     }
 }

@@ -5,16 +5,16 @@ package Compiler.SableCC.postfix.node;
 import Compiler.SableCC.postfix.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TLPar extends Token
+public final class TFunction extends Token
 {
-    public TLPar()
+    public TFunction()
     {
-        super.setText("(");
+        super.setText("function");
     }
 
-    public TLPar(int line, int pos)
+    public TFunction(int line, int pos)
     {
-        super.setText("(");
+        super.setText("function");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TLPar extends Token
     @Override
     public Object clone()
     {
-      return new TLPar(getLine(), getPos());
+      return new TFunction(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTLPar(this);
+        ((Analysis) sw).caseTFunction(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TLPar text.");
+        throw new RuntimeException("Cannot change TFunction text.");
     }
 }

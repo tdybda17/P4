@@ -5,14 +5,14 @@ package Compiler.SableCC.postfix.node;
 import Compiler.SableCC.postfix.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TNumber extends Token
+public final class TRealLiteral extends Token
 {
-    public TNumber(String text)
+    public TRealLiteral(String text)
     {
         setText(text);
     }
 
-    public TNumber(String text, int line, int pos)
+    public TRealLiteral(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TNumber extends Token
     @Override
     public Object clone()
     {
-      return new TNumber(getText(), getLine(), getPos());
+      return new TRealLiteral(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTNumber(this);
+        ((Analysis) sw).caseTRealLiteral(this);
     }
 }

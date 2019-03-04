@@ -3,10 +3,12 @@ Package Compiler.SableCC.postfix;
 Helpers
 
     digit                     = ['0' .. '9'];
+    digit_not_zero            = ['1' .. '9'];
     tab                       = 9;
     cr                        = 13;
     lf                        = 10;
     space                     = ' ';
+    int_num                   = '0' | digit_not_zero (digit)*;
 
 Tokens
 
@@ -24,39 +26,109 @@ Tokens
     then                      = 'then';
     int                       = 'int';
     real                      = 'real';
-    Vertex                    = 'Vertex';
-    Edge                      = 'Edge';
+    vertex                    = 'Vertex';
+    edge                      = 'Edge';
+    graph_type                = 'Graph' | 'WeightedGraph' | 'DiGraph' | 'WeightedDiGraph';
+    bool_literal              = 'true' | 'false';
+
 
     /* operators */
     plus                      = '+';
     minus                     = '-';
     mult                      = '*';
     div                       = '/';
-    eqeq                      = '==';
+    equals                    = '==';
     assign                    = '=';
+    v_connector               = '--';
 
     /* separators */
     lparen                    = '(';
     rparen                    = ')';
+    lbracket                  = '{';
+    rbracket                  = '}';
     newline                   = 10;  /* ASCII for '\n' */
     comma                     = ',';
-    plus                      = '+';
     blank                     = space | tab;
 
     /* numbers */
-    integer_literal           = digit+;
-    real_literal              = // TODO: Write this :-)
+    integer_literal           = int_num;
+    real_literal              = int_num '.' (digit)*;
 
     /* identifier */
-    TODO: Write this :-)
+    id                        = '';
+
 
     /* comment */
-    TODO: Write this :-)
+
+    /* end of file */
+    eof                       = '$';
+    lambda                    = '?';
 
 Ignored Tokens
     blank;
 
 Productions
+
+    prog =
+        main funcs_dcl eof
+
+    main =
+        function main() newline block end
+
+    block =
+        block_content newline block |
+        lambda
+
+    block_content =
+        dcl |
+        stmt |
+        lambda
+
+    dcl =
+        create ADT end |
+        number_types id initialization
+
+    initialization =
+        assign expr |
+        lambda
+
+    ADT =
+        graph_ADT |
+        collection_type
+
+    graph_ADT =
+        graph_type id newline graph_dcl
+
+    graph_dcl =
+        graph_vertex_dcl newline graph_dcl1
+
+    graph_dcl1 =
+        graph_dcl |
+        lambda
+
+    graph_vertex_dcl =
+        id -- graph_vertex_dcl1
+
+    graph_vertex_dcl1 =
+        {vertex_list} |
+        idweight
+
+    vertex_list =
+        idweight vertex_list1
+
+    vertex_list1 =
+        , vertex_list |
+        lambda
+
+    weight =
+        [arith_expr] |
+        lambda
+
+
+
+
+
+
     expr =
         {factor} factor |
         {plus} expr plus factor |
@@ -66,10 +138,9 @@ Productions
     factor =
         {term} term |
         {mult} factor mult term |
-        {div} factor div term |
-        {mod} factor mod term;
+        {div} factor div term;
 
 
     term =
-        {number} number |
-        {expr} l_par expr r_par;
+        {number} integer_literal |
+        {expr} lparen expr rparen;

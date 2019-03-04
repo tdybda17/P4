@@ -7,9 +7,9 @@ import Compiler.SableCC.postfix.analysis.*;
 @SuppressWarnings("nls")
 public final class AExprTerm extends PTerm
 {
-    private TLPar _lPar_;
+    private TLparen _lparen_;
     private PExpr _expr_;
-    private TRPar _rPar_;
+    private TRparen _rparen_;
 
     public AExprTerm()
     {
@@ -17,16 +17,16 @@ public final class AExprTerm extends PTerm
     }
 
     public AExprTerm(
-        @SuppressWarnings("hiding") TLPar _lPar_,
+        @SuppressWarnings("hiding") TLparen _lparen_,
         @SuppressWarnings("hiding") PExpr _expr_,
-        @SuppressWarnings("hiding") TRPar _rPar_)
+        @SuppressWarnings("hiding") TRparen _rparen_)
     {
         // Constructor
-        setLPar(_lPar_);
+        setLparen(_lparen_);
 
         setExpr(_expr_);
 
-        setRPar(_rPar_);
+        setRparen(_rparen_);
 
     }
 
@@ -34,9 +34,9 @@ public final class AExprTerm extends PTerm
     public Object clone()
     {
         return new AExprTerm(
-            cloneNode(this._lPar_),
+            cloneNode(this._lparen_),
             cloneNode(this._expr_),
-            cloneNode(this._rPar_));
+            cloneNode(this._rparen_));
     }
 
     @Override
@@ -45,16 +45,16 @@ public final class AExprTerm extends PTerm
         ((Analysis) sw).caseAExprTerm(this);
     }
 
-    public TLPar getLPar()
+    public TLparen getLparen()
     {
-        return this._lPar_;
+        return this._lparen_;
     }
 
-    public void setLPar(TLPar node)
+    public void setLparen(TLparen node)
     {
-        if(this._lPar_ != null)
+        if(this._lparen_ != null)
         {
-            this._lPar_.parent(null);
+            this._lparen_.parent(null);
         }
 
         if(node != null)
@@ -67,7 +67,7 @@ public final class AExprTerm extends PTerm
             node.parent(this);
         }
 
-        this._lPar_ = node;
+        this._lparen_ = node;
     }
 
     public PExpr getExpr()
@@ -95,16 +95,16 @@ public final class AExprTerm extends PTerm
         this._expr_ = node;
     }
 
-    public TRPar getRPar()
+    public TRparen getRparen()
     {
-        return this._rPar_;
+        return this._rparen_;
     }
 
-    public void setRPar(TRPar node)
+    public void setRparen(TRparen node)
     {
-        if(this._rPar_ != null)
+        if(this._rparen_ != null)
         {
-            this._rPar_.parent(null);
+            this._rparen_.parent(null);
         }
 
         if(node != null)
@@ -117,25 +117,25 @@ public final class AExprTerm extends PTerm
             node.parent(this);
         }
 
-        this._rPar_ = node;
+        this._rparen_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._lPar_)
+            + toString(this._lparen_)
             + toString(this._expr_)
-            + toString(this._rPar_);
+            + toString(this._rparen_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._lPar_ == child)
+        if(this._lparen_ == child)
         {
-            this._lPar_ = null;
+            this._lparen_ = null;
             return;
         }
 
@@ -145,9 +145,9 @@ public final class AExprTerm extends PTerm
             return;
         }
 
-        if(this._rPar_ == child)
+        if(this._rparen_ == child)
         {
-            this._rPar_ = null;
+            this._rparen_ = null;
             return;
         }
 
@@ -158,9 +158,9 @@ public final class AExprTerm extends PTerm
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._lPar_ == oldChild)
+        if(this._lparen_ == oldChild)
         {
-            setLPar((TLPar) newChild);
+            setLparen((TLparen) newChild);
             return;
         }
 
@@ -170,9 +170,9 @@ public final class AExprTerm extends PTerm
             return;
         }
 
-        if(this._rPar_ == oldChild)
+        if(this._rparen_ == oldChild)
         {
-            setRPar((TRPar) newChild);
+            setRparen((TRparen) newChild);
             return;
         }
 

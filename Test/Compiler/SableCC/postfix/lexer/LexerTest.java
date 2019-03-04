@@ -1,7 +1,7 @@
 package Compiler.SableCC.postfix.lexer;
 
 import Compiler.SableCC.postfix.node.EOF;
-import Compiler.SableCC.postfix.node.Token;
+import Compiler.SableCC.postfix.node.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,21 +17,22 @@ class LexerTest {
 
     @BeforeEach
     void setUp() {
-        lexer = new Lexer(new PushbackReader(new StringReader("!(false) 1 + 2 = 3")));
+        lexer = new Lexer(new PushbackReader(new StringReader("12345.849")));
     }
 
     @Test
     void testLexer01() {
-        Token token;
 
-        try {
-            while(!((token = lexer.next()) instanceof EOF)) {
-                System.out.println(token);
-            }
-        } catch (IOException | LexerException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
-
+    @Test
+    void testLexer02() {
+        try {
+            Token token = lexer.next();
+            assertFalse(token instanceof TIntegerLiteral);
+            assertTrue(token instanceof TRealLiteral);
+        } catch (IOException | LexerException e) {
+            e.printStackTrace();
+        }
+    }
 }

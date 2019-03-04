@@ -5,16 +5,16 @@ package Compiler.SableCC.postfix.node;
 import Compiler.SableCC.postfix.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TEquals extends Token
+public final class TAssign extends Token
 {
-    public TEquals()
+    public TAssign()
     {
-        super.setText("==");
+        super.setText("=");
     }
 
-    public TEquals(int line, int pos)
+    public TAssign(int line, int pos)
     {
-        super.setText("==");
+        super.setText("=");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TEquals extends Token
     @Override
     public Object clone()
     {
-      return new TEquals(getLine(), getPos());
+      return new TAssign(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTEquals(this);
+        ((Analysis) sw).caseTAssign(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TEquals text.");
+        throw new RuntimeException("Cannot change TAssign text.");
     }
 }
