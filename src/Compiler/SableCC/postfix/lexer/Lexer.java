@@ -258,6 +258,16 @@ public class Lexer
                     case 8:
                         {
                             @SuppressWarnings("hiding") Token token = new8(
+                                start_line + 1,
+                                start_pos + 1);
+                            pushBack(accept_length);
+                            this.pos = accept_pos;
+                            this.line = accept_line;
+                            return token;
+                        }
+                    case 9:
+                        {
+                            @SuppressWarnings("hiding") Token token = new9(
                                 getText(accept_length),
                                 start_line + 1,
                                 start_pos + 1);
@@ -295,7 +305,8 @@ public class Lexer
     Token new5(@SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TMod(line, pos); }
     Token new6(@SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TLPar(line, pos); }
     Token new7(@SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TRPar(line, pos); }
-    Token new8(@SuppressWarnings("hiding") String text, @SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TBlank(text, line, pos); }
+    Token new8(@SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TEquals(line, pos); }
+    Token new9(@SuppressWarnings("hiding") String text, @SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") int pos) { return new TBlank(text, line, pos); }
 
     private int getChar() throws IOException
     {
@@ -355,7 +366,7 @@ public class Lexer
     private static int[][][][] gotoTable;
 /*  {
         { // INITIAL
-            {{10, 10, 1}, {13, 13, 2}, {32, 32, 3}, {37, 37, 4}, {40, 40, 5}, {41, 41, 6}, {42, 42, 7}, {43, 43, 8}, {45, 45, 9}, {47, 47, 10}, {48, 57, 11}, },
+            {{10, 10, 1}, {13, 13, 2}, {32, 32, 3}, {37, 37, 4}, {40, 40, 5}, {41, 41, 6}, {42, 42, 7}, {43, 43, 8}, {45, 45, 9}, {47, 47, 10}, {48, 57, 11}, {61, 61, 12}, },
             {{10, 32, -2}, },
             {{10, 32, -2}, },
             {{10, 32, -2}, },
@@ -367,13 +378,14 @@ public class Lexer
             {},
             {},
             {{48, 57, 11}, },
+            {},
         }
     };*/
 
     private static int[][] accept;
 /*  {
         // INITIAL
-        {-1, 8, 8, 8, 5, 6, 7, 3, 1, 2, 4, 0, },
+        {-1, 9, 9, 9, 5, 6, 7, 3, 1, 2, 4, 0, 8, },
 
     };*/
 

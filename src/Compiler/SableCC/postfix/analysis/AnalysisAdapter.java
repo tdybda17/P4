@@ -177,6 +177,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTEquals(TEquals node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTBlank(TBlank node)
     {
         defaultCase(node);

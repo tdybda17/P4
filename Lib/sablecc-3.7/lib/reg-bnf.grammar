@@ -1,40 +1,75 @@
 Package Compiler.SableCC.postfix;
 
 Helpers
- digit = ['0' .. '9'];
- tab = 9;
- cr = 13;
- lf = 10;
- space = ' ';
+
+    digit                     = ['0' .. '9'];
+    tab                       = 9;
+    cr                        = 13;
+    lf                        = 10;
+    space                     = ' ';
 
 Tokens
- number = ['0' .. '9']+;
- plus = '+';
- minus = '-';
- mult = '*';
- div = '/';
- mod = '%';
- l_par = '(';
- r_par = ')';
- blank = (' ' | 13 | 10)+;
 
+    /* keywords */
+    create                    = 'create';
+    if                        = 'if';
+    else                      = 'else';
+    while                     = 'while';
+    for                       = 'for';
+    end                       = 'end';
+    do                        = 'do';
+    function                  = 'function';
+    foreach                   = 'foreach';
+    in                        = 'in';
+    then                      = 'then';
+    int                       = 'int';
+    real                      = 'real';
+    Vertex                    = 'Vertex';
+    Edge                      = 'Edge';
+
+    /* operators */
+    plus                      = '+';
+    minus                     = '-';
+    mult                      = '*';
+    div                       = '/';
+    eqeq                      = '==';
+    assign                    = '=';
+
+    /* separators */
+    lparen                    = '(';
+    rparen                    = ')';
+    newline                   = 10;  /* ASCII for '\n' */
+    comma                     = ',';
+    plus                      = '+';
+    blank                     = space | tab;
+
+    /* numbers */
+    integer_literal           = digit+;
+    real_literal              = // TODO: Write this :-)
+
+    /* identifier */
+    TODO: Write this :-)
+
+    /* comment */
+    TODO: Write this :-)
 
 Ignored Tokens
- blank;
+    blank;
 
 Productions
- expr =
-  {factor} factor |
-  {plus} expr plus factor |
-  {minus} expr minus factor;
-
- factor =
-  {term} term |
-  {mult} factor mult term |
-  {div} factor div term |
-  {mod} factor mod term;
+    expr =
+        {factor} factor |
+        {plus} expr plus factor |
+        {minus} expr minus factor;
 
 
- term =
-  {number} number |
-  {expr} l_par expr r_par;
+    factor =
+        {term} term |
+        {mult} factor mult term |
+        {div} factor div term |
+        {mod} factor mod term;
+
+
+    term =
+        {number} number |
+        {expr} l_par expr r_par;

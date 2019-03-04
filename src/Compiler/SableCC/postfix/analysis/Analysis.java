@@ -30,6 +30,7 @@ public interface Analysis extends Switch
     void caseTMod(TMod node);
     void caseTLPar(TLPar node);
     void caseTRPar(TRPar node);
+    void caseTEquals(TEquals node);
     void caseTBlank(TBlank node);
     void caseEOF(EOF node);
     void caseInvalidToken(InvalidToken node);
