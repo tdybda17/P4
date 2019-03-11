@@ -1,0 +1,534 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;
+  //LOOKAHEAD=3;
+  //FORCE_LA_CHECK=true; skal måske indkommenteres?}PARSER_BEGIN(testParser)package testParser;
+
+public class testParser{  public static void main(String args []) throws ParseException  {    testParser parser = new testParser(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");      try      {        switch (testParser.one_line())        {          case 0 :           System.out.println("OK.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        testParser.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(testParser)SKIP :{  " "| "\r"| "\t"
+| < "//" (~["\n"])* > //This is for skipping a comment}TOKEN : /* OPERATORS */{  < CREATE : "create" >
+| < END : "end" >
+| < BLANK : " " | "\t" >
+| < NEWLINE : "\n" >
+| < COMMA : "," >
+| < DOT : "." >
+| < MAIN : "main" >
+| < ENDOFFILE : "<EOF>" >
+| < ASSIGN : "=" >
+| < AND : "&" >
+| < OR : "|" >
+| < NEG : "!" >
+| < FUNCTION : "function" >
+| < WHILE : "while" >
+| < FOR : "for" >
+| < FOREACH : "foreach" >
+| < IN : "in" >
+| < IF : "if" >
+| < THEN : "then" >
+| < ELSE : "else" >
+| < LCURLY  : "{" >
+| < RCURLY : "}" >
+| < LHARD : "[" >
+| < RHARD : "]" >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
+| < CONNECTION : "--" >
+| < VERTEX : "Vertex" >
+| < EDGE : "Edge" >
+| < INT : "int" >
+| < REAL : "real" >
+| < BOOLEAN : "boolean" >
+| < BOOL_VAL : "true" | "false" >
+| < DO : "do" >
+| < TO : "to" > }TOKEN :{
+  < GRAPH_TYPE : (< GRAPH >) >
+| < #GRAPH : "Graph" | "WeightedGraph" | "DiGraph" | "WeightedDiGraph" > 
+| < ADD_SUB : (< addsub >) >
+| < #addsub : "+" | "-" >
+| < MUL_DIV : (< muldiv >) >
+| < #muldiv : "*" | "/" >
+| < EQUALITY_OP : (< equality_ope >) >
+| < #equality_ope : "==" | "!=" >
+| < RELATIONAL_OP : (< relational_ope >) >
+| < #relational_ope : "<" | ">" | "<=" | ">=" >
+| < COLLECTION_TYPE : (< collection >) >
+| < #collection : "Array" | "List" | "Set" | "Queue" | "PriorityQueue" | "Stack" >
+| < INUM_VAL : (< DIGIT >) >
+| < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
+| < FNUM_VAL : (< DIGITF >) >
+| < #DIGITF : "0" | ["1"-"9"](["0"-"9"])*"."(["0"-"9"])+ >
+| < IDENTIFIER : (< ID >) >
+| < #ID : ["a"-"z", "A"-"Z"](["a"-"z", "A"-"Z"] | ["0"-"9"])* >
+
+}
+
+int one_line() :{}{  prog()  {    return 0;  }}void prog() :{}{  (    (< NEWLINE >)* main() funcs_dcl() //< ENDOFFILE >  )}void main() :{}{  (    (      <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() < END >    )       )}
+
+void block() :
+{}
+{
+  (
+    block_content() < NEWLINE > block() | empty()
+  )
+}
+
+void block_content() :
+{}
+{
+  (
+    dcl() | stmt() | empty()
+  )
+}
+
+void dcl() :
+{}
+{
+  (
+    < CREATE > adt() < END > | simple_types() < IDENTIFIER > initialization()
+  )
+}
+
+void initialization() :
+{}
+{
+  (
+    < ASSIGN > expr() | empty()
+  )
+}
+
+void adt() :
+{}
+{
+  (
+    graph_type() | collection_type()
+  )
+}
+
+void graph_type() :
+{}
+{
+  (
+    < GRAPH_TYPE > < IDENTIFIER > < NEWLINE > graph_dcl()
+  )
+}
+
+void graph_dcl() :
+{}
+{
+  (
+    graph_vertex_dcl() < NEWLINE > graph_dcl1() 
+  )
+}
+
+void graph_dcl1() :
+{}
+{
+  (
+    graph_dcl() | empty()
+  )
+}
+
+void graph_vertex_dcl() :
+{}
+{
+  (
+    < IDENTIFIER > < CONNECTION > graph_vertex_dcl1() 
+  )
+}
+
+void graph_vertex_dcl1() :
+{}
+{
+  (
+    < LCURLY > vertex_list() < RCURLY > | <IDENTIFIER > weight()
+  )
+}
+
+void vertex_list() :
+{}
+{
+  (
+    < IDENTIFIER > weight() vertex_list1() 
+  )
+}
+
+void vertex_list1() :
+{}
+{
+  (
+    < COMMA > vertex_list() | empty()
+  )
+}
+
+void weight() :
+{}
+{
+  (
+    < LHARD > arith_expr() < RHARD > | empty()
+  )
+}
+
+void expr() :
+{}
+{
+  (
+    and_expr() A()
+  )
+}
+
+void A() :
+{}
+{
+  (
+    < OR > and_expr() A() | empty()
+  )
+}
+
+void and_expr() :
+{}
+{
+  (
+    equal_expr() B()
+  )
+}
+
+void B() :
+{}
+{
+  (
+    < AND > equal_expr() B() | empty()
+  )
+}
+
+void equal_expr() :
+{}
+{
+  (
+    rel_expr() equal_expr1()
+  )
+}
+
+void equal_expr1() :
+{}
+{
+  (
+    < EQUALITY_OP > rel_expr() | empty()
+  )
+}
+
+void rel_expr() :
+{}
+{
+  (
+    arith_expr() rel_expr1()
+  )
+}
+
+void rel_expr1() :
+{}
+{
+  (
+    < RELATIONAL_OP > arith_expr() | empty()
+  )
+}
+
+void arith_expr() :
+{}
+{
+  (
+    term() C()
+  )
+}
+
+void C() :
+{}
+{
+  (
+    < ADD_SUB > term() C() | empty()
+  )
+}
+
+void term() :
+{}
+{
+  (
+    neg_expr() D()
+  )
+}
+
+void D() :
+{}
+{
+  (
+    < MUL_DIV > atomic_expr() D() | empty()
+  )
+}
+
+void neg_expr() :
+{}
+{
+  (
+    < NEG > atomic_expr() | atomic_expr()
+  )
+}
+
+void atomic_expr() :
+{}
+{
+  (
+    < LPAREN > expr() < RPAREN > | value() 
+  )
+}
+
+void value() :
+{}
+{
+  (
+    < IDENTIFIER > value1() | < INUM_VAL > | < FNUM_VAL > | < BOOL_VAL >
+  )
+}
+
+void value1() :
+{}
+{
+  (
+    function_call1() | empty()
+  )
+}
+
+
+void function_call1() :
+{}
+{
+  (
+    < DOT > function_call() | < LPAREN > actual_parameters() < RPAREN >
+  )
+}
+
+void function_call() :
+{}
+{
+  (
+    < IDENTIFIER > function_call1() 
+  )
+}
+
+void actual_parameters() :
+{}
+{
+  (
+    actual_parameter_list() | empty()
+  )
+}
+
+void actual_parameter_list() :
+{}
+{
+  (
+    expr() actual_parameter_list1()
+  )
+}
+
+void actual_parameter_list1() :
+{}
+{
+  (
+    < COMMA > actual_parameter_list() | empty()
+  )
+}
+
+void simple_types() :
+{}
+{
+  (
+    < INT > | < REAL > | < BOOLEAN >
+  )
+}
+
+
+void collection_type() :
+{}
+{
+  (
+    < COLLECTION_TYPE > < IDENTIFIER > collection_dcl()
+  )
+}
+
+void collection_dcl() :
+{}
+{
+  (
+   < ASSIGN > function_call() | < NEWLINE > element_list() | empty()
+  )
+}
+
+void element_list() :
+{}
+{
+  (
+    value() < NEWLINE > element_list1()
+  )
+}
+
+void element_list1() :
+{}
+{
+  (
+    element_list() | empty()
+  )
+}
+
+
+void funcs_dcl() :
+{}
+{
+  (
+    func_dcl() < NEWLINE > funcs_dcl() | empty()
+  )
+}
+
+void func_dcl() :
+{}
+{
+  (
+    ret() < FUNCTION > < IDENTIFIER > < LPAREN > formal_parameters() < RPAREN > block() < END >
+  )
+}
+
+void ret() :
+{}
+{
+  (
+    type() | empty()
+  )
+}
+
+void formal_parameters() :
+{}
+{
+  (
+    formal_parameter_list() | empty()
+  )
+}
+
+void formal_parameter_list() :
+{}
+{
+  (
+    formal_parameter() formal_parameter_list1()
+  )
+}
+
+void formal_parameter_list1() :
+{}
+{
+  (
+    < COMMA > formal_parameter_list() | empty()
+  )
+}
+
+void formal_parameter() :
+{}
+{
+  (
+    type() < IDENTIFIER >
+  )
+}
+
+void type() :
+{}
+{
+  (
+    object_types() |  simple_types()
+  )
+}
+
+void object_types() :
+{}
+{
+  (
+    < GRAPH_TYPE > | < COLLECTION_TYPE > | graph_element_types()
+  )
+}
+
+void graph_element_types() :
+{}
+{
+  (
+    < VERTEX > | < EDGE >
+  )
+}
+
+
+
+void stmt() :
+{}
+{
+  (
+    < IDENTIFIER > stmt1() | loop() | if_statement()
+  )
+}
+
+void stmt1() :
+{}
+{
+  (
+    function_call1() | assignment()
+  )
+}
+
+void assignment() :
+{}
+{
+  (
+    < ASSIGN > expr()
+  )
+}
+
+void loop() :
+{}
+{
+  (
+    while_statement() | for_statement() | foreach_statement()
+  )
+}
+
+void while_statement() :
+{}
+{
+  (
+    < WHILE > expr() < DO > < NEWLINE > block() < END >
+  )
+}
+
+void for_statement() :
+{}
+{
+  (
+    < FOR > < IDENTIFIER > < ASSIGN > < INUM_VAL > < TO > < INUM_VAL > < DO > < NEWLINE > block() < END >
+  )
+}
+
+void foreach_statement() :
+{}
+{
+  (
+    < FOREACH > < IDENTIFIER > < IN > < IDENTIFIER > value1() < DO > < NEWLINE > block() < END > 
+  )
+}
+
+void if_statement() :
+{}
+{
+  (
+    < IF > expr() < THEN > block() < END >
+  )
+}
+
+void empty() : {}
+{
+     {}
+} 
+
+
+
+

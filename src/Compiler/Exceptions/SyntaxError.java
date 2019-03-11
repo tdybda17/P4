@@ -1,4 +1,4 @@
-package Exceptions;
+package Compiler.Exceptions;
 
 import Compiler.Scanner.FlexScanner.Token.Token;
 
