@@ -1,65 +1,82 @@
-package Compiler.Parser;
-
-public class whatever {
-	
-
-		
-
-	public static void printTree(Node root, int lvl) {
-		StringBuilder sb = new StringBuilder();
-		   for (int i = 0; i < lvl; i++)
-		       sb.append(" ");
-
-		   
-		   if (root instanceof SimpleNode) {
-			   String value = "";
-			   if (((SimpleNode) root).jjtGetValue() != null)
-			       value = "[" + ((SimpleNode) root).jjtGetValue().toString() + "]";
-			   System.out.println(((SimpleNode) root).toString(sb.toString()) + value);
-			}
-
-		   for (int i = 0; i < root.jjtGetNumChildren(); i++) {
-		       printTree(root.jjtGetChild(i), lvl + 1);
-		   }
-		}
-		
-	public static String createDotOutput(Node root) {
-		   StringBuilder sb = new StringBuilder("diGraph {\n");
-		   sb.append(printTree(root, ""));
-		   sb.append("}");
-
-		   return sb.toString();
-		}
-
-	public static String printTree(Node root, String dotString) {
-		   StringBuilder sb = new StringBuilder(dotString);
-
-		   for (int i = 0; i < root.jjtGetNumChildren(); i++) {
-		       Node child = root.jjtGetChild(i);
-		       if (child.jjtGetNumChildren() == 1)
-		           continue;
-		      
-		       else if (child.jjtGetNumChildren() == 0 && child instanceof SimpleNode && ((SimpleNode) child).jjtGetValue() != null) {
-		           sb.append("  ");
-		           sb.append(root);
-		           sb.append(" -> ");
-		           sb.append("\"");
-		           sb.append(child);
-		           sb.append(" [");
-		           sb.append(((SimpleNode) child).jjtGetValue());
-		           sb.append("]");
-		           sb.append("\"\n");
-		       }
-		   }
-
-		   for (int i = 0; i < root.jjtGetNumChildren(); i++) {
-		       sb.append(printTree(root.jjtGetChild(i), ""));
-		   }
-
-		   return sb.toString();
-		}
+/*public class whatever {
+    private static int suffix;
 
 
+    public static String createDotOutput(Node root) {
+        while (reduceTree(root));
+        suffix = 0;
 
+        return "diGraph {\n"
+                + printTree(root)
+                + "}";
+    }
 
-}
+    private static boolean reduceTree(Node root) {
+        boolean changed = false;
+
+        for (int i = 0; i < root.jjtGetNumChildren(); i++) {
+            Node child = root.jjtGetChild(i);
+
+            if (child instanceof SimpleNode && root instanceof SimpleNode) {
+                while (child.jjtGetNumChildren() == 1) {
+                    Node grandChild = child.jjtGetChild(0);
+                    root.jjtAddChild(grandChild, i);  // overrides child with grandChild in root's children array
+                    child = grandChild;
+                    changed = true;
+                }
+
+                if (child.jjtGetNumChildren() == 0 && ((SimpleNode) child).jjtGetValue() == null) {
+                    ((SimpleNode) root).jjtRemoveChild(i);
+                    changed = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < root.jjtGetNumChildren(); i++) {
+            if (reduceTree(root.jjtGetChild(i)))
+                changed = true;
+        }
+
+        return changed;
+    }
+
+    private static String printTree(Node root) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < root.jjtGetNumChildren(); i++) {
+            Node child = root.jjtGetChild(i);
+
+            if (child instanceof SimpleNode && root instanceof SimpleNode) {
+                ((SimpleNode) child).setName(suffix++);
+
+                appendLabelling(sb, (SimpleNode) child);
+                appendEdge(sb, (SimpleNode) root, (SimpleNode) child);
+
+                sb.append(printTree(root.jjtGetChild(i)));
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private static void appendLabelling(StringBuilder sb, SimpleNode child) {
+        sb.append("  ");
+        sb.append(child.getName());
+        sb.append(" [label=");
+        sb.append(child);
+        if (child.jjtGetValue() != null) {
+            sb.append("___");
+            sb.append(child.jjtGetValue());
+        }
+        sb.append("]\n");
+    }
+
+    private static void appendEdge(StringBuilder sb, SimpleNode root, SimpleNode child) {
+        sb.append("  ");
+        sb.append(root.getName());
+        sb.append(" -> ");
+        sb.append(child.getName());
+        sb.append("\n");
+    }
+
+}*/
