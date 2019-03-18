@@ -9,13 +9,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SymbolTableTest {
+class SymbolTableTreeImplementationTest {
 
-    private SymbolTable symbolTable;
+    private SymbolTableTreeImplementation symbolTable;
 
     @BeforeEach
     void setUp() {
-        symbolTable = new SymbolTable();
+        symbolTable = new SymbolTableTreeImplementation();
     }
 
     @Test
@@ -39,4 +39,7 @@ class SymbolTableTest {
         symbolTable.enterSymbol(symbol1);
         assertThrows(DuplicationSymbolException.class, () -> symbolTable.enterSymbol(symbol2));
     }
+
+
+
 }
