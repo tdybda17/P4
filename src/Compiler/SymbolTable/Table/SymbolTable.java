@@ -1,19 +1,16 @@
 package Compiler.SymbolTable.Table;
 
-import Compiler.SymbolTable.Table.Scope.Scope;
+import Compiler.Exceptions.SymbolTableExceptions.DuplicationSymbolException;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.TreeSet;
 
 public class SymbolTable implements ISymbolTable {
 
-    private Map<Integer, Scope> scopesMap;
-    private int currentScope;
+    private TreeSet<Symbol> symbols;
 
     public SymbolTable() {
-        this.scopesMap = new HashMap<>();
+        symbols = new TreeSet<>();
     }
 
     @Override
@@ -30,7 +27,9 @@ public class SymbolTable implements ISymbolTable {
 
     @Override
     public void enterSymbol(Symbol symbol) {
-
+        if(!symbols.add(symbol)) {
+            throw new DuplicationSymbolException(symbol);
+        }
     }
 
     @Override
@@ -43,4 +42,7 @@ public class SymbolTable implements ISymbolTable {
         return false;
     }
 
+    public TreeSet<Symbol> getSymbols() {
+        return symbols;
+    }
 }

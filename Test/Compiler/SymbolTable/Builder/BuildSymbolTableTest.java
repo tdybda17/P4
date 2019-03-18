@@ -3,8 +3,6 @@ package Compiler.SymbolTable.Builder;
 import Compiler.Parser.whatever;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class BuildSymbolTableTest {
 
     private BuildSymbolTable builder;
