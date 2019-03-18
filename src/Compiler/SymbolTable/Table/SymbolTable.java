@@ -3,6 +3,7 @@ package Compiler.SymbolTable.Table;
 import Compiler.Exceptions.SymbolTableExceptions.DuplicationSymbolException;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 
+import java.util.Arrays;
 import java.util.TreeSet;
 
 public class SymbolTable implements ISymbolTable {
@@ -34,6 +35,7 @@ public class SymbolTable implements ISymbolTable {
 
     @Override
     public Symbol retrieveSymbol(String name) {
+        Symbol[] array = symbols.toArray(new Symbol[symbols.size()]);
         return null;
     }
 
