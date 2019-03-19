@@ -1,14 +1,15 @@
 package Compiler.SymbolTable.Table.Symbol;
 
-import Compiler.Exceptions.SymbolTableExceptions.NoValueSetForSymbol;
-
 import java.util.Objects;
 
 public class Symbol implements Comparable<Symbol> {
 
-    private int num; // TODO: firgure out how to handle this
     private String name;
-    private Object value;
+    private Object type;
+    private Object var;
+    private Object level;
+    private int scopeDepth;
+
 
     public Symbol(String name) {
         this.name = name;
@@ -16,16 +17,18 @@ public class Symbol implements Comparable<Symbol> {
 
     public Symbol(String name, Object value) {
         this.name = name;
-        this.value = value;
+    }
+
+    /* TODO: Fix these 'Object' to the real type when known */
+    public Symbol(String name, Object type, Object level, int scopeDepth) {
+        this.name = name;
+        this.type = type;
+        this.level = level;
+        this.scopeDepth = scopeDepth;
     }
 
     public String getName() {
         return name;
-    }
-
-    public Object getValue() {
-        if(value != null) return value;
-        else throw new NoValueSetForSymbol("No value for symbol: " + name);
     }
 
     @Override
@@ -38,19 +41,12 @@ public class Symbol implements Comparable<Symbol> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return Objects.equals(getName(), symbol.getName());
+        return scopeDepth == symbol.scopeDepth &&
+                Objects.equals(getName(), symbol.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
-    }
-
-    @Override
-    public String toString() {
-        return "Symbol{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
+        return Objects.hash(getName(), scopeDepth);
     }
 }

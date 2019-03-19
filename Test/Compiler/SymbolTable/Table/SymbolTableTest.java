@@ -1,6 +1,6 @@
 package Compiler.SymbolTable.Table;
 
-import Compiler.Exceptions.SymbolTableExceptions.DuplicationSymbolException;
+import Compiler.Exceptions.ScopeError.DuplicateSymbolError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,13 +9,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SymbolTableTreeImplementationTest {
+class SymbolTableTest {
 
-    private SymbolTableTreeImplementation symbolTable;
+    private SymbolTable symbolTable;
 
     @BeforeEach
     void setUp() {
-        symbolTable = new SymbolTableTreeImplementation();
+        symbolTable = new SymbolTable();
     }
 
     @Test
@@ -27,8 +27,8 @@ class SymbolTableTreeImplementationTest {
         symbolTable.enterSymbol(BSymbol);
         symbolTable.enterSymbol(ASymbol);
         assertEquals(
-                List.of(ASymbol, BSymbol, CSymbol).toString(),
-                symbolTable.getSymbols().toString()
+                List.of(ASymbol, BSymbol, CSymbol),
+                symbolTable.getSymbols().asList()
         );
     }
 
@@ -37,9 +37,16 @@ class SymbolTableTreeImplementationTest {
         Symbol symbol1 = new Symbol("id");
         Symbol symbol2 = new Symbol("id");
         symbolTable.enterSymbol(symbol1);
-        assertThrows(DuplicationSymbolException.class, () -> symbolTable.enterSymbol(symbol2));
+        assertThrows(DuplicateSymbolError.class, () -> symbolTable.enterSymbol(symbol2));
     }
 
-
+    @Test
+    void testRetrieveSymbol() {
+        for (int i = 0; i < 1000; i++) {
+            symbolTable.enterSymbol(new Symbol("id" + i));
+        }
+        Symbol symbol = new Symbol("id500");
+        assertEquals(symbol, symbolTable.retrieveSymbol(symbol.getName()));
+    }
 
 }
