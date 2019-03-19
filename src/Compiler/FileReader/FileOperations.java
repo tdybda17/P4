@@ -1,16 +1,19 @@
 package Compiler.FileReader;
 
+
 import Compiler.Exceptions.NotADirectoryException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class FileOperations {
+    public static final Path PROJECT_DIRECTORY = Paths.get(System.getProperty("user.dir"));
+    public static final Path PARSER_DIR_PATH = Paths.get(System.getProperty("user.dir") + "/src/Compiler/Parser");
 
     public static List<Path> getPathsInDirectory(final Path dirPath) throws IOException {
         List<Path> filePaths = new ArrayList<>();
@@ -28,5 +31,6 @@ public class FileOperations {
     public static boolean isDirectory(final Path dirPath) {
         return Files.isDirectory(dirPath);
     }
+
 
 }

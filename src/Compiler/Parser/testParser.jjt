@@ -5,7 +5,7 @@
 
 options
 {
-
+    JJTREE_OUTPUT_DIRECTORY = "./src";
   //LOOKAHEAD=3;
   //FORCE_LA_CHECK=true; skal måske indkommenteres?
   //NODE_DEFAULT_VOID = true; 
