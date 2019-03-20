@@ -8,27 +8,31 @@ public class Symbol implements Comparable<Symbol> {
     private Object type;
     private Object var;
     private Object level;
-    private int scopeDepth;
+    private int depth;
 
 
     public Symbol(String name) {
         this.name = name;
     }
 
-    public Symbol(String name, Object value) {
+    public Symbol(String name, int depth) {
         this.name = name;
+        this.depth = depth;
     }
 
-    /* TODO: Fix these 'Object' to the real type when known */
-    public Symbol(String name, Object type, Object level, int scopeDepth) {
+    public Symbol(String name, Object type, Object level, int depth) {
         this.name = name;
         this.type = type;
         this.level = level;
-        this.scopeDepth = scopeDepth;
+        this.depth = depth;
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 
     @Override
@@ -41,12 +45,11 @@ public class Symbol implements Comparable<Symbol> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return scopeDepth == symbol.scopeDepth &&
-                Objects.equals(getName(), symbol.getName());
+        return Objects.equals(getName(), symbol.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), scopeDepth);
+        return Objects.hash(getName());
     }
 }
