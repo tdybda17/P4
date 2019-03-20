@@ -10,7 +10,7 @@ public class whatever {
     public static String createDotOutput(Node root) {
         //while (reduceTree(root));
         suffix = 0;
-
+        ((SimpleNode) root).setName();
         return "diGraph {\n"
                 + printTree(root)
                 + "}";

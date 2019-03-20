@@ -13,7 +13,7 @@ public class BuildSymbolTable implements BuildTable {
     public BuildSymbolTable(String str) {
         try {
             TestParser p = new TestParser(new StringReader(str));
-            node = p.one_line();
+            node = p.start();
         } catch (ParseException e) {
             System.out.println(e.getMessage());
         }

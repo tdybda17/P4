@@ -11,6 +11,9 @@ class SimpleNode implements Node {
   public void setName(int suffix) {
     this.name = TestParserTreeConstants.jjtNodeName[id] + suffix;
   }
+  public void setName() {
+    this.name = TestParserTreeConstants.jjtNodeName[id];
+  }
 
   protected Node parent;
   protected Node[] children;

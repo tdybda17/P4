@@ -8,7 +8,7 @@ options
     //  JJTREE_OUTPUT_DIRECTORY = "./../..";
   //LOOKAHEAD=3;
   //FORCE_LA_CHECK=true; skal måske indkommenteres?
-  //NODE_DEFAULT_VOID = true;
+  NODE_DEFAULT_VOID = true;
   STATIC = false;
 }
 
@@ -36,7 +36,7 @@ public class TestParser {
 
             BufferedReader reader = new BufferedReader(new FileReader(file));
             TestParser parser = new TestParser(reader);
-            SimpleNode root = parser.one_line();
+            Node root = parser.start();
             //root.dump("");
             System.out.println(whatever.createDotOutput(root));
         } catch (Exception e) {
@@ -145,19 +145,19 @@ void skip_to_EOF() {
 }
 
 
-SimpleNode one_line() #ONE_LINE :
+SimpleNode start() #START :
 {}
 {
   prog() {return jjtThis;}
 }
 
-void prog() #PROG :
+void prog() #PROG(>1) :
 {}
 {
     skip_to_first_dcl() vertex_edge_dcl() (< NEWLINE >)* main() (< NEWLINE >)* funcs_dcl() skip_to_EOF() < EOF >
 }
 
-void vertex_edge_dcl() #VERTEX_EDGE_DCL :
+void vertex_edge_dcl() #VERTEX_EDGE_DCL(>1) :
 {}
 {
     graph_element_types() < DCL > < NEWLINE > attribute_dcl() < END > | empty()
@@ -166,22 +166,22 @@ void vertex_edge_dcl() #VERTEX_EDGE_DCL :
 void attribute_dcl() #ATTRIBUTE_DCL :
 {}
 {
-    simple_types() < IDENTIFIER > initialization() < NEWLINE > attribute_dcl() | object_types() < IDENTIFIER > < NEWLINE > attribute_dcl() | empty()
+    simple_types() identifier() initialization() < NEWLINE > attribute_dcl() | object_types() identifier() < NEWLINE > attribute_dcl() | empty()
 }
 
-void main() #MAIN :
+void main() #void :
 {}
 {
     <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() < END >
 }
 
-void block() #BLOCK :
+void block() #BLOCK(>1) :
 {}
 {
     block_content() < NEWLINE > block() | empty()
 }
 
-void block_content() #BLOCK_CONTENT :
+void block_content() #void :
 {}
 {
     dcl() | stmt() | empty()
@@ -214,7 +214,7 @@ void adt() #ADT :
 void graph_type() #GRAPH_TYPE :
 {}
 {
-    < GRAPH_TYPE > < IDENTIFIER > graph_dcl()
+    < GRAPH_TYPE > identifier() graph_dcl()
 }
 
 void graph_dcl() #GRAPH_DCL :
@@ -232,7 +232,7 @@ void graph_elements() #GRAPH_ELEMENTS :
 void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
 {}
 {
-    < IDENTIFIER > < CONNECTION > graph_vertex_dcl1()
+    identifier() < CONNECTION > graph_vertex_dcl1()
 }
 
 void graph_vertex_dcl1() #GRAPH_VERTEX_DCL1 :
@@ -244,7 +244,7 @@ void graph_vertex_dcl1() #GRAPH_VERTEX_DCL1 :
 void vertex_list() #VERTEX_LIST :
 {}
 {
-    < IDENTIFIER > weight() vertex_list_continuous()
+    identifier() weight() vertex_list_continuous()
 }
 
 void vertex_list_continuous() #VERTEX_LIST_CONTINUOUS :
@@ -259,88 +259,88 @@ void weight() #WEIGHT :
     < LHARD > arith_expr() < RHARD > | empty()
 }
 
-void expr() #EXPR :
+void expr() #EXPR(>1) :
 {}
 {
     and_expr() A()
 }
 
-void A() #A :
+void A() #A(>1) :
 {}
 {
     < OR > and_expr() A() | empty()
 }
 
-void and_expr() #AND_EXPR :
+void and_expr() #AND_EXPR(>1) :
 {}
 {
     equal_expr() B()
 }
 
-void B() #B :
+void B() #B(>1) :
 {}
 {
     < AND > equal_expr() B() | empty()
 }
 
-void equal_expr() #EQUAL_EXPR :
+void equal_expr() #EQUAL_EXPR(>1) :
 {}
 {
     rel_expr() equal_expr1()
 }
 
-void equal_expr1() #EQUAL_EXPR1 :
+void equal_expr1() #EQUAL_EXPR1(>0) :
 {}
 {
     < EQUALITY_OP > rel_expr() | empty()
 }
 
-void rel_expr() #REL_EXPR :
+void rel_expr() #REL_EXPR(>1) :
 {}
 {
     arith_expr() rel_expr1()
 }
 
-void rel_expr1() #REL_EXPR1 :
+void rel_expr1() #REL_EXPR1(>0) :
 {Token t;}
 {
   t = < RELATIONAL_OP > {jjtThis.value = t.image;} arith_expr() | empty()
 }
 
-void arith_expr() #ARITH_EXPR :
+void arith_expr() #ARITH_EXPR(>1) :
 {}
 {
   term() C()
 }
 
-void C() #C :
+void C() #void :
 {}
 {
   < ADD_SUB > term() C() | empty()
 }
 
-void term() #TERM :
+void term() #TERM(>1) :
 {}
 {
     neg_expr() D()
 }
 
-void D() #D :
+void D() #D(>1) :
 {Token t;}
 {
     t = < MUL_DIV > {jjtThis.value = t.image;} atomic_expr() D() | empty()
 }
 
-void neg_expr() #NEG_EXPR :
-{}
+void neg_expr() #void :
+{Token t;}
 {
-    < NEG > atomic_expr() | atomic_expr()
+   < NEG > atomic_expr() #NEG_EXPR | atomic_expr()
 }
 
-void atomic_expr() #ATOMIC_EXPR :
+void atomic_expr() #void :
 {}
 {
-    < LPAREN > expr() < RPAREN > | value()
+    < LPAREN > expr() #PARENTHESIZED_EXPR < RPAREN > | value()
 }
 
 void value() #VALUE :
@@ -352,7 +352,7 @@ void value() #VALUE :
 void member_function_call() #MEMBER_FUNCTION_CALL :
 {}
 {
-    < IDENTIFIER > member_function_call_tail()
+    identifier() member_function_call_tail()
 }
 
 void member_function_call_tail() #MEMBER_FUNCTION_CALL_TAIL :
@@ -396,7 +396,7 @@ void simple_types() #SIMPLE_TYPES :
 void collection_type() #COLLECTION_TYPE :
 {}
 {
-    < COLLECTION_TYPE > < IDENTIFIER > collection_dcl()
+    < COLLECTION_TYPE > identifier() collection_dcl()
 }
 
 void collection_dcl() #COLLECTION_DCL :
@@ -418,7 +418,7 @@ void element_list_continuous() #ELEMENT_LIST1 :
 }
 
 
-void funcs_dcl() #FUNCS_DCL :
+void funcs_dcl() #FUNCS_DCL(>1) :
 {}
 {
     func_dcl() < NEWLINE > funcs_dcl() | empty()
@@ -427,7 +427,7 @@ void funcs_dcl() #FUNCS_DCL :
 void func_dcl() #FUNC_DCL :
 {}
 {
-    ret() < FUNCTION > < IDENTIFIER > < LPAREN > formal_parameters() < RPAREN > block() < END >
+    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() < END >
 }
 
 void ret() #RET :
@@ -457,7 +457,7 @@ void formal_parameter_list1() #FORMAL_PARAMETER_LIST1 :
 void formal_parameter() #FORMAL_PARAMETER :
 {}
 {
-    type() < IDENTIFIER >
+    type() identifier()
 }
 
 void type() #TYPE :
@@ -473,14 +473,12 @@ void object_types() #OBJECT_TYPES :
 }
 
 void graph_element_types() #GRAPH_ELEMENT_TYPES :
-{}
+{Token t;}
 {
-    < VERTEX > | < EDGE >
+    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;}
 }
 
-
-
-void stmt() #STMT :
+void stmt() #STMT(>1) :
 {}
 {
     member_function_call() assign_or_func() | loop() | if_statement() | return_stmt()
@@ -511,7 +509,7 @@ void assignment() #ASSIGNMENT :
     t = < ASSIGN > {jjtThis.value = t.image;} expr()
 }
 
-void loop() #LOOP :
+void loop() #LOOP(>1) :
 {}
 {
   while_statement() | for_statement() | foreach_statement()
@@ -526,7 +524,7 @@ void while_statement() #WHILE_STATEMENT :
 void for_statement() #FOR_STATEMENT :
 {}
 {
-    < FOR > < IDENTIFIER > < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() < END >
+    < FOR > identifier() < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() < END >
 }
 
 void integer_value() #INTEGER_VALUE :
@@ -538,7 +536,7 @@ void integer_value() #INTEGER_VALUE :
 void foreach_statement() #FOREACH_STATEMENT :
 {}
 {
-    < FOREACH > < IDENTIFIER > < IN > member_function_call() < DO > < NEWLINE > block() < END >
+    < FOREACH > identifier() < IN > member_function_call() < DO > < NEWLINE > block() < END >
 }
 
 void if_statement() #IF_STATEMENT :
@@ -547,13 +545,13 @@ void if_statement() #IF_STATEMENT :
     < IF > expr() < THEN > block() else_statement()
 }
 
-void else_statement() #ELSE_STATEMENT :
+void else_statement() #ELSE_STATEMENT(>0) :
 {}
 {
     < ELSE > block() < END > | < END >
 }
 
-void empty() #EMPTY : {}
+void empty() : {}
 {
      {}
 } 
