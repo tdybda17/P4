@@ -1,14 +1,10 @@
 package Compiler.SymbolTable.Builder;
 
-import Compiler.Parser.ParseException;
-import Compiler.Parser.SimpleNode;
-import Compiler.Parser.testParser;
+import Compiler.Parser.GeneratedFiles.ParseException;
+import Compiler.Parser.GeneratedFiles.SimpleNode;
+import Compiler.Parser.GeneratedFiles.TestParser;
 import org.apache.commons.jexl3.parser.JexlNode;
-import org.w3c.dom.Node;
-
-import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Set;
 
 public class BuildSymbolTable implements BuildTable {
 
@@ -16,7 +12,7 @@ public class BuildSymbolTable implements BuildTable {
 
     public BuildSymbolTable(String str) {
         try {
-            testParser p = new testParser(new StringReader(str));
+            TestParser p = new TestParser(new StringReader(str));
             node = p.one_line();
         } catch (ParseException e) {
             System.out.println(e.getMessage());

@@ -1,0 +1,7 @@
+function main()
+    create Graph g
+        a -- {b}
+        b -- {c}
+        c -- d
+    end
+end

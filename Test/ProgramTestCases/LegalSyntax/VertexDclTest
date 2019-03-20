@@ -1,0 +1,22 @@
+Vertex dcl
+	int a = INF
+	real man = 0.0
+end
+
+
+function main()
+    if 5 > 3 then
+    	int a = 5
+    else
+    	int b = 5
+    end
+end
+
+
+
+
+
+
+
+
+

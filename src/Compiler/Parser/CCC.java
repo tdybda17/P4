@@ -3,6 +3,7 @@ package Compiler.Parser;
 import Compiler.FileReader.FileOperations;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,19 +15,20 @@ public class CCC {
     public static void main(String[] args) {
         try {
             Path javaCC = Paths.get(FileOperations.PARSER_DIR_PATH + "/javacc.jar");
-            Path testParserJJT = Paths.get(FileOperations.PARSER_DIR_PATH + "/testParser.jjt");
-            Path testParserJJ = Paths.get(FileOperations.PROJECT_DIRECTORY + "/src/testParser.jj");
-            execCmd("java -cp " + javaCC + " jjtree " + testParserJJT);
-            execCmd("java -cp " + javaCC + " javacc " + testParserJJ);
+            Path testParserJJT = Paths.get(FileOperations.PARSER_DIR_PATH + "/TestParser.jjt");
+            Path testParserJJ = Paths.get(FileOperations.GENERATED_FILES_PATH + "/TestParser.jj");
+
+            execCmd(FileOperations.GENERATED_FILES_PATH, "java -cp " + javaCC + " jjtree " + testParserJJT);
+            execCmd(FileOperations.GENERATED_FILES_PATH, "java -cp " + javaCC + " javacc " + testParserJJ);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void execCmd(String cmd) throws Exception {
+    public static void execCmd(Path cd, String cmd) throws Exception {
         Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(cmd);
+        Process proc = rt.exec(cmd, null, new File(cd.toString()));
         proc.waitFor();
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));

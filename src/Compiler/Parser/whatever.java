@@ -1,9 +1,14 @@
-/*public class whatever {
+package Compiler.Parser;
+
+import Compiler.Parser.GeneratedFiles.Node;
+import Compiler.Parser.GeneratedFiles.SimpleNode;
+
+public class whatever {
     private static int suffix;
 
 
     public static String createDotOutput(Node root) {
-        while (reduceTree(root));
+        //while (reduceTree(root));
         suffix = 0;
 
         return "diGraph {\n"
@@ -11,7 +16,7 @@
                 + "}";
     }
 
-    private static boolean reduceTree(Node root) {
+/*    private static boolean reduceTree(Node root) {
         boolean changed = false;
 
         for (int i = 0; i < root.jjtGetNumChildren(); i++) {
@@ -38,7 +43,7 @@
         }
 
         return changed;
-    }
+    }*/
 
     private static String printTree(Node root) {
         StringBuilder sb = new StringBuilder();
@@ -79,4 +84,4 @@
         sb.append("\n");
     }
 
-}*/
+}

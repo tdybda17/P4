@@ -13,7 +13,9 @@ import java.util.stream.Stream;
 
 public class FileOperations {
     public static final Path PROJECT_DIRECTORY = Paths.get(System.getProperty("user.dir"));
+    public static final Path SRC_DIRECTORY = Paths.get(System.getProperty("user.dir") + "/src");
     public static final Path PARSER_DIR_PATH = Paths.get(System.getProperty("user.dir") + "/src/Compiler/Parser");
+    public static final Path GENERATED_FILES_PATH = Paths.get(System.getProperty("user.dir") + "/src/Compiler/Parser/GeneratedFiles");
 
     public static List<Path> getPathsInDirectory(final Path dirPath) throws IOException {
         List<Path> filePaths = new ArrayList<>();

@@ -5,38 +5,49 @@
 
 options
 {
-    JJTREE_OUTPUT_DIRECTORY = "./src";
+    //  JJTREE_OUTPUT_DIRECTORY = "./../..";
   //LOOKAHEAD=3;
   //FORCE_LA_CHECK=true; skal måske indkommenteres?
-  //NODE_DEFAULT_VOID = true; 
+  //NODE_DEFAULT_VOID = true;
+  STATIC = false;
 }
 
-PARSER_BEGIN(testParser)
+PARSER_BEGIN(TestParser)
 
-import java.io.BufferedReader;
+package Compiler.Parser.GeneratedFiles;
+
+import Compiler.Parser.whatever;import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-public class testParser
-{
-  public static void main(String[] args) throws ParseException {
-          try {
-                      File file = new File("test");
+public class TestParser {
+    public static void main(String[] args) {
+        try {
+            parseTextFile("src/Compiler/Parser/test");
 
-                      BufferedReader reader = new BufferedReader(new FileReader(file));
-                      testParser parser = new testParser(reader);
-                      SimpleNode root = one_line();
-                      root.dump("");
-
-                  } catch (Exception e) {
-                      System.out.println(e.getMessage());
-                  }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
+
+    public static void parseTextFile(String path){
+        try {
+            File file = new File(path);
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            TestParser parser = new TestParser(reader);
+            SimpleNode root = parser.one_line();
+            //root.dump("");
+            System.out.println(whatever.createDotOutput(root));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+  }
 }
   
 
 
-PARSER_END(testParser)
+PARSER_END(TestParser)
 
 SKIP :
 {
