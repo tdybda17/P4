@@ -1,11 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.SymbolList;
 
 import Compiler.SymbolTable.Table.Symbol.Symbol;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class SymbolList {
 

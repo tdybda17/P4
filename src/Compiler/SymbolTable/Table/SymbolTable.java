@@ -38,6 +38,7 @@ public class SymbolTable implements ISymbolTable {
     @Override
     public Symbol retrieveSymbol(String name) {
         SymbolList symbolList = hashTable.get(name);
+
         return null;
     }
 
