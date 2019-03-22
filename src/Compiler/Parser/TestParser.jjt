@@ -154,43 +154,73 @@ SimpleNode start() #START :
 void prog() #PROG(>1) :
 {}
 {
-    skip_to_first_dcl() vertex_edge_dcl() (< NEWLINE >)* main() (< NEWLINE >)* funcs_dcl() skip_to_EOF() < EOF >
+    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() skip_to_EOF() < EOF >
 }
 
-void vertex_edge_dcl() #VERTEX_EDGE_DCL(>1) :
+void newlines_plus() #void :
 {}
 {
-    graph_element_types() < DCL > < NEWLINE > attribute_dcl() < END > | empty()
+    <NEWLINE> newlines_star()
 }
 
-void attribute_dcl() #ATTRIBUTE_DCL :
+void newlines_star() #void :
 {}
 {
-    simple_types() identifier() initialization() < NEWLINE > attribute_dcl() | object_types() identifier() < NEWLINE > attribute_dcl() | empty()
+    <NEWLINE> newlines_star() | empty()
 }
 
-void main() #void :
+void vertex_edge_attributes() #void :
 {}
 {
-    <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() < END >
+    vertex_attributes() | edge_attributes() | newlines_star()
 }
 
-void block() #BLOCK(>1) :
+void vertex_attributes() #VERTEX_ATTRIBUTES :
 {}
 {
-    block_content() < NEWLINE > block() | empty()
+    vertex_attr_dcl() newlines_star() vertex_attr_tail()
 }
 
-void block_content() #void :
+void vertex_attr_dcl() #void :
 {}
 {
-    dcl() | stmt() | empty()
+    <VERTEX> <DCL> <NEWLINE> attribute_dcl() <END>
 }
 
-void dcl() #DCL :
+void vertex_attr_tail() #void :
 {}
 {
-    < CREATE > adt() < END > | simple_types() identifier() initialization()
+    edge_attr_dcl() newlines_star() | empty()
+}
+
+void edge_attributes() #EDGE_ATTRIBUTES :
+{}
+{
+    edge_attr_dcl() newlines_star() edge_attr_tail()
+}
+
+void edge_attr_dcl() #void :
+{}
+{
+    <EDGE> <DCL> <NEWLINE> attribute_dcl() <END>
+}
+
+void edge_attr_tail() #void :
+{}
+{
+    vertex_attr_dcl() newlines_star() | empty()
+}
+
+void attribute_dcl() #ATTRIBUTE_DCL(>1) :
+{}
+{
+    (simple_types() identifier() initialization() < NEWLINE >) #ASSIGN  attribute_dcl() | (object_types() identifier() < NEWLINE >) #OBJECT_TYPE attribute_dcl() | empty()
+}
+
+void simple_types() #SIMPLE_TYPES :
+{Token t;}
+{
+    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;}
 }
 
 void identifier() #IDENTIFIER :
@@ -199,73 +229,31 @@ void identifier() #IDENTIFIER :
     t = < IDENTIFIER > {jjtThis.value = t.image;}
 }
 
-void initialization() #INITIALIZATION :
+void initialization() #void :
+{}
+{
+    < ASSIGN > expr() | empty()
+}
+
+void object_types() #OBJECT_TYPES :
+{}
+{
+    < GRAPH_TYPE > | < COLLECTION_TYPE > | graph_element_types()
+}
+
+Token graph_element_types() #void :
 {Token t;}
 {
-    t = < ASSIGN > {jjtThis.value = t.image;} expr() | empty()
+    t = < VERTEX > {return t;} | t = < EDGE > {return t;}
 }
 
-void adt() #ADT :
-{}
-{
-    graph_type() | collection_type()
-}
-
-void graph_type() #GRAPH_TYPE :
-{}
-{
-    < GRAPH_TYPE > identifier() graph_dcl()
-}
-
-void graph_dcl() #GRAPH_DCL :
-{}
-{
-    < ASSIGN > member_function_call() | < NEWLINE > graph_elements() | empty()
-}
-
-void graph_elements() #GRAPH_ELEMENTS :
-{}
-{
-    graph_vertex_dcl() < NEWLINE > graph_elements() | empty()
-}
-
-void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
-{}
-{
-    identifier() < CONNECTION > graph_vertex_dcl1()
-}
-
-void graph_vertex_dcl1() #GRAPH_VERTEX_DCL1 :
-{}
-{
-    < LCURLY > vertex_list() < RCURLY > | <IDENTIFIER > weight()
-}
-
-void vertex_list() #VERTEX_LIST :
-{}
-{
-    identifier() weight() vertex_list_continuous()
-}
-
-void vertex_list_continuous() #VERTEX_LIST_CONTINUOUS :
-{}
-{
-    < COMMA > vertex_list() | empty()
-}
-
-void weight() #WEIGHT :
-{}
-{
-    < LHARD > arith_expr() < RHARD > | empty()
-}
-
-void expr() #EXPR(>1) :
+void expr() #OR_EXPR(>1) :
 {}
 {
     and_expr() A()
 }
 
-void A() #A(>1) :
+void A() #void :
 {}
 {
     < OR > and_expr() A() | empty()
@@ -277,58 +265,58 @@ void and_expr() #AND_EXPR(>1) :
     equal_expr() B()
 }
 
-void B() #B(>1) :
+void B() #void :
 {}
 {
     < AND > equal_expr() B() | empty()
 }
 
 void equal_expr() #EQUAL_EXPR(>1) :
-{}
+{Token t;}
 {
-    rel_expr() equal_expr1()
+    rel_expr() t = equal_expr1() {jjtThis.value = t.image;}
 }
 
-void equal_expr1() #EQUAL_EXPR1(>0) :
-{}
+Token equal_expr1() #void :
+{Token t;}
 {
-    < EQUALITY_OP > rel_expr() | empty()
+    t = < EQUALITY_OP > rel_expr() {return t;} | empty() {return new Token();}
 }
 
 void rel_expr() #REL_EXPR(>1) :
-{}
-{
-    arith_expr() rel_expr1()
-}
-
-void rel_expr1() #REL_EXPR1(>0) :
 {Token t;}
 {
-  t = < RELATIONAL_OP > {jjtThis.value = t.image;} arith_expr() | empty()
+    arith_expr() t = rel_expr1() {jjtThis.value = t.image;}
 }
 
-void arith_expr() #ARITH_EXPR(>1) :
-{}
-{
-  term() C()
-}
-
-void C() #void :
-{}
-{
-  < ADD_SUB > term() C() | empty()
-}
-
-void term() #TERM(>1) :
-{}
-{
-    neg_expr() D()
-}
-
-void D() #D(>1) :
+Token rel_expr1() #void :
 {Token t;}
 {
-    t = < MUL_DIV > {jjtThis.value = t.image;} atomic_expr() D() | empty()
+  t = < RELATIONAL_OP > arith_expr() {return t;} | empty() {return new Token();}
+}
+
+void arith_expr() #ADD_SUB(>1) :
+{Token t;}
+{
+  term() t = C() {jjtThis.value = t.image;}
+}
+
+Token C() #void :
+{Token t;}
+{
+  t = < ADD_SUB > term() C() {return t;} | empty() {return new Token();}
+}
+
+void term() #MUL_DIV(>1) :
+{Token t;}
+{
+    neg_expr() t = D() {jjtThis.value = t.image;}
+}
+
+Token D() #void :
+{Token t;}
+{
+    t = < MUL_DIV > atomic_expr() D() {return t;} | empty() {return new Token();}
 }
 
 void neg_expr() #void :
@@ -340,7 +328,7 @@ void neg_expr() #void :
 void atomic_expr() #void :
 {}
 {
-    < LPAREN > expr() #PARENTHESIZED_EXPR < RPAREN > | value()
+    < LPAREN > expr() < RPAREN > | value()
 }
 
 void value() #VALUE :
@@ -367,7 +355,6 @@ void continuous() #CONTINUOUS :
     < DOT > member_function_call() | empty()
 }
 
-
 void actual_parameters() #ACTUAL_PARAMETERS :
 {}
 {
@@ -386,102 +373,94 @@ void actual_parameter_list1() #ACTUAL_PARAMETER_LIST1 :
     < COMMA > actual_parameter_list() | empty()
 }
 
-void simple_types() #SIMPLE_TYPES :
-{Token t;}
-{
-    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;}
-}
-
-
-void collection_type() #COLLECTION_TYPE :
+void main() #void :
 {}
 {
-    < COLLECTION_TYPE > identifier() collection_dcl()
+    <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() < END >
 }
 
-void collection_dcl() #COLLECTION_DCL :
+void block() #BLOCK(>1) :
 {}
 {
-   < ASSIGN > member_function_call() | < NEWLINE > element_list() | empty()
+    block_content() < NEWLINE > block() | empty()
 }
 
-void element_list() #ELEMENT_LIST :
+void block_content() #void :
 {}
 {
-    value() < NEWLINE > element_list_continuous()
+    dcl() | stmt() | empty()
 }
 
-void element_list_continuous() #ELEMENT_LIST1 :
+void dcl() #void :
 {}
 {
-    element_list() | empty()
+    (< CREATE > adt() < END >) #CREATE | (simple_types() identifier() initialization()) #ASSIGN
 }
 
-
-void funcs_dcl() #FUNCS_DCL(>1) :
+void adt() #void :
 {}
 {
-    func_dcl() < NEWLINE > funcs_dcl() | empty()
+    graph_adt() | collection_adt()
 }
 
-void func_dcl() #FUNC_DCL :
+void graph_adt() #void :
 {}
 {
-    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() < END >
+    < GRAPH_TYPE > identifier() graph_dcl() #GRAPH_ADT
 }
 
-void ret() #RET :
+void graph_dcl() #void :
 {}
 {
-    type() | empty()
+    (< ASSIGN > member_function_call()) #ASSIGN | (< NEWLINE > graph_vertex_dcl() <NEWLINE> graph_elements()) #GRAPH_DCL
 }
 
-void formal_parameters() #FORMAL_PARAMETERS :
+void graph_elements() #void :
 {}
 {
-    formal_parameter_list() | empty()
+    graph_vertex_dcl() < NEWLINE > graph_elements() | empty()
 }
 
-void formal_parameter_list() #FORMAL_PARAMETER_LIST :
+void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
 {}
 {
-    formal_parameter() formal_parameter_list1()
+    identifier() edge_dcl()
 }
 
-void formal_parameter_list1() #FORMAL_PARAMETER_LIST1 :
+void edge_dcl() #EDGE_DCL :
 {}
 {
-    < COMMA > formal_parameter_list() | empty()
+    < CONNECTION > graph_vertex_dcl1() | empty()
 }
 
-void formal_parameter() #FORMAL_PARAMETER :
+void graph_vertex_dcl1() #GRAPH_VERTEX_DCL1 :
 {}
 {
-    type() identifier()
+    < LCURLY > vertex_list() < RCURLY > | <IDENTIFIER > weight()
 }
 
-void type() #TYPE :
+void vertex_list() #VERTEX_LIST :
 {}
 {
-    object_types() |  simple_types()
+    identifier() weight() vertex_list_continuous()
 }
 
-void object_types() #OBJECT_TYPES :
+void vertex_list_continuous() #VERTEX_LIST_CONTINUOUS :
 {}
 {
-    < GRAPH_TYPE > | < COLLECTION_TYPE > | graph_element_types()
+    < COMMA > vertex_list() | empty()
 }
 
-void graph_element_types() #GRAPH_ELEMENT_TYPES :
-{Token t;}
+void weight() #WEIGHT :
+{}
 {
-    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;}
+    < LHARD > arith_expr() < RHARD > | empty()
 }
 
 void stmt() #STMT(>1) :
 {}
 {
-    member_function_call() assign_or_func() | loop() | if_statement() | return_stmt()
+    member_function_call() assign_or_func() | loop() | if_statement() | return_statement()
 }
 
 void assign_or_func() #ASSIGN_OR_FUNC :
@@ -489,19 +468,6 @@ void assign_or_func() #ASSIGN_OR_FUNC :
 {
     assignment() | empty()
 }
-
-void return_stmt() #RETURN_STMT :
-{}
-{
-    < RETURN > return_expr()
-}
-
-void return_expr() #RETURN_EXPR :
-{}
-{
-    expr() | < CREATE > adt() < END >
-}
-
 
 void assignment() #ASSIGNMENT :
 {Token t;}
@@ -549,6 +515,90 @@ void else_statement() #ELSE_STATEMENT(>0) :
 {}
 {
     < ELSE > block() < END > | < END >
+}
+
+void return_statement() #RETURN_STMT :
+{}
+{
+    < RETURN > return_expr()
+}
+
+void return_expr() #RETURN_EXPR :
+{}
+{
+    expr() | < CREATE > adt() < END >
+}
+
+void collection_adt() #COLLECTION_ADT :
+{}
+{
+    < COLLECTION_TYPE > identifier() collection_dcl()
+}
+
+void collection_dcl() #COLLECTION_DCL :
+{}
+{
+   < ASSIGN > member_function_call() | < NEWLINE > element_list() | empty()
+}
+
+void element_list() #ELEMENT_LIST :
+{}
+{
+    value() < NEWLINE > element_list_continuous()
+}
+
+void element_list_continuous() #ELEMENT_LIST1 :
+{}
+{
+    element_list() | empty()
+}
+
+void funcs_dcl() #FUNCS_DCL(>1) :
+{}
+{
+    func_dcl() newlines_plus() funcs_dcl() | empty()
+}
+
+void func_dcl() #FUNC_DCL :
+{}
+{
+    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() < END >
+}
+
+void ret() #RET :
+{}
+{
+    type() | empty()
+}
+
+void formal_parameters() #FORMAL_PARAMETERS :
+{}
+{
+    formal_parameter_list() | empty()
+}
+
+void formal_parameter_list() #FORMAL_PARAMETER_LIST :
+{}
+{
+    formal_parameter() formal_parameter_list1()
+}
+
+void formal_parameter_list1() #FORMAL_PARAMETER_LIST1 :
+{}
+{
+    < COMMA > formal_parameter_list() | empty()
+}
+
+void formal_parameter() #FORMAL_PARAMETER :
+{}
+{
+    type() identifier()
+}
+
+void type() #TYPE :
+{}
+{
+    object_types() | simple_types()
 }
 
 void empty() : {}

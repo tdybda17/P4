@@ -6,104 +6,83 @@ public interface TestParserTreeConstants
   public int JJTVOID = 0;
   public int JJTSTART = 1;
   public int JJTPROG = 2;
-  public int JJTVERTEX_EDGE_DCL = 3;
-  public int JJTATTRIBUTE_DCL = 4;
-  public int JJTBLOCK = 5;
-  public int JJTDCL = 6;
-  public int JJTIDENTIFIER = 7;
-  public int JJTINITIALIZATION = 8;
-  public int JJTADT = 9;
-  public int JJTGRAPH_TYPE = 10;
-  public int JJTGRAPH_DCL = 11;
-  public int JJTGRAPH_ELEMENTS = 12;
-  public int JJTGRAPH_VERTEX_DCL = 13;
-  public int JJTGRAPH_VERTEX_DCL1 = 14;
-  public int JJTVERTEX_LIST = 15;
-  public int JJTVERTEX_LIST_CONTINUOUS = 16;
-  public int JJTWEIGHT = 17;
-  public int JJTEXPR = 18;
-  public int JJTA = 19;
-  public int JJTAND_EXPR = 20;
-  public int JJTB = 21;
-  public int JJTEQUAL_EXPR = 22;
-  public int JJTEQUAL_EXPR1 = 23;
-  public int JJTREL_EXPR = 24;
-  public int JJTREL_EXPR1 = 25;
-  public int JJTARITH_EXPR = 26;
-  public int JJTADD_SUB = 27;
-  public int JJTTERM = 28;
-  public int JJTD = 29;
-  public int JJTNEG_EXPR = 30;
-  public int JJTPARENTHESIZED_EXPR = 31;
-  public int JJTVALUE = 32;
-  public int JJTMEMBER_FUNCTION_CALL = 33;
-  public int JJTMEMBER_FUNCTION_CALL_TAIL = 34;
-  public int JJTCONTINUOUS = 35;
-  public int JJTACTUAL_PARAMETERS = 36;
-  public int JJTACTUAL_PARAMETER_LIST = 37;
-  public int JJTACTUAL_PARAMETER_LIST1 = 38;
-  public int JJTSIMPLE_TYPES = 39;
-  public int JJTCOLLECTION_TYPE = 40;
-  public int JJTCOLLECTION_DCL = 41;
-  public int JJTELEMENT_LIST = 42;
-  public int JJTELEMENT_LIST1 = 43;
-  public int JJTFUNCS_DCL = 44;
-  public int JJTFUNC_DCL = 45;
-  public int JJTRET = 46;
-  public int JJTFORMAL_PARAMETERS = 47;
-  public int JJTFORMAL_PARAMETER_LIST = 48;
-  public int JJTFORMAL_PARAMETER_LIST1 = 49;
-  public int JJTFORMAL_PARAMETER = 50;
-  public int JJTTYPE = 51;
-  public int JJTOBJECT_TYPES = 52;
-  public int JJTGRAPH_ELEMENT_TYPES = 53;
-  public int JJTSTMT = 54;
-  public int JJTASSIGN_OR_FUNC = 55;
-  public int JJTRETURN_STMT = 56;
-  public int JJTRETURN_EXPR = 57;
-  public int JJTASSIGNMENT = 58;
-  public int JJTLOOP = 59;
-  public int JJTWHILE_STATEMENT = 60;
-  public int JJTFOR_STATEMENT = 61;
-  public int JJTINTEGER_VALUE = 62;
-  public int JJTFOREACH_STATEMENT = 63;
-  public int JJTIF_STATEMENT = 64;
-  public int JJTELSE_STATEMENT = 65;
+  public int JJTVERTEX_ATTRIBUTES = 3;
+  public int JJTEDGE_ATTRIBUTES = 4;
+  public int JJTATTRIBUTE_DCL = 5;
+  public int JJTASSIGN = 6;
+  public int JJTOBJECT_TYPE = 7;
+  public int JJTSIMPLE_TYPES = 8;
+  public int JJTIDENTIFIER = 9;
+  public int JJTOBJECT_TYPES = 10;
+  public int JJTOR_EXPR = 11;
+  public int JJTAND_EXPR = 12;
+  public int JJTEQUAL_EXPR = 13;
+  public int JJTREL_EXPR = 14;
+  public int JJTADD_SUB = 15;
+  public int JJTMUL_DIV = 16;
+  public int JJTNEG_EXPR = 17;
+  public int JJTVALUE = 18;
+  public int JJTMEMBER_FUNCTION_CALL = 19;
+  public int JJTMEMBER_FUNCTION_CALL_TAIL = 20;
+  public int JJTCONTINUOUS = 21;
+  public int JJTACTUAL_PARAMETERS = 22;
+  public int JJTACTUAL_PARAMETER_LIST = 23;
+  public int JJTACTUAL_PARAMETER_LIST1 = 24;
+  public int JJTBLOCK = 25;
+  public int JJTCREATE = 26;
+  public int JJTGRAPH_ADT = 27;
+  public int JJTGRAPH_DCL = 28;
+  public int JJTGRAPH_VERTEX_DCL = 29;
+  public int JJTEDGE_DCL = 30;
+  public int JJTGRAPH_VERTEX_DCL1 = 31;
+  public int JJTVERTEX_LIST = 32;
+  public int JJTVERTEX_LIST_CONTINUOUS = 33;
+  public int JJTWEIGHT = 34;
+  public int JJTSTMT = 35;
+  public int JJTASSIGN_OR_FUNC = 36;
+  public int JJTASSIGNMENT = 37;
+  public int JJTLOOP = 38;
+  public int JJTWHILE_STATEMENT = 39;
+  public int JJTFOR_STATEMENT = 40;
+  public int JJTINTEGER_VALUE = 41;
+  public int JJTFOREACH_STATEMENT = 42;
+  public int JJTIF_STATEMENT = 43;
+  public int JJTELSE_STATEMENT = 44;
+  public int JJTRETURN_STMT = 45;
+  public int JJTRETURN_EXPR = 46;
+  public int JJTCOLLECTION_ADT = 47;
+  public int JJTCOLLECTION_DCL = 48;
+  public int JJTELEMENT_LIST = 49;
+  public int JJTELEMENT_LIST1 = 50;
+  public int JJTFUNCS_DCL = 51;
+  public int JJTFUNC_DCL = 52;
+  public int JJTRET = 53;
+  public int JJTFORMAL_PARAMETERS = 54;
+  public int JJTFORMAL_PARAMETER_LIST = 55;
+  public int JJTFORMAL_PARAMETER_LIST1 = 56;
+  public int JJTFORMAL_PARAMETER = 57;
+  public int JJTTYPE = 58;
 
 
   public String[] jjtNodeName = {
     "void",
     "START",
     "PROG",
-    "VERTEX_EDGE_DCL",
+    "VERTEX_ATTRIBUTES",
+    "EDGE_ATTRIBUTES",
     "ATTRIBUTE_DCL",
-    "BLOCK",
-    "DCL",
+    "ASSIGN",
+    "OBJECT_TYPE",
+    "SIMPLE_TYPES",
     "IDENTIFIER",
-    "INITIALIZATION",
-    "ADT",
-    "GRAPH_TYPE",
-    "GRAPH_DCL",
-    "GRAPH_ELEMENTS",
-    "GRAPH_VERTEX_DCL",
-    "GRAPH_VERTEX_DCL1",
-    "VERTEX_LIST",
-    "VERTEX_LIST_CONTINUOUS",
-    "WEIGHT",
-    "EXPR",
-    "A",
+    "OBJECT_TYPES",
+    "OR_EXPR",
     "AND_EXPR",
-    "B",
     "EQUAL_EXPR",
-    "EQUAL_EXPR1",
     "REL_EXPR",
-    "REL_EXPR1",
-    "ARITH_EXPR",
     "ADD_SUB",
-    "TERM",
-    "D",
+    "MUL_DIV",
     "NEG_EXPR",
-    "PARENTHESIZED_EXPR",
     "VALUE",
     "MEMBER_FUNCTION_CALL",
     "MEMBER_FUNCTION_CALL_TAIL",
@@ -111,8 +90,29 @@ public interface TestParserTreeConstants
     "ACTUAL_PARAMETERS",
     "ACTUAL_PARAMETER_LIST",
     "ACTUAL_PARAMETER_LIST1",
-    "SIMPLE_TYPES",
-    "COLLECTION_TYPE",
+    "BLOCK",
+    "CREATE",
+    "GRAPH_ADT",
+    "GRAPH_DCL",
+    "GRAPH_VERTEX_DCL",
+    "EDGE_DCL",
+    "GRAPH_VERTEX_DCL1",
+    "VERTEX_LIST",
+    "VERTEX_LIST_CONTINUOUS",
+    "WEIGHT",
+    "STMT",
+    "ASSIGN_OR_FUNC",
+    "ASSIGNMENT",
+    "LOOP",
+    "WHILE_STATEMENT",
+    "FOR_STATEMENT",
+    "INTEGER_VALUE",
+    "FOREACH_STATEMENT",
+    "IF_STATEMENT",
+    "ELSE_STATEMENT",
+    "RETURN_STMT",
+    "RETURN_EXPR",
+    "COLLECTION_ADT",
     "COLLECTION_DCL",
     "ELEMENT_LIST",
     "ELEMENT_LIST1",
@@ -124,20 +124,6 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER_LIST1",
     "FORMAL_PARAMETER",
     "TYPE",
-    "OBJECT_TYPES",
-    "GRAPH_ELEMENT_TYPES",
-    "STMT",
-    "ASSIGN_OR_FUNC",
-    "RETURN_STMT",
-    "RETURN_EXPR",
-    "ASSIGNMENT",
-    "LOOP",
-    "WHILE_STATEMENT",
-    "FOR_STATEMENT",
-    "INTEGER_VALUE",
-    "FOREACH_STATEMENT",
-    "IF_STATEMENT",
-    "ELSE_STATEMENT",
   };
 }
-/* JavaCC - OriginalChecksum=589b67f86b142ce6bac5f177af18b246 (do not edit this line) */
+/* JavaCC - OriginalChecksum=aae2009091c774229e6f47ac8326b010 (do not edit this line) */
