@@ -6,7 +6,7 @@ public interface ISymbolTable {
 
     void openScope();
     void closeScope();
-    void enterSymbol(Symbol symbol);
+    void enterSymbol(String name, Object type);
     Symbol retrieveSymbol(String name);
     boolean declaredLocally(String name);
 

@@ -1,4 +1,4 @@
-package Compiler.Exceptions.ScopeError;
+package Compiler.Exceptions.SymbolTable.ScopeError;
 
 public class ScopeError extends Error {
 
