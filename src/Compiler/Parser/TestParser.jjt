@@ -1,0 +1,625 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+
+
+options
+{
+    //  JJTREE_OUTPUT_DIRECTORY = "./../..";
+  //LOOKAHEAD=3;
+  //FORCE_LA_CHECK=true; skal måske indkommenteres?
+  NODE_DEFAULT_VOID = true;
+  STATIC = false;
+}
+
+PARSER_BEGIN(TestParser)
+
+package Compiler.Parser.GeneratedFiles;
+
+import Compiler.Parser.whatever;import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+public class TestParser {
+    public static void main(String[] args) {
+        try {
+            parseTextFile("src/Compiler/Parser/test");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void parseTextFile(String path){
+        try {
+            File file = new File(path);
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            TestParser parser = new TestParser(reader);
+            Node root = parser.start();
+            //root.dump("");
+            System.out.println(whatever.createDotOutput(root));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+  }
+}
+  
+
+
+PARSER_END(TestParser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| < "//" (~["\n"])* > //This is for skipping a comment
+}
+
+TOKEN : /* OPERATORS */
+{
+  < CREATE : "create" >
+| < END : "end" >
+| < BLANK : " " | "\t" >
+| < NEWLINE : "\n" >
+| < COMMA : "," >
+| < DOT : "." >
+| < MAIN : "main" >
+| < ENDOFFILE : "<EOF>" >
+| < ASSIGN : "=" >
+| < AND : "&" >
+| < OR : "|" >
+| < NEG : "!" >
+| < FUNCTION : "function" >
+| < WHILE : "while" >
+| < FOR : "for" >
+| < FOREACH : "foreach" >
+| < IN : "in" >
+| < IF : "if" >
+| < THEN : "then" >
+| < ELSE : "else" >
+| < LCURLY  : "{" >
+| < RCURLY : "}" >
+| < LHARD : "[" >
+| < RHARD : "]" >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
+| < CONNECTION : "--" >
+| < VERTEX : "Vertex" >
+| < EDGE : "Edge" >
+| < INT : "int" >
+| < REAL : "real" >
+| < BOOLEAN : "boolean" >
+| < BOOL_VAL : "true" | "false" >
+| < DO : "do" >
+| < TO : "to" >
+| < RETURN : "return" >
+| < DCL : "dcl" >
+}
+
+TOKEN :
+{
+  < GRAPH_TYPE : (< GRAPH >) >
+| < #GRAPH : "Graph" | "WeightedGraph" | "DiGraph" | "WeightedDiGraph" >
+| < CONSTANTS : (< CONSTANT >) >
+| < #CONSTANT : "INF" | "NEG_INF" | "Ø" >
+| < ADD_SUB : (< addsub >) >
+| < #addsub : "+" | "-" >
+| < MUL_DIV : (< muldiv >) >
+| < #muldiv : "*" | "/" >
+| < EQUALITY_OP : (< equality_ope >) >
+| < #equality_ope : "==" | "!=" >
+| < RELATIONAL_OP : (< relational_ope >) >
+| < #relational_ope : "<" | ">" | "<=" | ">=" >
+| < COLLECTION_TYPE : (< collection >) >
+| < #collection : "Array" | "List" | "Set" | "Queue" | "PriorityQueue" | "Stack" >
+| < INUM_VAL : (< DIGIT >) >
+| < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
+| < FNUM_VAL : (< DIGITF >) >
+| < #DIGITF : ("0" | ["1"-"9"](["0"-"9"])*)"."(["0"-"9"])+ >
+| < IDENTIFIER : (< ID >) >
+| < #ID : ["a"-"z", "A"-"Z"](["a"-"z", "A"-"Z"] | ["0"-"9"])* >
+
+
+}
+
+JAVACODE
+void skip_to_first_dcl() { 
+      Token tok;
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind != NEWLINE ) break;
+        tok = getNextToken();
+      }
+}
+
+JAVACODE
+void skip_to_EOF() { 
+      Token tok;
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind == EOF ) break;
+        tok = getNextToken();
+      }
+}
+
+
+SimpleNode start() #START :
+{}
+{
+  prog() {return jjtThis;}
+}
+
+void prog() #PROG(>1) :
+{}
+{
+    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() skip_to_EOF() < EOF >
+}
+
+void newlines_plus() #void :
+{}
+{
+    <NEWLINE> newlines_star()
+}
+
+void newlines_star() #void :
+{}
+{
+    <NEWLINE> newlines_star() | empty()
+}
+
+void vertex_edge_attributes() #void :
+{}
+{
+    vertex_attributes() | edge_attributes() | newlines_star()
+}
+
+void vertex_attributes() #VERTEX_ATTRIBUTES :
+{}
+{
+    vertex_attr_dcl() newlines_star() vertex_attr_tail()
+}
+
+void vertex_attr_dcl() #void :
+{}
+{
+    <VERTEX> <DCL> <NEWLINE> attribute_dcl() <END>
+}
+
+void vertex_attr_tail() #void :
+{}
+{
+    edge_attr_dcl() newlines_star() | empty()
+}
+
+void edge_attributes() #EDGE_ATTRIBUTES :
+{}
+{
+    edge_attr_dcl() newlines_star() edge_attr_tail()
+}
+
+void edge_attr_dcl() #void :
+{}
+{
+    <EDGE> <DCL> <NEWLINE> attribute_dcl() <END>
+}
+
+void edge_attr_tail() #void :
+{}
+{
+    vertex_attr_dcl() newlines_star() | empty()
+}
+
+void attribute_dcl() #ATTRIBUTE_DCL(>1) :
+{}
+{
+    (simple_types() identifier() initialization() < NEWLINE >) #ASSIGN  attribute_dcl() | (object_types() identifier() < NEWLINE >) #OBJECT_TYPE attribute_dcl() | empty()
+}
+
+void simple_types() #SIMPLE_TYPES :
+{Token t;}
+{
+    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;}
+}
+
+void identifier() #IDENTIFIER :
+{Token t;}
+{
+    t = < IDENTIFIER > {jjtThis.value = t.image;}
+}
+
+void initialization() #void :
+{}
+{
+    < ASSIGN > expr() | empty()
+}
+
+void object_types() #OBJECT_TYPES :
+{}
+{
+    graph_type() | collection_type() | graph_element_types()
+}
+
+void collection_type() #COLLECTION_TYPE :
+{Token t;}
+{
+    t = <COLLECTION_TYPE> {jjtThis.value = t.image;}
+}
+
+Token graph_element_types() #void :
+{Token t;}
+{
+    t = < VERTEX > {return t;} | t = < EDGE > {return t;}
+}
+
+void expr() #OR_EXPR(>1) :
+{}
+{
+    and_expr() A()
+}
+
+void A() #void :
+{}
+{
+    < OR > and_expr() A() | empty()
+}
+
+void and_expr() #AND_EXPR(>1) :
+{}
+{
+    equal_expr() B()
+}
+
+void B() #void :
+{}
+{
+    < AND > equal_expr() B() | empty()
+}
+
+void equal_expr() #EQUAL_EXPR(>1) :
+{Token t;}
+{
+    rel_expr() t = equal_expr1() {jjtThis.value = t.image;}
+}
+
+Token equal_expr1() #void :
+{Token t;}
+{
+    t = < EQUALITY_OP > rel_expr() {return t;} | empty() {return new Token();}
+}
+
+void rel_expr() #REL_EXPR(>1) :
+{Token t;}
+{
+    arith_expr() t = rel_expr1() {jjtThis.value = t.image;}
+}
+
+Token rel_expr1() #void :
+{Token t;}
+{
+  t = < RELATIONAL_OP > arith_expr() {return t;} | empty() {return new Token();}
+}
+
+void arith_expr() #ADD_SUB(>1) :
+{Token t;}
+{
+  term() t = C() {jjtThis.value = t.image;}
+}
+
+Token C() #void :
+{Token t;}
+{
+  t = < ADD_SUB > term() C() {return t;} | empty() {return new Token();}
+}
+
+void term() #MUL_DIV(>1) :
+{Token t;}
+{
+    neg_expr() t = D() {jjtThis.value = t.image;}
+}
+
+Token D() #void :
+{Token t;}
+{
+    t = < MUL_DIV > atomic_expr() D() {return t;} | empty() {return new Token();}
+}
+
+void neg_expr() #void :
+{Token t;}
+{
+   < NEG > atomic_expr() #NEG_EXPR | atomic_expr()
+}
+
+void atomic_expr() #void :
+{}
+{
+    < LPAREN > expr() < RPAREN > | value()
+}
+
+void value() #VALUE(jjtree.nodeArity() == 0) :
+{Token t;}
+{
+    member_function_call() #MEMBER_FUNCTION_CALL(>1) | t = <INUM_VAL> {jjtThis.value = t.image;} | t = <FNUM_VAL> {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = <CONSTANTS> {jjtThis.value = t.image;}
+}
+
+void member_function_call() #void :
+{}
+{
+    identifier() member_function_call_tail()
+}
+
+void member_function_call_tail() #void :
+{}
+{
+    < DOT > member_function_call() | < LPAREN > actual_parameters() < RPAREN > continuous() | empty()
+}
+
+void continuous() #void :
+{}
+{
+    < DOT > member_function_call() | empty()
+}
+
+void actual_parameters() #ACTUAL_PARAMETERS :
+{}
+{
+    actual_parameter_list() | empty()
+}
+
+void actual_parameter_list() #void :
+{}
+{
+    expr() actual_parameter_list1()
+}
+
+void actual_parameter_list1() #void :
+{}
+{
+    < COMMA > actual_parameter_list() | empty()
+}
+
+void main() #void :
+{}
+{
+    <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() #BLOCK < END >
+}
+
+void block() #void :
+{}
+{
+    block_content() < NEWLINE > block() | empty()
+}
+
+void block_content() #void :
+{}
+{
+    dcl() | stmt() | empty()
+}
+
+void dcl() #void :
+{}
+{
+    (< CREATE > adt() < END >) #CREATE | (simple_types() identifier() initialization()) #ASSIGN
+}
+
+void adt() #void :
+{}
+{
+    graph_adt() | collection_adt()
+}
+
+void graph_adt() #void :
+{}
+{
+    graph_type() identifier() graph_dcl()
+}
+
+void graph_type() #GRAPH_TYPE :
+{Token t;}
+{
+    t = <GRAPH_TYPE> {jjtThis.value = t.image;}
+}
+
+void graph_dcl() #void :
+{}
+{
+    (< ASSIGN > member_function_call()) #ASSIGN | (< NEWLINE > graph_vertex_dcl() <NEWLINE> graph_elements()) #GRAPH_DCL
+}
+
+void graph_elements() #void :
+{}
+{
+    graph_vertex_dcl() < NEWLINE > graph_elements() | empty()
+}
+
+void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
+{}
+{
+    identifier() edge_dcl()
+}
+
+void edge_dcl() #void :
+{}
+{
+    < CONNECTION > graph_vertex_dcl1() | empty()
+}
+
+void graph_vertex_dcl1() #void :
+{}
+{
+    < LCURLY > vertex_list() #VERTEX_LIST(>1) < RCURLY > | identifier() weight()
+}
+
+void vertex_list() #void :
+{}
+{
+    (identifier() weight()) #VERTEX vertex_list_continuous()
+}
+
+void vertex_list_continuous() #void :
+{}
+{
+    < COMMA > vertex_list() | empty()
+}
+
+void weight() #WEIGHT :
+{}
+{
+    < LHARD > arith_expr() < RHARD > | empty()
+}
+
+void stmt() #STMT(>1) :
+{boolean isAssign = false;}
+{
+    ((member_function_call() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNC_CALL(!isAssign) | loop() | if_statement() | return_statement()
+}
+
+boolean assign_or_func() #void :
+{}
+{
+    assignment() {return true;} | empty() {return false;}
+}
+
+void assignment() #void :
+{}
+{
+    < ASSIGN > expr()
+}
+
+void loop() #LOOP(>1) :
+{}
+{
+  while_statement() | for_statement() | foreach_statement()
+}
+
+void while_statement() #WHILE_STATEMENT :
+{}
+{
+    < WHILE > expr() < DO > < NEWLINE > block() #BLOCK < END >
+}
+
+void for_statement() #FOR_STATEMENT :
+{}
+{
+    < FOR > identifier() < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() #BLOCK < END >
+}
+
+void integer_value() #INTEGER_VALUE :
+{}
+{
+    member_function_call() | < INUM_VAL >
+}
+
+void foreach_statement() #FOREACH_STATEMENT :
+{}
+{
+    < FOREACH > identifier() < IN > member_function_call() < DO > < NEWLINE > block() #BLOCK < END >
+}
+
+void if_statement() #IF_STATEMENT :
+{}
+{
+    < IF > expr() < THEN > block() #BLOCK else_statement()
+}
+
+void else_statement() #ELSE_STATEMENT :
+{}
+{
+    < ELSE > block() #BLOCK < END > | < END >
+}
+
+void return_statement() #RETURN_STMT :
+{}
+{
+    < RETURN > return_expr()
+}
+
+void return_expr() #void :
+{}
+{
+    expr() | (< CREATE > adt() < END >) #CREATE
+}
+
+void collection_adt() #COLLECTION_ADT :
+{}
+{
+    collection_type() identifier() collection_dcl()
+}
+
+void collection_dcl() #COLLECTION_DCL :
+{}
+{
+   < ASSIGN > member_function_call() | < NEWLINE > element_list() #ELEMENT_LIST | empty()
+}
+
+void element_list() #void :
+{}
+{
+    value() < NEWLINE > element_list_continuous()
+}
+
+void element_list_continuous() #void :
+{}
+{
+    element_list() | empty()
+}
+
+void funcs_dcl() #FUNCS_DCL(>1) :
+{}
+{
+    func_dcl() newlines_plus() funcs_dcl() | empty()
+}
+
+void func_dcl() #FUNC_DCL :
+{}
+{
+    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() #BLOCK < END >
+}
+
+void ret() #void :
+{}
+{
+    type() | empty()
+}
+
+void formal_parameters() #void :
+{}
+{
+    formal_parameter_list() #FORMAL_PARAMETERS(>1) | empty()
+}
+
+void formal_parameter_list() #void :
+{}
+{
+    formal_parameter() formal_parameter_list1()
+}
+
+void formal_parameter_list1() #void :
+{}
+{
+    < COMMA > formal_parameter_list() | empty()
+}
+
+void formal_parameter() #FORMAL_PARAMETER :
+{}
+{
+    type() identifier()
+}
+
+void type() #void :
+{}
+{
+    object_types() | simple_types()
+}
+
+void empty() #void : {}
+{
+     {}
+} 
+
+
+
+
+
+
