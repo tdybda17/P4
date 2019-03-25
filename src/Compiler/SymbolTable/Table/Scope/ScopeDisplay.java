@@ -1,5 +1,6 @@
 package Compiler.SymbolTable.Table.Scope;
 
+import Compiler.Exceptions.SymbolTable.ScopeError.AddingToClosedScopeDisplayError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 
 public class ScopeDisplay {
 
+    private int currentDepth = 0;
     private Map<Integer, SymbolList> symbolMap;
 
     public ScopeDisplay() {
@@ -18,10 +20,15 @@ public class ScopeDisplay {
         return symbolMap.get(depth);
     }
 
-    public void add(final int depth, Symbol symbol) {
-        if(!symbolMap.containsKey(depth))
-            symbolMap.put(depth, new SymbolList());
-        symbolMap.get(depth).add(symbol);
+    public void open(final int depth) {
+        currentDepth++;
+        symbolMap.put(depth, new SymbolList());
+    }
+
+    public void add(Symbol symbol) {
+        if(currentDepth > 0)
+            symbolMap.get(this.currentDepth).add(symbol);
+        else throw new AddingToClosedScopeDisplayError();
     }
 
 }

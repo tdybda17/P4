@@ -1,6 +1,6 @@
 package Compiler.SymbolTable.Table.Symbol.SymbolList;
 
-import Compiler.Exceptions.ScopeError.NoSuchSymbolError;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

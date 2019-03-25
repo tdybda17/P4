@@ -21,8 +21,9 @@ class ScopeDisplayTest {
         var symbol1 = new Symbol("name", 1);
         var symbol2 = new Symbol("name", 1);
         var expectedList = new SymbolList(symbol1);
-        scopeDisplay.add(1, symbol1);
-        scopeDisplay.add(1, symbol2);
+        scopeDisplay.open(1);
+        scopeDisplay.add(symbol1);
+        scopeDisplay.add(symbol2);
         assertEquals(expectedList, scopeDisplay.get(1));
     }
 
@@ -31,8 +32,9 @@ class ScopeDisplayTest {
         var symbol1 = new Symbol("name", 1);
         var symbol2 = new Symbol("name2", 1);
         var expectedList = new SymbolList(symbol1, symbol2);
-        scopeDisplay.add(1, symbol1);
-        scopeDisplay.add(1, symbol2);
+        scopeDisplay.open(1);
+        scopeDisplay.add(symbol1);
+        scopeDisplay.add(symbol2);
         assertEquals(expectedList, scopeDisplay.get(1));
     }
 

@@ -1,5 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol;
 
+import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
+
 import java.util.Objects;
 
 public class Symbol implements Comparable<Symbol> {
@@ -7,7 +9,7 @@ public class Symbol implements Comparable<Symbol> {
     private String name;
     private Object type;
     private Object var;
-    private Object level;
+    private SymbolList symbolList;
     private int depth;
 
 
@@ -20,11 +22,16 @@ public class Symbol implements Comparable<Symbol> {
         this.depth = depth;
     }
 
-    public Symbol(String name, Object type, Object level, int depth) {
+    public Symbol(String name, Object type) {
         this.name = name;
         this.type = type;
-        this.level = level;
+    }
+
+    public Symbol(String name, Object type, int depth, SymbolList symbolList) {
+        this.name = name;
+        this.type = type;
         this.depth = depth;
+        this.symbolList = symbolList;
     }
 
     public String getName() {
@@ -33,6 +40,10 @@ public class Symbol implements Comparable<Symbol> {
 
     public int getDepth() {
         return depth;
+    }
+
+    public SymbolList getSymbolList() {
+        return symbolList;
     }
 
     @Override
