@@ -5,11 +5,11 @@
 
 options
 {
-    //  JJTREE_OUTPUT_DIRECTORY = "./../..";
-  //LOOKAHEAD=3;
-  //FORCE_LA_CHECK=true; skal måske indkommenteres?
   NODE_DEFAULT_VOID = true;
   STATIC = false;
+  VISITOR = true;
+  MULTI = true;
+  TRACK_TOKENS = true;
 }
 
 PARSER_BEGIN(TestParser)
@@ -22,12 +22,7 @@ import java.io.FileReader;
 
 public class TestParser {
     public static void main(String[] args) {
-        try {
-            parseTextFile("src/Compiler/Parser/test");
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        parseTextFile("src/Compiler/Parser/test");
     }
 
     public static void parseTextFile(String path){
@@ -40,7 +35,7 @@ public class TestParser {
             //root.dump("");
             System.out.println(whatever.createDotOutput(root));
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
   }
 }

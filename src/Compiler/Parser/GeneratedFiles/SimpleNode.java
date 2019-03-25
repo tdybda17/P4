@@ -20,6 +20,7 @@ class SimpleNode implements Node {
   protected int id;
   protected Object value;
   protected TestParser parser;
+  protected Token first, last;
 
   public SimpleNode(int i) {
     id = i;
@@ -31,9 +32,22 @@ class SimpleNode implements Node {
   }
 
   public void jjtOpen() {
+    //first = parser.getToken(1);	// new
   }
 
   public void jjtClose() {
+    //last = parser.getToken(0);	// new
+  }
+
+  public Token jjtGetFirstToken() { return first; } // new
+  public Token getLastToken() { return last; }   // new
+
+  public void jjtSetFirstToken(Token first) {
+    this.first = first; // new
+  }
+
+  public void jjtSetLastToken(Token last) {
+    this.last = last; // new
   }
 
   public void jjtSetParent(Node n) { parent = n; }
@@ -85,6 +99,22 @@ class SimpleNode implements Node {
         }
       }
     }
+  }
+
+  /** Accept the visitor. **/
+  @Override
+  public Object jjtAccept(TestParserVisitor visitor, Object data) {
+    return visitor.visit(this, data);
+  }
+
+  /** Accept the visitor. **/
+  public Object childrenAccept(TestParserVisitor visitor, Object data) {
+    if (children != null) {
+      for (int i = 0; i < children.length; ++i) {
+        children[i].jjtAccept(visitor, data);
+      }
+    }
+    return data;
   }
 
   public int getId() {
