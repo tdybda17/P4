@@ -3,7 +3,6 @@ package Compiler.SymbolTable.Table.Symbol;
 import java.util.Objects;
 
 public class Symbol implements Comparable<Symbol> {
-
     private String name;
     private Object type;
     private Object var;
