@@ -1,31 +1,49 @@
 package Compiler.SymbolTable.Table.Symbol;
 
-import Compiler.Exceptions.SymbolTableExceptions.NoValueSetForSymbol;
+import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
 import java.util.Objects;
 
 public class Symbol implements Comparable<Symbol> {
 
-    private int num; // TODO: firgure out how to handle this
     private String name;
-    private Object value;
+    private Object type;
+    private Object var;
+    private SymbolList symbolList;
+    private int depth;
+
 
     public Symbol(String name) {
         this.name = name;
     }
 
-    public Symbol(String name, Object value) {
+    public Symbol(String name, int depth) {
         this.name = name;
-        this.value = value;
+        this.depth = depth;
+    }
+
+    public Symbol(String name, Object type) {
+        this.name = name;
+        this.type = type;
+    }
+
+    public Symbol(String name, Object type, int depth, SymbolList symbolList) {
+        this.name = name;
+        this.type = type;
+        this.depth = depth;
+        this.symbolList = symbolList;
     }
 
     public String getName() {
         return name;
     }
 
-    public Object getValue() {
-        if(value != null) return value;
-        else throw new NoValueSetForSymbol("No value for symbol: " + name);
+    public int getDepth() {
+        return depth;
+    }
+
+    public SymbolList getSymbolList() {
+        return symbolList;
     }
 
     @Override
@@ -44,13 +62,5 @@ public class Symbol implements Comparable<Symbol> {
     @Override
     public int hashCode() {
         return Objects.hash(getName());
-    }
-
-    @Override
-    public String toString() {
-        return "Symbol{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
     }
 }
