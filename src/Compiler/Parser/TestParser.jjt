@@ -547,10 +547,10 @@ void collection_adt() #COLLECTION_ADT :
     collection_type() identifier() collection_dcl()
 }
 
-void collection_dcl() #COLLECTION_DCL :
+void collection_dcl() #void :
 {}
 {
-   < ASSIGN > member_function_call() | < NEWLINE > element_list() #ELEMENT_LIST | empty()
+   < ASSIGN > member_function_call() #MEMBER_FUNCTION_CALL | < NEWLINE > element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
