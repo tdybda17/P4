@@ -67,6 +67,10 @@ public class SymbolTable implements ISymbolTable {
         else return null;
     }
 
+    public SymbolList retrieveSymbol(String name, boolean v) {
+        return hashTable.get(name);
+    }
+
     @Override
     public boolean declaredLocally(String name) {
         return false;

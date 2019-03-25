@@ -8,6 +8,7 @@ public class Symbol implements Comparable<Symbol> {
 
     private String name;
     private Object type;
+    private Object attributes;
     private Object var;
     private SymbolList symbolList;
     private int depth;
