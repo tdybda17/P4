@@ -238,7 +238,13 @@ void initialization() #void :
 void object_types() #OBJECT_TYPES :
 {}
 {
-    < GRAPH_TYPE > | < COLLECTION_TYPE > | graph_element_types()
+    graph_type() | collection_type() | graph_element_types()
+}
+
+void collection_type() #COLLECTION_TYPE :
+{Token t;}
+{
+    t = <COLLECTION_TYPE> {jjtThis.value = t.image;}
 }
 
 Token graph_element_types() #void :
@@ -331,25 +337,25 @@ void atomic_expr() #void :
     < LPAREN > expr() < RPAREN > | value()
 }
 
-void value() #VALUE :
+void value() #VALUE(jjtree.nodeArity() == 0) :
 {Token t;}
 {
-    member_function_call() | t = < INUM_VAL > {jjtThis.value = t.image;} | t = < FNUM_VAL > {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = < CONSTANTS > {jjtThis.value = t.image;}
+    member_function_call() #MEMBER_FUNCTION_CALL(>1) | t = <INUM_VAL> {jjtThis.value = t.image;} | t = <FNUM_VAL> {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = <CONSTANTS> {jjtThis.value = t.image;}
 }
 
-void member_function_call() #MEMBER_FUNCTION_CALL :
+void member_function_call() #void :
 {}
 {
     identifier() member_function_call_tail()
 }
 
-void member_function_call_tail() #MEMBER_FUNCTION_CALL_TAIL :
+void member_function_call_tail() #void :
 {}
 {
     < DOT > member_function_call() | < LPAREN > actual_parameters() < RPAREN > continuous() | empty()
 }
 
-void continuous() #CONTINUOUS :
+void continuous() #void :
 {}
 {
     < DOT > member_function_call() | empty()
@@ -361,13 +367,13 @@ void actual_parameters() #ACTUAL_PARAMETERS :
     actual_parameter_list() | empty()
 }
 
-void actual_parameter_list() #ACTUAL_PARAMETER_LIST :
+void actual_parameter_list() #void :
 {}
 {
     expr() actual_parameter_list1()
 }
 
-void actual_parameter_list1() #ACTUAL_PARAMETER_LIST1 :
+void actual_parameter_list1() #void :
 {}
 {
     < COMMA > actual_parameter_list() | empty()
@@ -376,10 +382,10 @@ void actual_parameter_list1() #ACTUAL_PARAMETER_LIST1 :
 void main() #void :
 {}
 {
-    <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() < END >
+    <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() #BLOCK < END >
 }
 
-void block() #BLOCK(>1) :
+void block() #void :
 {}
 {
     block_content() < NEWLINE > block() | empty()
@@ -406,7 +412,13 @@ void adt() #void :
 void graph_adt() #void :
 {}
 {
-    < GRAPH_TYPE > identifier() graph_dcl() #GRAPH_ADT
+    graph_type() identifier() graph_dcl()
+}
+
+void graph_type() #GRAPH_TYPE :
+{Token t;}
+{
+    t = <GRAPH_TYPE> {jjtThis.value = t.image;}
 }
 
 void graph_dcl() #void :
@@ -427,25 +439,25 @@ void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
     identifier() edge_dcl()
 }
 
-void edge_dcl() #EDGE_DCL :
+void edge_dcl() #void :
 {}
 {
     < CONNECTION > graph_vertex_dcl1() | empty()
 }
 
-void graph_vertex_dcl1() #GRAPH_VERTEX_DCL1 :
+void graph_vertex_dcl1() #void :
 {}
 {
-    < LCURLY > vertex_list() < RCURLY > | <IDENTIFIER > weight()
+    < LCURLY > vertex_list() #VERTEX_LIST(>1) < RCURLY > | identifier() weight()
 }
 
-void vertex_list() #VERTEX_LIST :
+void vertex_list() #void :
 {}
 {
-    identifier() weight() vertex_list_continuous()
+    (identifier() weight()) #VERTEX vertex_list_continuous()
 }
 
-void vertex_list_continuous() #VERTEX_LIST_CONTINUOUS :
+void vertex_list_continuous() #void :
 {}
 {
     < COMMA > vertex_list() | empty()
@@ -458,21 +470,21 @@ void weight() #WEIGHT :
 }
 
 void stmt() #STMT(>1) :
-{}
+{boolean isAssign = false;}
 {
-    member_function_call() assign_or_func() | loop() | if_statement() | return_statement()
+    ((member_function_call() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNC_CALL(!isAssign) | loop() | if_statement() | return_statement()
 }
 
-void assign_or_func() #ASSIGN_OR_FUNC :
+boolean assign_or_func() #void :
 {}
 {
-    assignment() | empty()
+    assignment() {return true;} | empty() {return false;}
 }
 
-void assignment() #ASSIGNMENT :
-{Token t;}
+void assignment() #void :
+{}
 {
-    t = < ASSIGN > {jjtThis.value = t.image;} expr()
+    < ASSIGN > expr()
 }
 
 void loop() #LOOP(>1) :
@@ -484,13 +496,13 @@ void loop() #LOOP(>1) :
 void while_statement() #WHILE_STATEMENT :
 {}
 {
-    < WHILE > expr() < DO > < NEWLINE > block() < END >
+    < WHILE > expr() < DO > < NEWLINE > block() #BLOCK < END >
 }
 
 void for_statement() #FOR_STATEMENT :
 {}
 {
-    < FOR > identifier() < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() < END >
+    < FOR > identifier() < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() #BLOCK < END >
 }
 
 void integer_value() #INTEGER_VALUE :
@@ -502,19 +514,19 @@ void integer_value() #INTEGER_VALUE :
 void foreach_statement() #FOREACH_STATEMENT :
 {}
 {
-    < FOREACH > identifier() < IN > member_function_call() < DO > < NEWLINE > block() < END >
+    < FOREACH > identifier() < IN > member_function_call() < DO > < NEWLINE > block() #BLOCK < END >
 }
 
 void if_statement() #IF_STATEMENT :
 {}
 {
-    < IF > expr() < THEN > block() else_statement()
+    < IF > expr() < THEN > block() #BLOCK else_statement()
 }
 
-void else_statement() #ELSE_STATEMENT(>0) :
+void else_statement() #ELSE_STATEMENT :
 {}
 {
-    < ELSE > block() < END > | < END >
+    < ELSE > block() #BLOCK < END > | < END >
 }
 
 void return_statement() #RETURN_STMT :
@@ -523,31 +535,31 @@ void return_statement() #RETURN_STMT :
     < RETURN > return_expr()
 }
 
-void return_expr() #RETURN_EXPR :
+void return_expr() #void :
 {}
 {
-    expr() | < CREATE > adt() < END >
+    expr() | (< CREATE > adt() < END >) #CREATE
 }
 
 void collection_adt() #COLLECTION_ADT :
 {}
 {
-    < COLLECTION_TYPE > identifier() collection_dcl()
+    collection_type() identifier() collection_dcl()
 }
 
 void collection_dcl() #COLLECTION_DCL :
 {}
 {
-   < ASSIGN > member_function_call() | < NEWLINE > element_list() | empty()
+   < ASSIGN > member_function_call() | < NEWLINE > element_list() #ELEMENT_LIST | empty()
 }
 
-void element_list() #ELEMENT_LIST :
+void element_list() #void :
 {}
 {
     value() < NEWLINE > element_list_continuous()
 }
 
-void element_list_continuous() #ELEMENT_LIST1 :
+void element_list_continuous() #void :
 {}
 {
     element_list() | empty()
@@ -562,28 +574,28 @@ void funcs_dcl() #FUNCS_DCL(>1) :
 void func_dcl() #FUNC_DCL :
 {}
 {
-    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() < END >
+    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() #BLOCK < END >
 }
 
-void ret() #RET :
+void ret() #void :
 {}
 {
     type() | empty()
 }
 
-void formal_parameters() #FORMAL_PARAMETERS :
+void formal_parameters() #void :
 {}
 {
-    formal_parameter_list() | empty()
+    formal_parameter_list() #FORMAL_PARAMETERS(>1) | empty()
 }
 
-void formal_parameter_list() #FORMAL_PARAMETER_LIST :
+void formal_parameter_list() #void :
 {}
 {
     formal_parameter() formal_parameter_list1()
 }
 
-void formal_parameter_list1() #FORMAL_PARAMETER_LIST1 :
+void formal_parameter_list1() #void :
 {}
 {
     < COMMA > formal_parameter_list() | empty()
@@ -595,13 +607,13 @@ void formal_parameter() #FORMAL_PARAMETER :
     type() identifier()
 }
 
-void type() #TYPE :
+void type() #void :
 {}
 {
     object_types() | simple_types()
 }
 
-void empty() : {}
+void empty() #void : {}
 {
      {}
 } 
