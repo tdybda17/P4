@@ -44,12 +44,11 @@ public interface TestParserTreeConstants
   public int JJTELSE_STATEMENT = 38;
   public int JJTRETURN_STMT = 39;
   public int JJTCOLLECTION_ADT = 40;
-  public int JJTCOLLECTION_DCL = 41;
-  public int JJTELEMENT_LIST = 42;
-  public int JJTFUNCS_DCL = 43;
-  public int JJTFUNC_DCL = 44;
-  public int JJTFORMAL_PARAMETERS = 45;
-  public int JJTFORMAL_PARAMETER = 46;
+  public int JJTELEMENT_LIST = 41;
+  public int JJTFUNCS_DCL = 42;
+  public int JJTFUNC_DCL = 43;
+  public int JJTFORMAL_PARAMETERS = 44;
+  public int JJTFORMAL_PARAMETER = 45;
 
 
   public String[] jjtNodeName = {
@@ -94,7 +93,6 @@ public interface TestParserTreeConstants
     "ELSE_STATEMENT",
     "RETURN_STMT",
     "COLLECTION_ADT",
-    "COLLECTION_DCL",
     "ELEMENT_LIST",
     "FUNCS_DCL",
     "FUNC_DCL",
@@ -102,4 +100,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=325c55825f38f24ecba4db36e2c6663e (do not edit this line) */
+/* JavaCC - OriginalChecksum=14c8390fdeff380fabf3b539bf8d900a (do not edit this line) */

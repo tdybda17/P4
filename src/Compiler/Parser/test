@@ -1,5 +1,3 @@
 function main()
-    create PriorityQueue q
-        a
-    end
+    create PriorityQueue q = a end
 end
