@@ -1,0 +1,3 @@
+function main() //This is main
+    int i = 0 //This is an assignment
+end

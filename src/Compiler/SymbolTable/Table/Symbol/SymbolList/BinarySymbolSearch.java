@@ -1,6 +1,5 @@
 package Compiler.SymbolTable.Table.Symbol.SymbolList;
 
-import Compiler.Exceptions.ScopeError.NoSuchSymbolError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import java.util.Arrays;
 
@@ -11,7 +10,7 @@ public final class BinarySymbolSearch {
         if(hitIndex > -1) {
             return symbols.get(hitIndex);
         } else {
-            throw new NoSuchSymbolError("No symbol for name '" + name + "'");
+            return null;
         }
     }
 

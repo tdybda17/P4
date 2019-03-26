@@ -1,4 +1,4 @@
-package Compiler.Exceptions.ScopeError;
+package Compiler.Exceptions.SymbolTable.ScopeError;
 
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 
