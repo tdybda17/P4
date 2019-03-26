@@ -6,16 +6,14 @@ import java.util.Objects;
 
 public class VariableAttributes implements Attributes {
     private TypeDescriptor type;
-    private String kind;
 
     public VariableAttributes(TypeDescriptor type) {
-        this.kind = "Variable";
         this.type = type;
     }
 
     @Override
     public String getAttributeKind() {
-        return this.kind;
+        return "Variable";
     }
 
     public TypeDescriptor getType() {
@@ -27,12 +25,11 @@ public class VariableAttributes implements Attributes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VariableAttributes that = (VariableAttributes) o;
-        return Objects.equals(type, that.type) &&
-                Objects.equals(kind, that.kind);
+        return Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, kind);
+        return Objects.hash(type);
     }
 }
