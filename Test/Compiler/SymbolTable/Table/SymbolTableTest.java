@@ -44,4 +44,73 @@ class SymbolTableTest {
         symbolTable.enterSymbol(name2, null);
     }
 
+    @Test
+    void testEnterSymbol04() {
+        String name1 = "firstSymbol";
+        String name2 = "secondSymbol";
+        symbolTable.openScope();
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.enterSymbol(name2, null);
+        symbolTable.closeScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.enterSymbol(name2, null);
+    }
+
+    @Test
+    void testRetrieveSymbol01() {
+        String name1 = "firstSymbol";
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        assertEquals(name1, symbolTable.retrieveSymbol(name1).getName());
+    }
+
+    @Test
+    void testRetrieveSymbol02() {
+        String name1 = "firstSymbol";
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.openScope();
+        symbolTable.openScope();
+        assertEquals(name1, symbolTable.retrieveSymbol(name1).getName());
+    }
+
+    @Test
+    void testSymbolsAreRemovedFromHashMap01() {
+        String name1 = "firstSymbol";
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.closeScope();
+        assertTrue(symbolTable.getHashMap().isEmpty());
+    }
+
+    @Test
+    void testSymbolsAreRemovedFromHashMap02() {
+        String name1 = "firstSymbol";
+        String name2 = "secondSymbol";
+        String name3 = "thirdSymbol";
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name2, null);
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name3, null);
+        symbolTable.closeScope();
+        symbolTable.enterSymbol(name3, null);
+        symbolTable.closeScope();
+        symbolTable.enterSymbol(name2, null);
+        symbolTable.closeScope();
+        assertTrue(symbolTable.getHashMap().isEmpty());
+    }
+
+    @Test
+    void testSymbolsAreRemovedFromScopeDisplay() {
+        String name1 = "firstSymbol";
+        String name2 = "secondSymbol";
+        symbolTable.openScope();
+        symbolTable.enterSymbol(name1, null);
+        symbolTable.enterSymbol(name2, null);
+        symbolTable.closeScope();
+        assertNull(symbolTable.getCurrentScopeDisplay());
+    }
 }
