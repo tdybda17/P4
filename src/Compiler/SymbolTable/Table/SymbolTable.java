@@ -16,6 +16,12 @@ public class SymbolTable implements ISymbolTable {
     private ScopeDisplay scopeDisplay;
     private Map<String, SymbolList> hashTable;
 
+    private String x;
+
+    public void x(int x) {
+
+    }
+
     public SymbolTable() {
         this.depth = 0;
         this.hashTable = new HashMap<>();
@@ -30,7 +36,8 @@ public class SymbolTable implements ISymbolTable {
 
     @Override
     public void closeScope() {
-        // Delete symbols in this scope
+        // Delete symbols currently in scope
+
         depth -= 1;
     }
 
