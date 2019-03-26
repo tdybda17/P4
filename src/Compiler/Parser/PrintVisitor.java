@@ -38,7 +38,7 @@ public class PrintVisitor implements TestParserVisitor {
         return data;
     }
     public Object visit(ASTASSIGN node, Object data){
-        System.out.print(((SimpleNode)node.jjtGetChild(0)).jjtGetValue());
+        node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print(" = ");
         node.jjtGetChild(1).jjtAccept(this, data);
         return data;
@@ -48,6 +48,7 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print(" ");
         System.out.print(((SimpleNode)node.jjtGetChild(1)).jjtGetValue());
         System.out.print(" = ");
+        //node.jjtGetChild()
         return data;
     }
     public Object visit(ASTOBJECT_TYPE node, Object data){
