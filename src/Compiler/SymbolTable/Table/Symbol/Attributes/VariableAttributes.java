@@ -12,11 +12,10 @@ public class VariableAttributes implements Attributes {
     }
 
     @Override
-    public String getKind() {
+    public String getAttributeKind() {
         return this.kind;
     }
 
-    @Override
     public TypeDescriptor getType() {
         return this.type;
     }
