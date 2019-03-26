@@ -44,6 +44,10 @@ public class Symbol implements Comparable<Symbol> {
         return symbolList;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int compareTo(Symbol sym) {
         return this.name.compareTo(sym.name);

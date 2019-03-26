@@ -8,17 +8,18 @@ import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SymbolTable implements ISymbolTable {
 
     private int depth;
     private ScopeDisplay scopeDisplay;
-    private Map<String, SymbolList> hashTable;
+    private Map<String, SymbolList> hashMap;
 
     public SymbolTable() {
         this.depth = 0;
-        this.hashTable = new HashMap<>();
+        this.hashMap = new HashMap<>();
         this.scopeDisplay = new ScopeDisplay();
     }
 
@@ -30,8 +31,15 @@ public class SymbolTable implements ISymbolTable {
 
     @Override
     public void closeScope() {
-        // Delete symbols in this scope
+        // Delete symbols currently in scope
+        deleteSymbolsInCurrentDepth();
         depth -= 1;
+    }
+
+    private void deleteSymbolsInCurrentDepth() {
+        List<Symbol> symbolsToRemove = scopeDisplay.remove(depth);
+        for (Symbol symbol : symbolsToRemove)
+            hashMap.remove(symbol.getName());
     }
 
     @Override
@@ -39,7 +47,7 @@ public class SymbolTable implements ISymbolTable {
         validateInputName(name);
         Symbol oldSymbol = retrieveSymbol(name);
         if(oldSymbol == null) {
-            Symbol newSymbol = new Symbol(name, attributes, this.depth, scopeDisplay.get(this.depth));
+            Symbol newSymbol = new Symbol(name, attributes, depth, scopeDisplay.get(depth));
             scopeDisplay.add(newSymbol);
             addToHashTable(newSymbol);
         } else {
@@ -55,14 +63,14 @@ public class SymbolTable implements ISymbolTable {
 
     private void addToHashTable(Symbol symbol) {
         String name = symbol.getName();
-        if(!hashTable.containsKey(name))
-            hashTable.put(name, new SymbolList());
-        hashTable.get(name).add(symbol);
+        if(!hashMap.containsKey(name))
+            hashMap.put(name, new SymbolList());
+        hashMap.get(name).add(symbol);
     }
 
     @Override
     public Symbol retrieveSymbol(String name) {
-        SymbolList symbolList = hashTable.get(name);
+        SymbolList symbolList = hashMap.get(name);
         if(symbolList != null)
             return symbolList.get(name);
         else return null;
@@ -73,4 +81,13 @@ public class SymbolTable implements ISymbolTable {
         return false;
     }
 
+    /* Method for testing */
+    Map<String, SymbolList> getHashMap() {
+        return hashMap;
+    }
+
+    /* Method for testing */
+    SymbolList getCurrentScopeDisplay() {
+        return scopeDisplay.get(depth);
+    }
 }
