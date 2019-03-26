@@ -2,13 +2,13 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
 
 import java.util.Objects;
 
-public class SetTypeDescriptor implements TypeDescriptor {
+public class StackTypeDescriptor implements TypeDescriptor {
     private String typeName;
     private TypeDescriptor elementType;
 
 
-    public SetTypeDescriptor(TypeDescriptor elementType) {
-        this.typeName = "Set";
+    public StackTypeDescriptor(TypeDescriptor elementType) {
+        this.typeName = "Stack";
         this.elementType = elementType;
     }
 
@@ -26,7 +26,7 @@ public class SetTypeDescriptor implements TypeDescriptor {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SetTypeDescriptor that = (SetTypeDescriptor) o;
+        StackTypeDescriptor that = (StackTypeDescriptor) o;
         return Objects.equals(typeName, that.typeName) &&
                 Objects.equals(elementType, that.elementType);
     }
