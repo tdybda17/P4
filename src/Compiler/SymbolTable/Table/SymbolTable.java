@@ -3,6 +3,7 @@ package Compiler.SymbolTable.Table;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.ScopeError.IllegalSymbolNameError;
 import Compiler.SymbolTable.Table.Scope.ScopeDisplay;
+import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
@@ -34,11 +35,11 @@ public class SymbolTable implements ISymbolTable {
     }
 
     @Override
-    public void enterSymbol(String name, Object type) {
+    public void enterSymbol(String name, Attributes attributes) {
         validateInputName(name);
         Symbol oldSymbol = retrieveSymbol(name);
         if(oldSymbol == null) {
-            Symbol newSymbol = new Symbol(name, type, this.depth, scopeDisplay.get(this.depth));
+            Symbol newSymbol = new Symbol(name, attributes, this.depth, scopeDisplay.get(this.depth));
             scopeDisplay.add(newSymbol);
             addToHashTable(newSymbol);
         } else {
@@ -65,10 +66,6 @@ public class SymbolTable implements ISymbolTable {
         if(symbolList != null)
             return symbolList.get(name);
         else return null;
-    }
-
-    public SymbolList retrieveSymbol(String name, boolean v) {
-        return hashTable.get(name);
     }
 
     @Override
