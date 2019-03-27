@@ -6,9 +6,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Fiel
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class StackTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
@@ -23,13 +21,13 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
 
 
     @Override
-    public List<Method> getMethods() {
-        return new ArrayList<>(methods);
+    public Set<Method> getMethods() {
+        return new HashSet<>(methods);
     }
 
     @Override
-    public List<Field> getFields() {
-        return new ArrayList<>(fields);
+    public Set<Field> getFields() {
+        return new HashSet<>(fields);
     }
 
     @Override
@@ -46,5 +44,19 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
 
     private Method popMethod(){
         return new Method("pop", elementType, new ArrayList<>());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        StackTypeDescriptor that = (StackTypeDescriptor) o;
+        return Objects.equals(elementType, that.elementType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(elementType);
     }
 }

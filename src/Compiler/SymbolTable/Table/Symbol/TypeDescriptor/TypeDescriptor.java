@@ -1,6 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
 
-import Compiler.Exceptions.NotImplementedException;
+
+import java.util.Objects;
 
 public abstract class TypeDescriptor {
     public abstract String getTypeName();
@@ -12,5 +13,10 @@ public abstract class TypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         TypeDescriptor typeDescriptor = (TypeDescriptor) o;
         return this.getTypeName().equals(typeDescriptor.getTypeName());
+    }
+
+    @Override
+    public int hashCode() {
+        return  Objects.hash(this.getTypeName());
     }
 }

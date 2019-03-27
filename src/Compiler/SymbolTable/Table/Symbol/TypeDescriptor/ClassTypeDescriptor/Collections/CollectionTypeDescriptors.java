@@ -6,15 +6,17 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Fiel
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 abstract class CollectionTypeDescriptors extends ClassTypeDescriptor {
-    List<Method> methods;
-    List<Field> fields;
+    Set<Method> methods;
+    Set<Field> fields;
 
     CollectionTypeDescriptors() {
-        this.methods = new ArrayList<>();
-        this.fields = new ArrayList<>();
+        this.methods = new HashSet<>();
+        this.fields = new HashSet<>();
         methods.add(isEmpty());
     }
 

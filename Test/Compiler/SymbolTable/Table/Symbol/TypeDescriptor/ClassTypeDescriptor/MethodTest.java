@@ -49,4 +49,45 @@ class MethodTest {
         Method other = new Method("testMethod", new IntegerTypeDescriptor(), parameters);
         assertEquals(other, method);
     }
+
+    //Testing different method names
+    @Test
+    void equals2() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(new IntegerTypeDescriptor());
+        parameters.add(new BooleanTypeDescriptor());
+        Method other = new Method("WrongName", new IntegerTypeDescriptor(), parameters);
+        assertNotEquals(other, method);
+    }
+
+    //Testing different return types
+    @Test
+    void equals3() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(new IntegerTypeDescriptor());
+        parameters.add(new BooleanTypeDescriptor());
+        Method other = new Method("testMethod", new BooleanTypeDescriptor(), parameters);
+        assertNotEquals(other, method);
+    }
+
+    //Testing parameters incorrect parameters
+    @Test
+    void equals4() {
+        List<TypeDescriptor> wrongParameters = new ArrayList<>();
+        wrongParameters.add(new IntegerTypeDescriptor());
+        wrongParameters.add(new IntegerTypeDescriptor());
+        Method other = new Method("testMethod", new IntegerTypeDescriptor(), wrongParameters);
+        assertNotEquals(other, method);
+    }
+
+
+    //Testing parameters in wrong order
+    @Test
+    void equals5() {
+        List<TypeDescriptor> wrongParameters = new ArrayList<>();
+        wrongParameters.add(new BooleanTypeDescriptor());
+        wrongParameters.add(new IntegerTypeDescriptor());
+        Method other = new Method("testMethod", new IntegerTypeDescriptor(), wrongParameters);
+        assertNotEquals(other, method);
+    }
 }
