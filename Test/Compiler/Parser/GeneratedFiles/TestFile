@@ -17,6 +17,8 @@ function main()
         7
         8
     end
+
+    sum = yes(sum, 1.0)
 end
 
 function no()

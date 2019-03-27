@@ -1,0 +1,10 @@
+function main()
+    create Vertex v end
+    int sum
+    sum = yes(sum, 1.0)
+end
+
+int function yes(int a, real b)
+    return a + a
+end
+

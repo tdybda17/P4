@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private Object var;
+    private Object var;                 //TODO: var and symbolList are not needed anymore
     private SymbolList symbolList;
     private int depth;
 

@@ -1,6 +1,7 @@
 package Compiler.Parser.GeneratedFiles;
 
 import Compiler.Parser.whatever;
+import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,17 +17,19 @@ class DeclarationVisitorTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        String path = "Test/Compiler/Parser/GeneratedFiles/TestFile";
+        String path = "Test/Compiler/Parser/GeneratedFiles/TestFile"; //Todo: ændre path til TestFile
         File file = new File(path);
         TestParser parser = new TestParser(new BufferedReader(new FileReader(file)));
 
         root = parser.start();
         visitor = new DeclarationVisitor();
+        System.out.println(whatever.createDotOutput(root));
     }
 
     @Test
     void createSymbolTable() {
-        visitor.createSymbolTable(root);
+        SymbolTable symbolTable = visitor.createSymbolTable(root);
+        //assertEquals(new SymbolTable(), symbolTable);
     }
 
     @Test
