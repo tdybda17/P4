@@ -3,9 +3,13 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Gra
 import Compiler.Exceptions.CompilerException;
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
+
+import java.util.ArrayList;
 
 public class VertexTypeDescriptor extends ClassTypeDescriptor {
     public VertexTypeDescriptor() {
@@ -16,7 +20,7 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
 
     @Override
     public String getTypeName() {
-        return "Stack";
+        return "Vertex";
     }
 
     private void addMethods(){
@@ -29,11 +33,13 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
     }
 
     private Method getOutgoingEdges(){
-        return null;
+        TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor());
+        return new Method("getOutgoingEdges", returnType, new ArrayList<>());
     }
 
     private Method getNeighbours(){
-        return null;
+        TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
+        return new Method("getNeighbours", returnType, new ArrayList<>());
     }
 
     private Field color(){
