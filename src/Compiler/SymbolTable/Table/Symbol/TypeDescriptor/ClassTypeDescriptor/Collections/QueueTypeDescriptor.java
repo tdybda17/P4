@@ -49,6 +49,6 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptors {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getTypeName(), elementType);
+        return Objects.hash(super.hashCode(), elementType);
     }
 }

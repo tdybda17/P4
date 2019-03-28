@@ -1,42 +1,47 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-public class StackTypeDescriptor extends CollectionTypeDescriptors {
+public class SetTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
 
-    StackTypeDescriptor(TypeDescriptor elementType) {
+    public SetTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
     }
 
     private void addMethods(){
-        this.addMethod(pushMethod());
-        this.addMethod(popMethod());
+
+    }
+
+    private Method addMethod(){
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(elementType);
+        return new Method("add", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method removeMethod(){
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(elementType);
+        return new Method("remove", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method containsMethod(){
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(elementType);
+        return new Method("contains", new BooleanTypeDescriptor(), parameters);
     }
 
     @Override
     public String getTypeName() {
-        return "Stack";
-    }
-
-    private Method pushMethod(){
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
-
-        return new Method("push", new BooleanTypeDescriptor(), parameters);
-    }
-
-    private Method popMethod(){
-        return new Method("pop", elementType, new ArrayList<>());
+        return "Set";
     }
 
     @Override
@@ -44,8 +49,8 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        StackTypeDescriptor that = (StackTypeDescriptor) o;
-        return Objects.equals(elementType, that.elementType);
+        SetTypeDescriptor that = (SetTypeDescriptor) o;
+        return elementType.equals(that.elementType);
     }
 
     @Override
