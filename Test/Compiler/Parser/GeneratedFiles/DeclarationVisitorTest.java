@@ -17,13 +17,12 @@ class DeclarationVisitorTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        String path = "Test/Compiler/Parser/GeneratedFiles/TestFile"; //Todo: ændre path til TestFile
+        String path = "Test/Compiler/Parser/GeneratedFiles/TestFile2"; //Todo: ændre path til TestFile
         File file = new File(path);
         TestParser parser = new TestParser(new BufferedReader(new FileReader(file)));
 
         root = parser.start();
         visitor = new DeclarationVisitor();
-        System.out.println(whatever.createDotOutput(root));
     }
 
     @Test
@@ -34,6 +33,10 @@ class DeclarationVisitorTest {
 
     @Test
     void wrongRootNodeType() {
+    }
 
+    @Test
+    void printAST() {
+        System.out.println(whatever.createDotOutput(root));
     }
 }

@@ -1,7 +1,11 @@
 function main()
-    create Vertex v end
     int sum
+    int a
+    int b
     sum = yes(sum, 1.0)
+
+    sum = whatever.x.x1.x2().x3
+    sum = whatever.y(a, b)
 end
 
 int function yes(int a, real b)

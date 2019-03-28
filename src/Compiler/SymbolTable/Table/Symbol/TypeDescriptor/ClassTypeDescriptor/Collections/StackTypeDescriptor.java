@@ -4,6 +4,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.*;
