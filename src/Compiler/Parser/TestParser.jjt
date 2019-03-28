@@ -23,7 +23,7 @@ import java.io.FileReader;
 public class TestParser {
     public static void main(String[] args) {
         //parseTextFile("src/Compiler/Parser/test");
-        //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
+        useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
     }
 
     public static void parseTextFile(String path){
@@ -39,17 +39,17 @@ public class TestParser {
         }
   }
 
-  /*public static void useVisitorMethod(TestParserVisitor visitor, String filePath) {
+  public static void useVisitorMethod(TestParserVisitor visitor, String filePath) {
         try {
             File file = new File(filePath);
             BufferedReader reader = new BufferedReader(new FileReader(file));
             TestParser parser = new TestParser(reader);
             Node root = parser.start();
-            visitor.visit(root);
+            root.jjtAccept(visitor, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-  }*/
+  }
 }
   
 
@@ -254,10 +254,10 @@ void collection_type() #COLLECTION_TYPE :
     t = <COLLECTION_TYPE> {jjtThis.value = t.image;}
 }
 
-Token graph_element_types() #void :
+void graph_element_types() #GRAPH_ELEMENT_TYPES :
 {Token t;}
 {
-    t = < VERTEX > {return t;} | t = < EDGE > {return t;}
+    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;}
 }
 
 void expr() #OR_EXPR(>1) :
@@ -347,19 +347,19 @@ void atomic_expr() #void :
 void value() #VALUE(jjtree.nodeArity() == 0) :
 {Token t;}
 {
-    member_function_call() #MEMBER_FUNCTION_CALL(>1) | t = <INUM_VAL> {jjtThis.value = t.image;} | t = <FNUM_VAL> {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = <CONSTANTS> {jjtThis.value = t.image;}
+    member_function_call() #MEMBER_FUNCTION_CALL | t = <INUM_VAL> {jjtThis.value = t.image;} | t = <FNUM_VAL> {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = <CONSTANTS> {jjtThis.value = t.image;}
 }
 
-void member_function_call() #MEMBER_FUNCTION_CALL :
-{}
+void member_function_call() #void :
+{boolean withParameters = false;}
 {
-    identifier() member_function_call_tail()
+    ((identifier() withParameters = member_function_call_tail()) #MEMBER(!withParameters)) #FUNC_CALL(withParameters)
 }
 
-void member_function_call_tail() #void :
+boolean member_function_call_tail() #void :
 {}
 {
-    < DOT > member_function_call() | < LPAREN > actual_parameters() < RPAREN > continuous() | empty()
+    < DOT > member_function_call() {return false;} | < LPAREN > actual_parameters() < RPAREN > continuous() {return true;} | empty() {return false;}
 }
 
 void continuous() #void :
@@ -386,7 +386,7 @@ void actual_parameter_list1() #void :
     < COMMA > actual_parameter_list() | empty()
 }
 
-void main() #void :
+void main() #MAIN :
 {}
 {
     <FUNCTION > < MAIN > < LPAREN > < RPAREN > < NEWLINE > block() #BLOCK < END >
@@ -431,7 +431,7 @@ void graph_type() #GRAPH_TYPE :
 void graph_dcl() #void :
 {}
 {
-    (< ASSIGN > member_function_call()) #GRAPH_ASSIGN | (< NEWLINE > graph_vertex_dcl() <NEWLINE> graph_elements()) #GRAPH_DCL_ELEMENTS
+    (< ASSIGN > member_function_call()) #GRAPH_ASSIGN | (< NEWLINE > graph_vertex_dcl() <NEWLINE> graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
 }
 
 void graph_elements() #void :
@@ -455,7 +455,7 @@ void edge_dcl() #void :
 void graph_vertex_dcl1() #void :
 {}
 {
-    < LCURLY > vertex_list() #VERTEX_LIST(>1) < RCURLY > | identifier() weight()
+    < LCURLY > vertex_list() #VERTEX_LIST < RCURLY > | identifier() weight()
 }
 
 void vertex_list() #void :
@@ -476,10 +476,10 @@ void weight() #WEIGHT :
     < LHARD > arith_expr() < RHARD > | empty()
 }
 
-void stmt() #STMT(>1) :
+void stmt() #void :
 {boolean isAssign = false;}
 {
-    ((member_function_call() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNC_CALL(!isAssign) | loop() | if_statement() | return_statement()
+    ((member_function_call() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNCTION_CALL(!isAssign) | loop() | if_statement() | return_statement()
 }
 
 boolean assign_or_func() #void :
@@ -494,7 +494,7 @@ void assignment() #void :
     < ASSIGN > expr()
 }
 
-void loop() #LOOP(>1) :
+void loop() #void :
 {}
 {
   while_statement() | for_statement() | foreach_statement()
@@ -513,21 +513,21 @@ void for_statement() #FOR_STATEMENT :
 }
 
 void integer_value() #INTEGER_VALUE :
-{}
+{Token t;}
 {
-    member_function_call() | < INUM_VAL >
+    member_function_call() #MEMBER_FUNCTION_CALL |  t = < INUM_VAL > {jjtThis.value = t.image;}
 }
 
 void foreach_statement() #FOREACH_STATEMENT :
 {}
 {
-    < FOREACH > identifier() < IN > member_function_call() < DO > < NEWLINE > block() #BLOCK < END >
+    < FOREACH > identifier() < IN > member_function_call() #MEMBER_FUNCTION_CALL < DO > < NEWLINE > block() #BLOCK < END >
 }
 
 void if_statement() #IF_STATEMENT :
 {}
 {
-    < IF > expr() < THEN > block() #BLOCK else_statement()
+    < IF > expr() < THEN > <NEWLINE> block() #BLOCK else_statement()
 }
 
 void else_statement() #ELSE_STATEMENT :
@@ -581,10 +581,10 @@ void funcs_dcl() #FUNCS_DCL(>1) :
 void func_dcl() #FUNC_DCL :
 {}
 {
-    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > block() #BLOCK < END >
+    ret() < FUNCTION > identifier() < LPAREN > formal_parameters() < RPAREN > <NEWLINE> block() #BLOCK < END >
 }
 
-void ret() #void :
+void ret() #RETURN_TYPE :
 {}
 {
     type() | empty()

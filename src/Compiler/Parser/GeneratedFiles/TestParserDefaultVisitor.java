@@ -42,6 +42,9 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTCOLLECTION_TYPE node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTOR_EXPR node, Object data){
     return defaultVisit(node, data);
   }
@@ -69,7 +72,16 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTMEMBER node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTFUNC_CALL node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTACTUAL_PARAMETERS node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTMAIN node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTBLOCK node, Object data){
@@ -102,16 +114,10 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTWEIGHT node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTSTMT node, Object data){
-    return defaultVisit(node, data);
-  }
   public Object visit(ASTASSIGN node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTFUNC_CALL node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTLOOP node, Object data){
+  public Object visit(ASTFUNCTION_CALL node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTWHILE_STATEMENT node, Object data){
@@ -147,6 +153,9 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTFUNC_DCL node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTRETURN_TYPE node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTFORMAL_PARAMETERS node, Object data){
     return defaultVisit(node, data);
   }
@@ -154,4 +163,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=0f7535fe17904e237cba03d55ff10f5d (do not edit this line) */
+/* JavaCC - OriginalChecksum=73e63daaaa808c0583f68ed672069371 (do not edit this line) */

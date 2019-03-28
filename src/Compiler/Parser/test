@@ -5,6 +5,11 @@ end
 
 
 function main()
+    sum.total = a().b.c().d
+    create Graph g
+        a -- b
+    end
+    create Set s = g.vertices() end
     create PriorityQueue q = a end
     boolean a = ((5 == 2 | 3 < 2) & (8 != 8) | (3 >= 3)) | true
     int sum = 0
@@ -26,4 +31,3 @@ end
 int function yes(int a, real b)
     return a + a
 end
-
