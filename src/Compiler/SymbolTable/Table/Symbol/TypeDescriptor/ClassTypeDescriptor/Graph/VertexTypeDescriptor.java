@@ -1,5 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
 
+import Compiler.Exceptions.CompilerException;
+import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
@@ -38,4 +40,13 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
         return new Field("color", new ColorTypeDescriptor());
     }
 
+    public void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
+        for (Field field: this.getFields()) {
+            if(field.equals(userAttribute)) {
+                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an already added field");
+            }
+        }
+
+        this.addField(userAttribute);
+    }
 }
