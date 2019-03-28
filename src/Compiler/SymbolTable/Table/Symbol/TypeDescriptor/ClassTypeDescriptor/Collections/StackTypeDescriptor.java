@@ -15,20 +15,12 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
     StackTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
-
-        methods.add(pushMethod());
-        methods.add(popMethod());
+        this.addMethods();
     }
 
-
-    @Override
-    public Set<Method> getMethods() {
-        return new HashSet<>(methods);
-    }
-
-    @Override
-    public Set<Field> getFields() {
-        return new HashSet<>(fields);
+    private void addMethods(){
+        this.addMethod(pushMethod());
+        this.addMethod(popMethod());
     }
 
     @Override

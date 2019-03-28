@@ -11,13 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 abstract class CollectionTypeDescriptors extends ClassTypeDescriptor {
-    Set<Method> methods;
-    Set<Field> fields;
-
     CollectionTypeDescriptors() {
-        this.methods = new HashSet<>();
-        this.fields = new HashSet<>();
-        methods.add(isEmpty());
+        super();
+        this.addMethod(isEmpty());
     }
 
     private Method isEmpty(){
