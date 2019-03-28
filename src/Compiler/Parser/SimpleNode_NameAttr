@@ -1,0 +1,10 @@
+  private String name;
+  public String getName() {
+    return name;
+  }
+  public void setName(int suffix) {
+    this.name = TestParserTreeConstants.jjtNodeName[id] + suffix;
+  }
+  public void setName() {
+    this.name = TestParserTreeConstants.jjtNodeName[id];
+  }

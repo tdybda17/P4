@@ -12,7 +12,6 @@ public class Symbol implements Comparable<Symbol> {
     private SymbolList symbolList;
     private int depth;
 
-
     public Symbol(String name) {
         this.name = name;
     }
