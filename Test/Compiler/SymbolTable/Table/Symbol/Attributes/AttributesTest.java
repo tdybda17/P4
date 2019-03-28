@@ -40,7 +40,7 @@ class AttributesTest {
     }
 
     @Test
-    void testingInstanceOfVariableAttr(){
+    void testingInstanceOfIdentifierAttr(){
         Symbol testSymbol = new Symbol("testFunctionSymbol", variableAttr, 1, new SymbolList());
 
         Attributes attributes = testSymbol.getAttributes();
