@@ -40,11 +40,11 @@ class FieldTest {
         assertNotEquals(other, field);
     }
 
-    //Testing wrong type of the field
+    //Testing that two fields with different types but same name then they are still equal
     @Test
     void equals3() {
         Field other = new Field("testField", new BooleanTypeDescriptor());
 
-        assertNotEquals(other, field);
+        assertEquals(other, field);
     }
 }
