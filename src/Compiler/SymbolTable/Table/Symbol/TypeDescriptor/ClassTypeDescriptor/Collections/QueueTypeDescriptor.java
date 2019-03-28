@@ -1,42 +1,41 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-public class StackTypeDescriptor extends CollectionTypeDescriptors {
+public class QueueTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
 
-    StackTypeDescriptor(TypeDescriptor elementType) {
+    QueueTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
     }
 
     private void addMethods(){
-        this.addMethod(pushMethod());
-        this.addMethod(popMethod());
+        this.addMethod(enqueueMethod());
+        this.addMethod(dequeueMethod());
     }
 
     @Override
     public String getTypeName() {
-        return "Stack";
+        return "Queue";
     }
 
-    private Method pushMethod(){
+    private Method enqueueMethod(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
 
-        return new Method("push", new BooleanTypeDescriptor(), parameters);
+        return new Method("enqueue", new BooleanTypeDescriptor(), parameters);
     }
 
-    private Method popMethod(){
-        return new Method("pop", elementType, new ArrayList<>());
+    private Method dequeueMethod(){
+        return new Method("dequeue", elementType, new ArrayList<>());
     }
 
     @Override
@@ -44,7 +43,7 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        StackTypeDescriptor that = (StackTypeDescriptor) o;
+        QueueTypeDescriptor that = (QueueTypeDescriptor) o;
         return Objects.equals(elementType, that.elementType);
     }
 
