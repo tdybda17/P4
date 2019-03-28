@@ -18,22 +18,24 @@ public class SetTypeDescriptor extends CollectionTypeDescriptors {
     }
 
     private void addMethods(){
-
+        this.addMethod(add());
+        this.addMethod(remove());
+        this.addMethod(contains());
     }
 
-    private Method addMethod(){
+    private Method add(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
         return new Method("add", new BooleanTypeDescriptor(), parameters);
     }
 
-    private Method removeMethod(){
+    private Method remove(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
         return new Method("remove", new BooleanTypeDescriptor(), parameters);
     }
 
-    private Method containsMethod(){
+    private Method contains(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
         return new Method("contains", new BooleanTypeDescriptor(), parameters);

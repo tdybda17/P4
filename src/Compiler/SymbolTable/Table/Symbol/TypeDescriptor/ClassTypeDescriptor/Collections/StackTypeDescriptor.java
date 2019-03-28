@@ -1,10 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.*;
@@ -19,8 +16,8 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
     }
 
     private void addMethods(){
-        this.addMethod(pushMethod());
-        this.addMethod(popMethod());
+        this.addMethod(push());
+        this.addMethod(pop());
     }
 
     @Override
@@ -28,14 +25,14 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
         return "Stack";
     }
 
-    private Method pushMethod(){
+    private Method push(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
 
         return new Method("push", new BooleanTypeDescriptor(), parameters);
     }
 
-    private Method popMethod(){
+    private Method pop(){
         return new Method("pop", elementType, new ArrayList<>());
     }
 

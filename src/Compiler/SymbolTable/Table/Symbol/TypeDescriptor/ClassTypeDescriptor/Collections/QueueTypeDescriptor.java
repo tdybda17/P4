@@ -18,8 +18,8 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptors {
     }
 
     private void addMethods(){
-        this.addMethod(enqueueMethod());
-        this.addMethod(dequeueMethod());
+        this.addMethod(enqueue());
+        this.addMethod(dequeue());
     }
 
     @Override
@@ -27,14 +27,14 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptors {
         return "Queue";
     }
 
-    private Method enqueueMethod(){
+    private Method enqueue(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
 
         return new Method("enqueue", new BooleanTypeDescriptor(), parameters);
     }
 
-    private Method dequeueMethod(){
+    private Method dequeue(){
         return new Method("dequeue", elementType, new ArrayList<>());
     }
 
