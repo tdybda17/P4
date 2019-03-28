@@ -14,11 +14,6 @@ public class FunctionAttributes implements Attributes {
         this.parameterTypes = parameterTypes;
     }
 
-    @Override
-    public String getAttributeKind() {
-        return "Function";
-    }
-
     public TypeDescriptor getReturnType() {
         return returnType;
     }
