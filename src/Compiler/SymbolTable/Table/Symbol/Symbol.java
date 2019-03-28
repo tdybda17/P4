@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private Object var;
     private SymbolList symbolList;
     private int depth;
 
@@ -26,6 +25,10 @@ public class Symbol implements Comparable<Symbol> {
         this.attributes = attributes;
         this.depth = depth;
         this.symbolList = symbolList;
+
+
+
+
     }
 
     public String getName() {
@@ -42,6 +45,10 @@ public class Symbol implements Comparable<Symbol> {
 
     public SymbolList getSymbolList() {
         return symbolList;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package Compiler.SymbolTable.Table.Symbol.SymbolList;
 
-import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class BinarySymbolSearchTest {
     @Test
     void testCorrectSymbolReturned03() {
         symbolList.add(new Symbol("name", 1));
-        assertThrows(NoSuchSymbolError.class, () -> BinarySymbolSearch.find(symbolList, "name2"));
+        assertNull(BinarySymbolSearch.find(symbolList, "name2"));
     }
 
     @Test

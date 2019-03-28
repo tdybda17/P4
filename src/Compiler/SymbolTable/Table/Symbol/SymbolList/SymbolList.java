@@ -39,6 +39,20 @@ public class SymbolList {
         return symbols.get(index);
     }
 
+    public Symbol remove(int i) {
+        return symbols.remove(i);
+    }
+
+    public int size() {
+        return symbols.size();
+    }
+
+    /*
+    public Symbol remove(Symbol symbol) {
+        return this.symbols.remove(symbol);
+    }
+    */
+
     public List<Symbol> asList() {
         return symbols;
     }
