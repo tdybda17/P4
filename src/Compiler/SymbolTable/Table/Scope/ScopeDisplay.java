@@ -4,7 +4,9 @@ import Compiler.Exceptions.SymbolTable.ScopeError.AddingToClosedScopeDisplayErro
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ScopeDisplay {
@@ -29,6 +31,15 @@ public class ScopeDisplay {
         if(currentDepth > 0)
             symbolMap.get(this.currentDepth).add(symbol);
         else throw new AddingToClosedScopeDisplayError();
+    }
+
+    public List<Symbol> remove(int depth) {
+        List<Symbol> symbolsToRemove = symbolMap.get(depth).asList();
+        symbolMap.remove(depth);
+        if(currentDepth > 0)
+            currentDepth--;
+
+        return symbolsToRemove;
     }
 
 }
