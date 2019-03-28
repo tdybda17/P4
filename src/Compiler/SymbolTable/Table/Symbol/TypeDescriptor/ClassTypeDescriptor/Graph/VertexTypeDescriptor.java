@@ -33,13 +33,17 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
     }
 
     private Method getOutgoingEdges(){
-        TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor());
-        return new Method("getOutgoingEdges", returnType, new ArrayList<>());
+        //TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor()); //vi har to mulige underklasser
+        //return new Method("getOutgoingEdges", returnType, new ArrayList<>());
+        return null;
     }
 
     private Method getNeighbours(){
-        TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
-        return new Method("getNeighbours", returnType, new ArrayList<>());
+        /*TODO: få fixet dette, da det er et infite recursive loop,
+        da hver vertex har en metode som returner et set<vertex>, men hvor hver vertex i dette sæt har også set<vertex> osv. */
+        // TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
+        //return new Method("getNeighbours", returnType, new ArrayList<>());
+        return null;
     }
 
     private Field color(){
@@ -49,7 +53,7 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
     public void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
         for (Field field: this.getFields()) {
             if(field.equals(userAttribute)) {
-                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an already added field");
+                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an field already existing in the vertex type.");
             }
         }
 
