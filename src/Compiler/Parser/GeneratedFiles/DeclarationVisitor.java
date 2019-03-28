@@ -82,6 +82,11 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
+        return null;
+    }
+
     public Object visit(ASTOR_EXPR node, Object data) {
         return defaultVisit(node, data);
     }
@@ -118,8 +123,18 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTMEMBER node, Object data) {
+        return null;
+    }
+
     public Object visit(ASTACTUAL_PARAMETERS node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAIN node, Object data) {
+        return null;
     }
 
     public Object visit(ASTBLOCK node, Object data) {
@@ -162,19 +177,17 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTSTMT node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     public Object visit(ASTASSIGN node, Object data) {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTFUNC_CALL node, Object data) {
-        return defaultVisit(node, data);
+    @Override
+    public Object visit(ASTFUNCTION_CALL node, Object data) {
+        return null;
     }
 
-    public Object visit(ASTLOOP node, Object data) {
+    public Object visit(ASTFUNC_CALL node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -220,6 +233,11 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     public Object visit(ASTFUNC_DCL node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTRETURN_TYPE node, Object data) {
+        return null;
     }
 
     public Object visit(ASTFORMAL_PARAMETERS node, Object data) {
