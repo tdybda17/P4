@@ -32,8 +32,8 @@ class AttributesTest {
         if(attributes instanceof FunctionAttributes) {
             //We are checking by type casting that we can get the correct info out of the symbol still.
             FunctionAttributes actualAttributes = (FunctionAttributes) attributes;
-            assertEquals(funcAttr.getReturnType(),actualAttributes.getReturnType());
             assertEquals(funcAttr.getAttributeKind(), actualAttributes.getAttributeKind());
+            assertEquals(funcAttr.getReturnType(),actualAttributes.getReturnType());
             assertEquals(funcAttr.getParameterTypes(), actualAttributes.getParameterTypes());
         } else {
             throw new RuntimeException("We should not get here");

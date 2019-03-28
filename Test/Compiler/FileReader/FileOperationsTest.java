@@ -1,5 +1,6 @@
 package Compiler.FileReader;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ class FileOperationsTest {
 
     private Path directory;
 
-    @Test
+    @Disabled
     void testGetFilesOfDirectory01() {
         directory = Paths.get("/Users/toby/Programs/P4/Test/ProgramTestCases/SyntaxError");
         try {

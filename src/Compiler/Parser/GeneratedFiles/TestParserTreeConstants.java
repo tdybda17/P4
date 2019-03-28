@@ -9,7 +9,7 @@ public interface TestParserTreeConstants
   public int JJTVERTEX_ATTRIBUTES = 3;
   public int JJTEDGE_ATTRIBUTES = 4;
   public int JJTATTRIBUTE_DCL = 5;
-  public int JJTASSIGN = 6;
+  public int JJTDCL = 6;
   public int JJTOBJECT_TYPE = 7;
   public int JJTSIMPLE_TYPES = 8;
   public int JJTIDENTIFIER = 9;
@@ -27,28 +27,31 @@ public interface TestParserTreeConstants
   public int JJTACTUAL_PARAMETERS = 21;
   public int JJTBLOCK = 22;
   public int JJTCREATE = 23;
-  public int JJTGRAPH_TYPE = 24;
-  public int JJTGRAPH_DCL = 25;
-  public int JJTGRAPH_VERTEX_DCL = 26;
-  public int JJTVERTEX_LIST = 27;
-  public int JJTVERTEX = 28;
-  public int JJTWEIGHT = 29;
-  public int JJTSTMT = 30;
-  public int JJTFUNC_CALL = 31;
-  public int JJTLOOP = 32;
-  public int JJTWHILE_STATEMENT = 33;
-  public int JJTFOR_STATEMENT = 34;
-  public int JJTINTEGER_VALUE = 35;
-  public int JJTFOREACH_STATEMENT = 36;
-  public int JJTIF_STATEMENT = 37;
-  public int JJTELSE_STATEMENT = 38;
-  public int JJTRETURN_STMT = 39;
-  public int JJTCOLLECTION_ADT = 40;
-  public int JJTELEMENT_LIST = 41;
-  public int JJTFUNCS_DCL = 42;
-  public int JJTFUNC_DCL = 43;
-  public int JJTFORMAL_PARAMETERS = 44;
-  public int JJTFORMAL_PARAMETER = 45;
+  public int JJTGRAPH_DCL = 24;
+  public int JJTGRAPH_TYPE = 25;
+  public int JJTGRAPH_ASSIGN = 26;
+  public int JJTGRAPH_DCL_ELEMENTS = 27;
+  public int JJTGRAPH_VERTEX_DCL = 28;
+  public int JJTVERTEX_LIST = 29;
+  public int JJTVERTEX = 30;
+  public int JJTWEIGHT = 31;
+  public int JJTSTMT = 32;
+  public int JJTASSIGN = 33;
+  public int JJTFUNC_CALL = 34;
+  public int JJTLOOP = 35;
+  public int JJTWHILE_STATEMENT = 36;
+  public int JJTFOR_STATEMENT = 37;
+  public int JJTINTEGER_VALUE = 38;
+  public int JJTFOREACH_STATEMENT = 39;
+  public int JJTIF_STATEMENT = 40;
+  public int JJTELSE_STATEMENT = 41;
+  public int JJTRETURN_STMT = 42;
+  public int JJTCOLLECTION_ADT = 43;
+  public int JJTELEMENT_LIST = 44;
+  public int JJTFUNCS_DCL = 45;
+  public int JJTFUNC_DCL = 46;
+  public int JJTFORMAL_PARAMETERS = 47;
+  public int JJTFORMAL_PARAMETER = 48;
 
 
   public String[] jjtNodeName = {
@@ -58,7 +61,7 @@ public interface TestParserTreeConstants
     "VERTEX_ATTRIBUTES",
     "EDGE_ATTRIBUTES",
     "ATTRIBUTE_DCL",
-    "ASSIGN",
+    "DCL",
     "OBJECT_TYPE",
     "SIMPLE_TYPES",
     "IDENTIFIER",
@@ -76,13 +79,16 @@ public interface TestParserTreeConstants
     "ACTUAL_PARAMETERS",
     "BLOCK",
     "CREATE",
-    "GRAPH_TYPE",
     "GRAPH_DCL",
+    "GRAPH_TYPE",
+    "GRAPH_ASSIGN",
+    "GRAPH_DCL_ELEMENTS",
     "GRAPH_VERTEX_DCL",
     "VERTEX_LIST",
     "VERTEX",
     "WEIGHT",
     "STMT",
+    "ASSIGN",
     "FUNC_CALL",
     "LOOP",
     "WHILE_STATEMENT",
@@ -100,4 +106,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=14c8390fdeff380fabf3b539bf8d900a (do not edit this line) */
+/* JavaCC - OriginalChecksum=1a059034a26ccbac3d185ece962a2617 (do not edit this line) */

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SymbolTable implements ISymbolTable {
-
     private int depth;
     private ScopeDisplay scopeDisplay;
     private Map<String, SymbolList> hashMap;

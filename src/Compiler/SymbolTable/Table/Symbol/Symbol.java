@@ -25,10 +25,6 @@ public class Symbol implements Comparable<Symbol> {
         this.attributes = attributes;
         this.depth = depth;
         this.symbolList = symbolList;
-
-
-
-
     }
 
     public String getName() {
