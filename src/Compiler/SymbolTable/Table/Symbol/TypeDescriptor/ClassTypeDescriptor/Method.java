@@ -33,13 +33,11 @@ public class Method {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Method method = (Method) o;
-        return Objects.equals(methodName, method.methodName) &&
-                Objects.equals(returnType, method.returnType) &&
-                Objects.equals(parameterTypes, method.parameterTypes);
+        return Objects.equals(methodName, method.methodName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(methodName, returnType, parameterTypes);
+        return Objects.hash(methodName);
     }
 }

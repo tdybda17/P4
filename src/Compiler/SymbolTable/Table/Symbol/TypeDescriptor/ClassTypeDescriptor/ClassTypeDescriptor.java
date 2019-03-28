@@ -1,5 +1,6 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor;
 
+import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.HashSet;
@@ -22,10 +23,20 @@ public abstract class ClassTypeDescriptor extends TypeDescriptor {
     }
 
     protected void addMethod(Method method){
+        for (Method m : this.getMethods()) {
+            if(m.equals(method)) {
+                throw new TypeDescriptorException("The method name: " + method.getMethodName() + "was used two times in: " + this);
+            }
+        }
         methods.add(method);
     }
 
     protected void addField(Field field) {
+        for (Field f : this.getFields()) {
+            if(f.equals(field)) {
+                throw new TypeDescriptorException("The field name: " + field.getFieldName() + "was used two times in: " + this);
+            }
+        }
         fields.add(field);
     }
 }
