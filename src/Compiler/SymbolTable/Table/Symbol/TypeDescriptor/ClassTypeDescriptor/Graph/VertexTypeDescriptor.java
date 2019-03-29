@@ -10,6 +10,8 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VertexTypeDescriptor extends ClassTypeDescriptor {
     public VertexTypeDescriptor() {
@@ -24,27 +26,13 @@ public class VertexTypeDescriptor extends ClassTypeDescriptor {
     }
 
     private void addMethods(){
-        this.addMethod(getOutgoingEdges());
-        this.addMethod(getNeighbours());
+        //We do not have any methods for vertexes yet
     }
 
     private void addFields() {
         this.addField(color());
     }
 
-    private Method getOutgoingEdges(){
-        //TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor()); //vi har to mulige underklasser
-        //return new Method("getOutgoingEdges", returnType, new ArrayList<>());
-        return null;
-    }
-
-    private Method getNeighbours(){
-        /*TODO: få fixet dette, da det er et infite recursive loop,
-        da hver vertex har en metode som returner et set<vertex>, men hvor hver vertex i dette sæt har også set<vertex> osv. */
-        // TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
-        //return new Method("getNeighbours", returnType, new ArrayList<>());
-        return null;
-    }
 
     private Field color(){
         return new Field("color", new ColorTypeDescriptor());

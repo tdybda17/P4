@@ -27,13 +27,6 @@ class VertexTypeDescriptorTest {
     @Test
     void getMethods() {
         Set<Method> expected = new HashSet<>();
-
-        TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
-        expected.add(new Method("getNeighbours", returnType, new ArrayList<>()));
-
-        //returnType = new SetTypeDescriptor(new EdgeTypeDescriptor());
-        expected.add(new Method("getOutgoingEdges", returnType, new ArrayList<>()));
-
         assertEquals(expected, vertexTypeDescriptor.getMethods());
     }
 

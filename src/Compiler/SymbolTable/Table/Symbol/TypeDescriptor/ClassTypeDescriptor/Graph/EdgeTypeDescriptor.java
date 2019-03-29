@@ -2,15 +2,23 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Gra
 
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.RealTypeDescriptor;
 
-public abstract class EdgeTypeDescriptor extends ClassTypeDescriptor {
-    public EdgeTypeDescriptor() {
+public class EdgeTypeDescriptor extends ClassTypeDescriptor {
+    private boolean directed;
+    public EdgeTypeDescriptor(Boolean directed) {
         super();
+        this.directed = directed;
         this.addMethods();
         this.addFields();
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Edge";
     }
 
     private void addMethods(){
@@ -20,6 +28,11 @@ public abstract class EdgeTypeDescriptor extends ClassTypeDescriptor {
     private void addFields() {
         this.addField(color());
         this.addField(weight());
+        if(directed) {
+            this.addDirectedFields();
+        } else {
+            this.addUndirectedFields();
+        }
     }
 
     private Field color(){
@@ -38,6 +51,27 @@ public abstract class EdgeTypeDescriptor extends ClassTypeDescriptor {
         }
 
         this.addField(userAttribute);
+    }
+
+    private void addDirectedFields() {
+        this.addField(this.startVertex());
+        this.addField(this.endVertex());
+    }
+
+    private Field startVertex() {
+        return new Field("startVertex", new VertexTypeDescriptor());
+    }
+
+    private Field endVertex() {
+        return new Field("endVertex", new VertexTypeDescriptor());
+    }
+
+    private void addUndirectedFields() {
+        this.addField(this.vertexSet());
+    }
+
+    private Field vertexSet() {
+        return new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor()));
     }
 
 }
