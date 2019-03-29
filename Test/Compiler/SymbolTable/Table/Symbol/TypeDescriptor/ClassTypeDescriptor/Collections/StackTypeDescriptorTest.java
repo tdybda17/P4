@@ -26,17 +26,24 @@ class StackTypeDescriptorTest {
         stackTypeDescriptor = new StackTypeDescriptor(elementType);
     }
 
+    @Test
+    void getMethodsIsEmpty(){
+        Method expected = new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>());
+        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
+    }
 
     @Test
-    void getMethods() {
-        Set<Method> expected = new HashSet<>();
-        expected.add(new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>()));
-        expected.add(new Method("pop", elementType, new ArrayList<>()));
-        List<TypeDescriptor> pushParameters = new ArrayList<>();
-        pushParameters.add(elementType);
-        expected.add(new Method("push", new BooleanTypeDescriptor(), pushParameters));
+    void getMethodsPop() {
+        Method expected = new Method("pop", elementType, new ArrayList<>());
+        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
+    }
 
-        assertEquals(expected, stackTypeDescriptor.getMethods());
+    @Test
+    void getMethodsPush() {
+        List<TypeDescriptor> enqueueParameters = new ArrayList<>();
+        enqueueParameters.add(elementType);
+        Method expected = new Method("push", new BooleanTypeDescriptor(), enqueueParameters);
+        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
     }
 
     @Test

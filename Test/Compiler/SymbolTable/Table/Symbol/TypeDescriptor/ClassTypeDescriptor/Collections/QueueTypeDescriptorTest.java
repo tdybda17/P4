@@ -28,21 +28,28 @@ class QueueTypeDescriptorTest {
 
 
     @Test
-    void getMethods() {
-        Set<Method> expected = new HashSet<>();
-        expected.add(new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>()));
-        expected.add(new Method("dequeue", elementType, new ArrayList<>()));
+    void getMethodsIsEmpty() {
+        Method expected = new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>());
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
+    }
+
+    @Test
+    void getMethodsDequeue() {
+        Method expected = new Method("dequeue", elementType, new ArrayList<>());
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
+    }
+
+    @Test
+    void getMethodsEnqueue() {
         List<TypeDescriptor> enqueueParameters = new ArrayList<>();
         enqueueParameters.add(elementType);
-        expected.add(new Method("enqueue", new BooleanTypeDescriptor(), enqueueParameters));
-
-        assertEquals(expected, queueTypeDescriptor.getMethods());
+        Method expected = new Method("enqueue", new BooleanTypeDescriptor(), enqueueParameters);
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
     }
 
     @Test
     void getFields() {
         Set<Field> expected = new HashSet<>();
-
         assertEquals(expected, queueTypeDescriptor.getFields());
     }
 
