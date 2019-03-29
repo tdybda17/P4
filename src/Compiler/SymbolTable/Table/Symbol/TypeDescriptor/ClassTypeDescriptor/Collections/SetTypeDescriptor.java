@@ -50,7 +50,7 @@ public class SetTypeDescriptor extends CollectionTypeDescriptors {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) return false; //Checking their names up against each other
         SetTypeDescriptor that = (SetTypeDescriptor) o;
         return elementType.equals(that.elementType);
     }

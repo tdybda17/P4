@@ -34,7 +34,7 @@ public class GraphTypeDescriptor extends ClassTypeDescriptor {
     }
 
     private Method getOutgoingEdges(){
-        TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor()); //vi har to mulige underklasser
+        TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor(this.directed)); //vi har to mulige underklasser
 
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new VertexTypeDescriptor());
