@@ -3,12 +3,14 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Gra
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.VertexPairTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.RealTypeDescriptor;
 
 public class EdgeTypeDescriptor extends ClassTypeDescriptor {
     private boolean directed;
+
     public EdgeTypeDescriptor(Boolean directed) {
         super();
         this.directed = directed;
@@ -67,11 +69,11 @@ public class EdgeTypeDescriptor extends ClassTypeDescriptor {
     }
 
     private void addUndirectedFields() {
-        this.addField(this.vertexSet());
+        this.addField(this.vertices());
     }
 
-    private Field vertexSet() {
-        return new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor()));
+    private Field vertices() {
+        return new Field("vertices", new VertexPairTypeDescriptor());
     }
 
 }
