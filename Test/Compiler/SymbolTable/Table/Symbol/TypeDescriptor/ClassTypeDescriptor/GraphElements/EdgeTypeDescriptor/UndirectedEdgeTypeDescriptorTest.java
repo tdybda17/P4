@@ -1,10 +1,8 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor;
 
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexPairTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor.DirectedEdgeTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor.EdgeTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor.UndirectedEdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.IntegerTypeDescriptor;
@@ -17,23 +15,23 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectedEdgeTypeDescriptorTest {
-    private EdgeTypeDescriptor directedEdgeTypeDescriptor;
+class UndirectedEdgeTypeDescriptorTest {
+    private EdgeTypeDescriptor undirectedEdgeTypeDescriptor;
 
     @BeforeEach
     void beforeEach(){
-        directedEdgeTypeDescriptor = new DirectedEdgeTypeDescriptor();
+        undirectedEdgeTypeDescriptor = new UndirectedEdgeTypeDescriptor();
     }
 
     @Test
     void getTypeName() {
-        assertEquals("DirectedEdge", directedEdgeTypeDescriptor.getTypeName());
+        assertEquals("UndirectedEdge", undirectedEdgeTypeDescriptor.getTypeName());
     }
 
     @Test
     void getMethods() {
         Set<Method> expected = new HashSet<>();
-        assertEquals(expected, directedEdgeTypeDescriptor.getMethods());
+        assertEquals(expected, undirectedEdgeTypeDescriptor.getMethods());
     }
 
     @Test
@@ -41,37 +39,35 @@ class DirectedEdgeTypeDescriptorTest {
         Set<Field> expected = new HashSet<>();
         expected.add(new Field("color", new ColorTypeDescriptor()));
         expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("startVertex", new VertexTypeDescriptor()));
-        expected.add(new Field("endVertex", new VertexTypeDescriptor()));
-        assertEquals(expected, directedEdgeTypeDescriptor.getFields());
+        expected.add(new Field("vertices", new VertexPairTypeDescriptor()));
+        assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
     }
 
     @Test
     void testAddUserAttributes1(){
         Field testField = new Field("test", new IntegerTypeDescriptor());
-        directedEdgeTypeDescriptor.addUserAttribute(testField);
+        undirectedEdgeTypeDescriptor.addUserAttribute(testField);
 
 
         Set<Field> expected = new HashSet<>();
         expected.add(new Field("color", new ColorTypeDescriptor()));
         expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("startVertex", new VertexTypeDescriptor()));
-        expected.add(new Field("endVertex", new VertexTypeDescriptor()));
+        expected.add(new Field("vertices", new VertexPairTypeDescriptor()));
         expected.add(testField);
-        assertEquals(expected, directedEdgeTypeDescriptor.getFields());
+        assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
     }
 
     @Test
     void testAddUserAttributes2(){
         Field sameAsExistingField = new Field("color", new ColorTypeDescriptor());
 
-        assertThrows(TypeDescriptorException.class, () -> directedEdgeTypeDescriptor.addUserAttribute(sameAsExistingField));
+        assertThrows(TypeDescriptorException.class, () -> undirectedEdgeTypeDescriptor.addUserAttribute(sameAsExistingField));
     }
     @Test
     void equals1() {
-        EdgeTypeDescriptor expected = new DirectedEdgeTypeDescriptor();
+        EdgeTypeDescriptor expected = new UndirectedEdgeTypeDescriptor();
 
-        assertEquals(expected, directedEdgeTypeDescriptor);
+        assertEquals(expected, undirectedEdgeTypeDescriptor);
     }
 
     //Right now two type descriptors are still equal if they have different fields, however in our langauge you cannot make two
@@ -79,17 +75,17 @@ class DirectedEdgeTypeDescriptorTest {
     @Test
     void equals2() {
         Field testField = new Field("test", new IntegerTypeDescriptor());
-        directedEdgeTypeDescriptor.addUserAttribute(testField);
+        undirectedEdgeTypeDescriptor.addUserAttribute(testField);
 
-        EdgeTypeDescriptor expected = new DirectedEdgeTypeDescriptor();
-        assertEquals(expected, directedEdgeTypeDescriptor);
+        EdgeTypeDescriptor expected = new UndirectedEdgeTypeDescriptor();
+        assertEquals(expected, undirectedEdgeTypeDescriptor);
     }
 
     //Testing that directed edges are not equal to undirected edges.
     @Test
     void equals3() {
-        EdgeTypeDescriptor undirectedEdgeTypeDescriptor = new UndirectedEdgeTypeDescriptor();
-        assertNotEquals(undirectedEdgeTypeDescriptor, directedEdgeTypeDescriptor);
+        EdgeTypeDescriptor directedEdgeTypeDescriptor = new DirectedEdgeTypeDescriptor();
+        assertNotEquals(directedEdgeTypeDescriptor, this.undirectedEdgeTypeDescriptor);
     }
 
 }
