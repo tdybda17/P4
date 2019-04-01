@@ -15,6 +15,12 @@ public class UndirectedGraphTypeDescriptor extends GraphTypeDescriptor {
         this.addUndirectedMethods();
     }
 
+    @Override
+    public String getTypeName() {
+        return "UndirectedGraph";
+    }
+
+
     private void addUndirectedMethods(){
         this.addMethod(this.getOutgoingEdges());
     }

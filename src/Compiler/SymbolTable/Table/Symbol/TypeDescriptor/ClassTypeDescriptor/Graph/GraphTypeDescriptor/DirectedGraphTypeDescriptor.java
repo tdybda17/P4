@@ -17,6 +17,11 @@ public class DirectedGraphTypeDescriptor extends GraphTypeDescriptor {
         this.addDirectedMethods();
     }
 
+    @Override
+    public String getTypeName() {
+        return "DirectedGraph";
+    }
+
     private void addDirectedMethods(){
         this.addMethod(this.getOutgoingEdges());
     }

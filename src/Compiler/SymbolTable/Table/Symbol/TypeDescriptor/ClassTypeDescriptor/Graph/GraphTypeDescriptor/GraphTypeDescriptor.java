@@ -17,11 +17,6 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         this.addFields();
     }
 
-    @Override
-    public String getTypeName() {
-        return "Graph";
-    }
-
     private void addMethods(){
         //We do not have any methods for the Edge Type yet
         this.addMethod(getNeighbours());
