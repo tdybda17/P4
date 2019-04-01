@@ -1,8 +1,9 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.IntegerTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
     private void addMethods(){
         addMethod(maximum());
         addMethod(extractMax());
-        addMethod(decreaseKey());
+        addMethod(increaseKey());
     }
 
     private Method maximum(){
@@ -31,11 +32,11 @@ public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
         return new Method("extractMax", elementType, new ArrayList<>());
     }
 
-    private Method decreaseKey(){
+    private Method increaseKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
-        parameters.add(new IntegerTypeDescriptor());
-        return new Method("decreaseKey", new BooleanTypeDescriptor(), parameters);
+        parameters.add(new RealTypeDescriptor());
+        return new Method("increaseKey", new BooleanTypeDescriptor(), parameters);
     }
 
     @Override

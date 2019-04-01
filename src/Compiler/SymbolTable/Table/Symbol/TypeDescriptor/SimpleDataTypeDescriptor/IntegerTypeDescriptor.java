@@ -1,6 +1,4 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
-
-import java.util.Objects;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor;
 
 public class IntegerTypeDescriptor extends SimpleDataTypeDescriptor {
 
