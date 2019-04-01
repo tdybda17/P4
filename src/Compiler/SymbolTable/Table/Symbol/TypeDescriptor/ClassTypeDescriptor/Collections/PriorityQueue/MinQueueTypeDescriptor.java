@@ -1,9 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.*;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
     private void addMethods(){
         addMethod(minimum());
         addMethod(extractMin());
-        addMethod(increaseKey());
+        addMethod(decreaseKey());
     }
 
     private Method minimum(){
@@ -31,11 +29,11 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
         return new Method("extractMin", elementType, new ArrayList<>());
     }
 
-    private Method increaseKey(){
+    private Method decreaseKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
-        parameters.add(new IntegerTypeDescriptor());
-        return new Method("increaseKey", new BooleanTypeDescriptor(), parameters);
+        parameters.add(new RealTypeDescriptor());
+        return new Method("decreaseKey", new BooleanTypeDescriptor(), parameters);
     }
 
     @Override
