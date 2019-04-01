@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AttributesTest {
     private FunctionAttributes funcAttr;
-    private VariableAttributes variableAttr;
+    private IdentifierAttributes variableAttr;
 
     @BeforeEach
     void setUp() {
         List<TypeDescriptor> parameterTypes = new ArrayList<>();
         funcAttr = new FunctionAttributes(new IntegerTypeDescriptor(), parameterTypes);
-        variableAttr = new VariableAttributes(new IntegerTypeDescriptor());
+        variableAttr = new IdentifierAttributes(new IntegerTypeDescriptor());
     }
 
     @Test
@@ -32,7 +32,6 @@ class AttributesTest {
         if(attributes instanceof FunctionAttributes) {
             //We are checking by type casting that we can get the correct info out of the symbol still.
             FunctionAttributes actualAttributes = (FunctionAttributes) attributes;
-            assertEquals(funcAttr.getAttributeKind(), actualAttributes.getAttributeKind());
             assertEquals(funcAttr.getReturnType(),actualAttributes.getReturnType());
             assertEquals(funcAttr.getParameterTypes(), actualAttributes.getParameterTypes());
         } else {
@@ -41,15 +40,14 @@ class AttributesTest {
     }
 
     @Test
-    void testingInstanceOfVariableAttr(){
+    void testingInstanceOfIdentifierAttr(){
         Symbol testSymbol = new Symbol("testFunctionSymbol", variableAttr, 1, new SymbolList());
 
         Attributes attributes = testSymbol.getAttributes();
 
-        if(attributes instanceof VariableAttributes) {
+        if(attributes instanceof IdentifierAttributes) {
             //We are checking by type casting that we can get the correct info out of the symbol still.
-            VariableAttributes actualAttributes = (VariableAttributes) attributes;
-            assertEquals(variableAttr.getAttributeKind(), actualAttributes.getAttributeKind());
+            IdentifierAttributes actualAttributes = (IdentifierAttributes) attributes;
             assertEquals(variableAttr.getType(), actualAttributes.getType());
         } else {
             throw new RuntimeException("We should not get here");

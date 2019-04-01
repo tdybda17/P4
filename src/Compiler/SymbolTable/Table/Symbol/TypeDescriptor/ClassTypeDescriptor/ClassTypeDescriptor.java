@@ -28,5 +28,4 @@ public abstract class ClassTypeDescriptor extends TypeDescriptor {
     protected void addField(Field field) {
         fields.add(field);
     }
-
 }
