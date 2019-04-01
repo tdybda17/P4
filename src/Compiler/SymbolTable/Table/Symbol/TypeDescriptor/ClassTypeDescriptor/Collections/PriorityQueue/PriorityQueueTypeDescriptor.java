@@ -1,6 +1,7 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
@@ -8,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PriorityQueueTypeDescriptor extends CollectionTypeDescriptors {
+abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
 
-    public PriorityQueueTypeDescriptor(TypeDescriptor elementType) {
+    PriorityQueueTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
@@ -25,11 +26,6 @@ public class PriorityQueueTypeDescriptor extends CollectionTypeDescriptors {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
         return new Method("insert", new BooleanTypeDescriptor(), parameters);
-    }
-
-    @Override
-    public String getTypeName() {
-        return "PriorityQueue";
     }
 
     @Override
