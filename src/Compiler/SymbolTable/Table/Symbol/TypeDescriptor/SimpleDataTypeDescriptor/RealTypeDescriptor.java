@@ -1,4 +1,4 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor;
 
 public class RealTypeDescriptor extends SimpleDataTypeDescriptor {
     @Override
