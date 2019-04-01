@@ -32,18 +32,18 @@ class FieldTest {
         assertEquals(other, field);
     }
 
-    //Testing wrong name
+    //Testing that two fields with different types but same name then they are still equal
     @Test
     void equals2() {
-        Field other = new Field("wrongName", new IntegerTypeDescriptor());
+        Field other = new Field("testField", new BooleanTypeDescriptor());
 
-        assertNotEquals(other, field);
+        assertEquals(other, field);
     }
 
-    //Testing wrong type of the field
+    //Testing wrong name
     @Test
     void equals3() {
-        Field other = new Field("testField", new BooleanTypeDescriptor());
+        Field other = new Field("wrongName", new IntegerTypeDescriptor());
 
         assertNotEquals(other, field);
     }

@@ -1,39 +1,31 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-public class StackTypeDescriptor extends CollectionTypeDescriptors {
+abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
 
-    StackTypeDescriptor(TypeDescriptor elementType) {
+    PriorityQueueTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
     }
 
-    private void addMethods(){
-        this.addMethod(push());
-        this.addMethod(pop());
+    private void addMethods() {
+        addMethod(insert());
     }
 
-    @Override
-    public String getTypeName() {
-        return "Stack";
-    }
-
-    private Method push(){
+    private Method insert(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(elementType);
-
-        return new Method("push", new BooleanTypeDescriptor(), parameters);
-    }
-
-    private Method pop(){
-        return new Method("pop", elementType, new ArrayList<>());
+        return new Method("insert", new BooleanTypeDescriptor(), parameters);
     }
 
     @Override
@@ -41,8 +33,8 @@ public class StackTypeDescriptor extends CollectionTypeDescriptors {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        StackTypeDescriptor that = (StackTypeDescriptor) o;
-        return Objects.equals(elementType, that.elementType);
+        PriorityQueueTypeDescriptor that = (PriorityQueueTypeDescriptor) o;
+        return elementType.equals(that.elementType);
     }
 
     @Override
