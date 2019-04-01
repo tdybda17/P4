@@ -27,12 +27,11 @@ public class Field {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Field field = (Field) o;
-        return Objects.equals(type, field.type) &&
-                Objects.equals(fieldName, field.fieldName);
+        return Objects.equals(fieldName, field.fieldName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, fieldName);
+        return Objects.hash(fieldName);
     }
 }

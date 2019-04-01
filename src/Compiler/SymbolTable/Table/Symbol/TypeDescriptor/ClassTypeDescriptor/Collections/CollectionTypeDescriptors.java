@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-abstract class CollectionTypeDescriptors extends ClassTypeDescriptor {
-    CollectionTypeDescriptors() {
+public abstract class CollectionTypeDescriptors extends ClassTypeDescriptor {
+    public CollectionTypeDescriptors() {
         super();
         this.addMethod(isEmpty());
     }

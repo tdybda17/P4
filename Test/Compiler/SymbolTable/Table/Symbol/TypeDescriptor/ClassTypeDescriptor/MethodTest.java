@@ -60,34 +60,23 @@ class MethodTest {
         assertNotEquals(other, method);
     }
 
-    //Testing different return types
+    //Testing two methods with different return types still are equal
     @Test
     void equals3() {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new IntegerTypeDescriptor());
         parameters.add(new BooleanTypeDescriptor());
         Method other = new Method("testMethod", new BooleanTypeDescriptor(), parameters);
-        assertNotEquals(other, method);
+        assertEquals(other, method);
     }
 
-    //Testing parameters incorrect parameters
+    //Testing that two methods with different parameters are equal because we do not support method overloading
     @Test
     void equals4() {
         List<TypeDescriptor> wrongParameters = new ArrayList<>();
         wrongParameters.add(new IntegerTypeDescriptor());
         wrongParameters.add(new IntegerTypeDescriptor());
         Method other = new Method("testMethod", new IntegerTypeDescriptor(), wrongParameters);
-        assertNotEquals(other, method);
-    }
-
-
-    //Testing parameters in wrong order
-    @Test
-    void equals5() {
-        List<TypeDescriptor> wrongParameters = new ArrayList<>();
-        wrongParameters.add(new BooleanTypeDescriptor());
-        wrongParameters.add(new IntegerTypeDescriptor());
-        Method other = new Method("testMethod", new IntegerTypeDescriptor(), wrongParameters);
-        assertNotEquals(other, method);
+        assertEquals(other, method);
     }
 }

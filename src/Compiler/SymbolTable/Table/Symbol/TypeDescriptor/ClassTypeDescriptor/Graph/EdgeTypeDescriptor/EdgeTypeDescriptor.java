@@ -1,47 +1,42 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor;
 
-import Compiler.Exceptions.CompilerException;
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.VertexPairTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.RealTypeDescriptor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+public abstract class EdgeTypeDescriptor extends ClassTypeDescriptor {
 
-public class VertexTypeDescriptor extends ClassTypeDescriptor {
-    public VertexTypeDescriptor() {
+    public EdgeTypeDescriptor() {
         super();
         this.addMethods();
         this.addFields();
     }
 
-    @Override
-    public String getTypeName() {
-        return "Vertex";
-    }
-
     private void addMethods(){
-        //We do not have any methods for vertexes yet
+        //We do not have any methods for the Edge Type yet
     }
 
     private void addFields() {
         this.addField(color());
+        this.addField(weight());
     }
-
 
     private Field color(){
         return new Field("color", new ColorTypeDescriptor());
     }
 
+    private Field weight(){
+        return new Field("weight", new RealTypeDescriptor());
+    }
+
     public void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
         for (Field field: this.getFields()) {
             if(field.equals(userAttribute)) {
-                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an field already existing in the vertex type.");
+                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an field already existing in the edge type.");
             }
         }
 

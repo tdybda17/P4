@@ -15,59 +15,59 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StackTypeDescriptorTest {
-    private StackTypeDescriptor stackTypeDescriptor;
+class QueueTypeDescriptorTest {
+    private QueueTypeDescriptor queueTypeDescriptor;
     private TypeDescriptor elementType;
 
     @BeforeEach
     void beforeEach(){
-        //We create an stack of integers
+        //We create a queue of integers
         elementType = new IntegerTypeDescriptor();
-        stackTypeDescriptor = new StackTypeDescriptor(elementType);
+        queueTypeDescriptor = new QueueTypeDescriptor(elementType);
     }
 
+
     @Test
-    void getMethodsIsEmpty(){
+    void getMethodsIsEmpty() {
         Method expected = new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>());
-        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
     }
 
     @Test
-    void getMethodsPop() {
-        Method expected = new Method("pop", elementType, new ArrayList<>());
-        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
+    void getMethodsDequeue() {
+        Method expected = new Method("dequeue", elementType, new ArrayList<>());
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
     }
 
     @Test
-    void getMethodsPush() {
+    void getMethodsEnqueue() {
         List<TypeDescriptor> enqueueParameters = new ArrayList<>();
         enqueueParameters.add(elementType);
-        Method expected = new Method("push", new BooleanTypeDescriptor(), enqueueParameters);
-        assertTrue(stackTypeDescriptor.getMethods().contains(expected));
+        Method expected = new Method("enqueue", new BooleanTypeDescriptor(), enqueueParameters);
+        assertTrue(queueTypeDescriptor.getMethods().contains(expected));
     }
 
     @Test
     void getFields() {
         Set<Field> expected = new HashSet<>();
-
-        assertEquals(expected, stackTypeDescriptor.getFields());
+        assertEquals(expected, queueTypeDescriptor.getFields());
     }
 
     @Test
     void getTypeName() {
-        assertEquals("Stack", stackTypeDescriptor.getTypeName());
+        assertEquals("Queue", queueTypeDescriptor.getTypeName());
     }
 
     @Test
     void equals1() {
-        StackTypeDescriptor other = new StackTypeDescriptor(new IntegerTypeDescriptor());
-        assertEquals(other, stackTypeDescriptor);
+        QueueTypeDescriptor other = new QueueTypeDescriptor(new IntegerTypeDescriptor());
+        assertEquals(other, queueTypeDescriptor);
     }
 
-    //Testing that two stacks with different element types are not equal
+    //Testing that two queues with different element types are not equal
     @Test
     void equals2() {
-        StackTypeDescriptor other = new StackTypeDescriptor(new BooleanTypeDescriptor());
-        assertNotEquals(other, stackTypeDescriptor);
+        QueueTypeDescriptor other = new QueueTypeDescriptor(new BooleanTypeDescriptor());
+        assertNotEquals(other, queueTypeDescriptor);
     }
 }
