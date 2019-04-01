@@ -1,4 +1,4 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor;
 
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
@@ -8,19 +8,12 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Fiel
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.RealTypeDescriptor;
 
-public class EdgeTypeDescriptor extends ClassTypeDescriptor {
-    private boolean directed;
+public abstract class EdgeTypeDescriptor extends ClassTypeDescriptor {
 
-    public EdgeTypeDescriptor(Boolean directed) {
+    public EdgeTypeDescriptor() {
         super();
-        this.directed = directed;
         this.addMethods();
         this.addFields();
-    }
-
-    @Override
-    public String getTypeName() {
-        return "Edge";
     }
 
     private void addMethods(){
@@ -30,11 +23,6 @@ public class EdgeTypeDescriptor extends ClassTypeDescriptor {
     private void addFields() {
         this.addField(color());
         this.addField(weight());
-        if(directed) {
-            this.addDirectedFields();
-        } else {
-            this.addUndirectedFields();
-        }
     }
 
     private Field color(){
@@ -54,26 +42,4 @@ public class EdgeTypeDescriptor extends ClassTypeDescriptor {
 
         this.addField(userAttribute);
     }
-
-    private void addDirectedFields() {
-        this.addField(this.startVertex());
-        this.addField(this.endVertex());
-    }
-
-    private Field startVertex() {
-        return new Field("startVertex", new VertexTypeDescriptor());
-    }
-
-    private Field endVertex() {
-        return new Field("endVertex", new VertexTypeDescriptor());
-    }
-
-    private void addUndirectedFields() {
-        this.addField(this.vertices());
-    }
-
-    private Field vertices() {
-        return new Field("vertices", new VertexPairTypeDescriptor());
-    }
-
 }

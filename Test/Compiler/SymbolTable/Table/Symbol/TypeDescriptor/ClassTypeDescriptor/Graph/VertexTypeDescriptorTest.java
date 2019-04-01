@@ -1,9 +1,11 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
 
+import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class VertexTypeDescriptorTest {
     private VertexTypeDescriptor vertexTypeDescriptor;
 
-    //TODO: check getNeighbours ud da den infinite recursive
     @BeforeEach
     void beforeEach(){
        vertexTypeDescriptor = new VertexTypeDescriptor();
@@ -34,7 +35,6 @@ class VertexTypeDescriptorTest {
     void getFields() {
         Set<Field> expected = new HashSet<>();
         expected.add(new Field("color", new ColorTypeDescriptor()));
-
         assertEquals(expected, vertexTypeDescriptor.getFields());
     }
 
@@ -43,19 +43,40 @@ class VertexTypeDescriptorTest {
         assertEquals("Vertex", vertexTypeDescriptor.getTypeName());
     }
 
+
+    @Test
+    void testAddUserAttributes1(){
+        Field testField = new Field("test", new IntegerTypeDescriptor());
+        vertexTypeDescriptor.addUserAttribute(testField);
+
+
+        Set<Field> expected = new HashSet<>();
+        expected.add(new Field("color", new ColorTypeDescriptor()));
+        expected.add(testField);
+        assertEquals(expected, vertexTypeDescriptor.getFields());
+    }
+
+    @Test
+    void testAddUserAttributes2(){
+        Field sameAsExistingField = new Field("color", new ColorTypeDescriptor());
+
+        assertThrows(TypeDescriptorException.class, () -> vertexTypeDescriptor.addUserAttribute(sameAsExistingField));
+    }
     @Test
     void equals1() {
+        VertexTypeDescriptor expected = new VertexTypeDescriptor();
 
+        assertEquals(expected, vertexTypeDescriptor);
     }
 
-    //Testing that two stacks with different element types are not equal
+    //Right now two type descriptors are still equal if they have different fields, however in our langauge you cannot make two
+    //different versions of vertices.
     @Test
     void equals2() {
-        //StackTypeDescriptor other = new StackTypeDescriptor(new BooleanTypeDescriptor());
-        //assertNotEquals(other, stackTypeDescriptor);
-    }
+        Field testField = new Field("test", new IntegerTypeDescriptor());
+        vertexTypeDescriptor.addUserAttribute(testField);
 
-    @Test
-    void addUserAttribute() {
+        VertexTypeDescriptor expected = new VertexTypeDescriptor();
+        assertEquals(expected, vertexTypeDescriptor);
     }
 }

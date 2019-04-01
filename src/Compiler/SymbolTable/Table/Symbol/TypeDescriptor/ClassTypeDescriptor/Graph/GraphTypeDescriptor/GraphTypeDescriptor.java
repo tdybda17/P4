@@ -1,19 +1,18 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.GraphTypeDescriptor;
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.EdgeTypeDescriptor.EdgeTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graph.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphTypeDescriptor extends ClassTypeDescriptor {
-    private boolean directed;
-
-    public GraphTypeDescriptor(Boolean directed) {
+public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
+    public GraphTypeDescriptor() {
         super();
-        this.directed = directed;
         this.addMethods();
         this.addFields();
     }
@@ -25,20 +24,11 @@ public class GraphTypeDescriptor extends ClassTypeDescriptor {
 
     private void addMethods(){
         //We do not have any methods for the Edge Type yet
-        this.addMethod(getOutgoingEdges());
         this.addMethod(getNeighbours());
     }
 
     private void addFields() {
 
-    }
-
-    private Method getOutgoingEdges(){
-        TypeDescriptor returnType = new SetTypeDescriptor(new EdgeTypeDescriptor(this.directed)); //vi har to mulige underklasser
-
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(new VertexTypeDescriptor());
-        return new Method("getOutgoingEdges", returnType, parameters);
     }
 
     private Method getNeighbours(){
