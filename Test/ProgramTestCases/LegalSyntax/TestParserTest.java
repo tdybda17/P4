@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestParserTest {
-    String absPath = "Test/ProgramTestCases/LegalSyntax/";
+    private String absPath = "Test/ProgramTestCases/LegalSyntax/";
 
     @Test
     void testVertexDcl() {
@@ -78,6 +78,10 @@ class TestParserTest {
         assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "ConstantTest"));
     }
 
+    @Test
+    void testIfElse() {
+        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "IfElseTest"));
+    }
 
 
 

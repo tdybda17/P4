@@ -20,7 +20,6 @@ public class CCC {
 
             execCmd(FileOperations.GENERATED_FILES_PATH, "java -cp " + javaCC + " jjtree " + testParserJJT);
             execCmd(FileOperations.GENERATED_FILES_PATH, "java -cp " + javaCC + " javacc " + testParserJJ);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

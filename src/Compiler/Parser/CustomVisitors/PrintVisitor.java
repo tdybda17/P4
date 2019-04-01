@@ -1,10 +1,10 @@
-package Compiler.Parser;
+package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
 
 public class PrintVisitor implements TestParserVisitor {
 
-    public Object defaultVisit(SimpleNode node, Object data){
+    private Object defaultVisit(SimpleNode node, Object data){
         node.childrenAccept(this, data);
         return data;
     }

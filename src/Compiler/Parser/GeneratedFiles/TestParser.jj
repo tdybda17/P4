@@ -17,7 +17,7 @@ PARSER_BEGIN(TestParser)
 
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.PrintVisitor;import Compiler.Parser.whatever;import java.io.BufferedReader;
+import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.whatever;import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
@@ -26,34 +26,30 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@ege
 
 /*@egen*/
     public static void main(String[] args) {
-        //parseTextFile("src/Compiler/Parser/test");
-        useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
+        try {
+            //parseTextFile("src/Compiler/Parser/test");
+            useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void parseTextFile(String path){
-        try {
-            File file = new File(path);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            TestParser parser = new TestParser(reader);
-            Node root = parser.start();
-            //root.dump("");
-            System.out.println(whatever.createDotOutput(root));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void parseTextFile(String path) throws Exception {
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        TestParser parser = new TestParser(reader);
+        Node root = parser.start();
+        //root.dump("");
+        System.out.println(whatever.createDotOutput(root));
   }
 
-  public static void useVisitorMethod(TestParserVisitor visitor, String filePath) {
-        try {
-            File file = new File(filePath);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            TestParser parser = new TestParser(reader);
-            Node root = parser.start();
-            root.jjtAccept(visitor, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-  }
+    public static void useVisitorMethod(TestParserVisitor visitor, String filePath) throws Exception {
+        File file = new File(filePath);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        TestParser parser = new TestParser(reader);
+        Node root = parser.start();
+        root.jjtAccept(visitor, null);
+    }
 }
   
 
@@ -140,20 +136,25 @@ void skip_to_first_dcl() {
       Token tok;
       while (true) {
         tok = getToken(1);
-        if (tok.kind != NEWLINE ) break;
+        if (tok.kind != NEWLINE)
+            break;
         tok = getNextToken();
       }
 }
 
 JAVACODE
-void skip_to_EOF() { 
+void skip_to_EOF() {
       Token tok;
       while (true) {
         tok = getToken(1);
-        if (tok.kind == EOF ) break;
+        if (tok.kind == EOF)
+            break;
+        else if (tok.kind != NEWLINE)
+            throw new ParseException("Encountered '" + tok.kind + "'. Was expecting: '<NEWLINE>' or '<EOF>'");
         tok = getNextToken();
       }
 }
+
 
 
 SimpleNode start()        :
@@ -206,7 +207,7 @@ void prog()           :
 {/*@bgen(jjtree) #PROG(> 1) */
     try {
 /*@egen*/
-    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() skip_to_EOF() < EOF >/*@bgen(jjtree)*/
+    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() skip_to_EOF() <EOF>/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
