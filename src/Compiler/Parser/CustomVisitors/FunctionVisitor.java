@@ -268,7 +268,7 @@ public class FunctionVisitor implements TestParserVisitor {
         SimpleNode returnNode = (SimpleNode) node.jjtGetChild(0);
         String returnType = (String) returnNode.jjtGetValue();
 
-        TypeDescriptor returnTD = new TypeDescriptorFactory(returnType).create();
+        TypeDescriptor returnTD = new TypeDescriptorFactory().create(returnType);
         if (returnTD instanceof CollectionTypeDescriptor) {
             System.out.println("fuck");
         }
