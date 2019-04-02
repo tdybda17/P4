@@ -8,6 +8,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.RealTypeDescriptor;
 
 public abstract class EdgeTypeDescriptor extends GraphElementTypeDescriptors {
+    //TODO: få lavet statisk udgave af fields osv.
 
     public EdgeTypeDescriptor() {
         super();

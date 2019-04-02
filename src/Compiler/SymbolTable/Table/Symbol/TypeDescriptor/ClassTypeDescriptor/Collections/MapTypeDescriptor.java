@@ -1,25 +1,26 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class QueueTypeDescriptor extends CollectionTypeDescriptor {
+public class MapTypeDescriptor extends CollectionTypeDescriptor {
+    private TypeDescriptor keyType;
     private TypeDescriptor elementType;
 
-    public QueueTypeDescriptor(TypeDescriptor elementType) {
+    MapTypeDescriptor(TypeDescriptor keyType, TypeDescriptor elementType) {
         super();
+        this.keyType = keyType;
         this.elementType = elementType;
         this.addMethods();
     }
 
     private void addMethods(){
-        this.addMethod(enqueue());
-        this.addMethod(dequeue());
+        this.addMethod(containsKey());
     }
 
     @Override
@@ -27,20 +28,15 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
         this.elementType = elementType;
     }
 
+    private Method containsKey(){
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(keyType);
+        return new Method("containsKey", new BooleanTypeDescriptor(), parameters);
+    }
+
     @Override
     public String getTypeName() {
-        return "Queue";
-    }
-
-    private Method enqueue(){
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
-
-        return new Method("enqueue", new BooleanTypeDescriptor(), parameters);
-    }
-
-    private Method dequeue(){
-        return new Method("dequeue", elementType, new ArrayList<>());
+        return "Map";
     }
 
     @Override
@@ -48,12 +44,12 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        QueueTypeDescriptor that = (QueueTypeDescriptor) o;
-        return Objects.equals(elementType, that.elementType);
+        MapTypeDescriptor that = (MapTypeDescriptor) o;
+        return Objects.equals(keyType, that.keyType) && Objects.equals(elementType, that.elementType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), elementType);
+        return Objects.hash(super.hashCode(), keyType, elementType);
     }
 }

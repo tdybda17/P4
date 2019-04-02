@@ -9,10 +9,15 @@ import java.util.*;
 public class StackTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor elementType;
 
-    StackTypeDescriptor(TypeDescriptor elementType) {
+    public StackTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
+    }
+
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
     }
 
     private void addMethods(){
