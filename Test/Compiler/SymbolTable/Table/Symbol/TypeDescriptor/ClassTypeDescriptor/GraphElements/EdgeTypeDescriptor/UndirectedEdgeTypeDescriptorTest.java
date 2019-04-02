@@ -1,8 +1,9 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor;
 
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexPairTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.IntegerTypeDescriptor;
@@ -39,7 +40,7 @@ class UndirectedEdgeTypeDescriptorTest {
         Set<Field> expected = new HashSet<>();
         expected.add(new Field("color", new ColorTypeDescriptor()));
         expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("vertices", new VertexPairTypeDescriptor()));
+        expected.add(new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor())));
         assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
     }
 
@@ -52,7 +53,7 @@ class UndirectedEdgeTypeDescriptorTest {
         Set<Field> expected = new HashSet<>();
         expected.add(new Field("color", new ColorTypeDescriptor()));
         expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("vertices", new VertexPairTypeDescriptor()));
+        expected.add(new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor())));
         expected.add(testField);
         assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
     }

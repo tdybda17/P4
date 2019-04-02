@@ -1,7 +1,8 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexPairTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 
 public class UndirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
     public UndirectedEdgeTypeDescriptor() {
@@ -14,7 +15,7 @@ public class UndirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
     }
 
     private Field vertices() {
-        return new Field("vertices", new VertexPairTypeDescriptor());
+        return new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor()));
     }
 
     @Override
