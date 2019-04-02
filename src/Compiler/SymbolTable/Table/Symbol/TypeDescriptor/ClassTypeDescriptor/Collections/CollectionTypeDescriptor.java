@@ -6,8 +6,8 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Meth
 
 import java.util.ArrayList;
 
-public abstract class CollectionTypeDescriptors extends ClassTypeDescriptor {
-    public CollectionTypeDescriptors() {
+public abstract class CollectionTypeDescriptor extends ClassTypeDescriptor {
+    public CollectionTypeDescriptor() {
         super();
         this.addMethod(isEmpty());
     }

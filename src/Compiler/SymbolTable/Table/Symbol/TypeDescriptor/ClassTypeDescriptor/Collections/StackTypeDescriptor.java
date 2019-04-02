@@ -6,7 +6,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.*;
 
-public class StackTypeDescriptor extends CollectionTypeDescriptors {
+public class StackTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor elementType;
 
     StackTypeDescriptor(TypeDescriptor elementType) {

@@ -92,9 +92,12 @@ TOKEN : /* OPERATORS */
 | < RHARD : "]" >
 | < LPAREN : "(" >
 | < RPAREN : ")" >
+| < LANGLE : "<" >
+| < RANGLE : ">" >
 | < CONNECTION : "--" >
 | < VERTEX : "Vertex" >
 | < EDGE : "Edge" >
+| < DIEDGE : "DiEdge" >
 | < INT : "int" >
 | < REAL : "real" >
 | < BOOLEAN : "boolean" >
@@ -103,12 +106,13 @@ TOKEN : /* OPERATORS */
 | < TO : "to" >
 | < RETURN : "return" >
 | < DCL : "dcl" >
+| < MAP : "Map" >
 }
 
 TOKEN :
 {
   < GRAPH_TYPE : (< GRAPH >) >
-| < #GRAPH : "Graph" | "WeightedGraph" | "DiGraph" | "WeightedDiGraph" >
+| < #GRAPH : "Graph" | "DiGraph" >
 | < CONSTANTS : (< CONSTANT >) >
 | < #CONSTANT : "INF" | "NEG_INF" | "\u00c3\u02dc" >
 | < ADD_SUB : (< addsub >) >
@@ -120,7 +124,7 @@ TOKEN :
 | < RELATIONAL_OP : (< relational_ope >) >
 | < #relational_ope : "<" | ">" | "<=" | ">=" >
 | < COLLECTION_TYPE : (< collection >) >
-| < #collection : "Array" | "List" | "Set" | "Queue" | "PriorityQueue" | "Stack" >
+| < #collection : "Set" | "Queue" | "MinQueue" | "MaxQueue" | "Stack" >
 | < INUM_VAL : (< DIGIT >) >
 | < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
 | < FNUM_VAL : (< DIGITF >) >
@@ -513,7 +517,41 @@ void object_types()               :
 {/*@bgen(jjtree) OBJECT_TYPES */
     try {
 /*@egen*/
-    graph_type() | collection_type() | graph_element_types()/*@bgen(jjtree)*/
+    graph_type() | collection_type() | map() | graph_element_types()/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
+      }
+    }
+/*@egen*/
+}
+
+void map()      :
+{/*@bgen(jjtree) MAP */
+  ASTMAP jjtn000 = new ASTMAP(JJTMAP);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+/*@egen*/}
+{/*@bgen(jjtree) MAP */
+    try {
+/*@egen*/
+    <MAP> <LANGLE> type() <COMMA> type() <RANGLE>/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -547,13 +585,27 @@ void collection_type()                  :
 {/*@bgen(jjtree) COLLECTION_TYPE */
     try {
 /*@egen*/
-    t = <COLLECTION_TYPE>/*@bgen(jjtree)*/
-                          {
-                            jjtree.closeNodeScope(jjtn000, true);
-                            jjtc000 = false;
-                            jjtn000.jjtSetLastToken(getToken(0));
-                          }
+    t = <COLLECTION_TYPE> <LANGLE> type() <RANGLE>/*@bgen(jjtree)*/
+                                                   {
+                                                     jjtree.closeNodeScope(jjtn000, true);
+                                                     jjtc000 = false;
+                                                     jjtn000.jjtSetLastToken(getToken(0));
+                                                   }
 /*@egen*/ {jjtn000.value = t.image;}/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
@@ -1245,7 +1297,36 @@ void dcl()       :
                                              jjtn002.jjtSetLastToken(getToken(0));
                                            }
                                          }
-/*@egen*/     
+/*@egen*/      |/*@bgen(jjtree) GRAPH_ELEMENT_DCL */
+                                                                                               {
+                                                                                                 ASTGRAPH_ELEMENT_DCL jjtn003 = new ASTGRAPH_ELEMENT_DCL(JJTGRAPH_ELEMENT_DCL);
+                                                                                                 boolean jjtc003 = true;
+                                                                                                 jjtree.openNodeScope(jjtn003);
+                                                                                                 jjtn003.jjtSetFirstToken(getToken(1));
+                                                                                               }
+                                                                                               try {
+/*@egen*/ (graph_element_types() identifier())/*@bgen(jjtree)*/
+                                                                                               } catch (Throwable jjte003) {
+                                                                                                 if (jjtc003) {
+                                                                                                   jjtree.clearNodeScope(jjtn003);
+                                                                                                   jjtc003 = false;
+                                                                                                 } else {
+                                                                                                   jjtree.popNode();
+                                                                                                 }
+                                                                                                 if (jjte003 instanceof RuntimeException) {
+                                                                                                   throw (RuntimeException)jjte003;
+                                                                                                 }
+                                                                                                 if (jjte003 instanceof ParseException) {
+                                                                                                   throw (ParseException)jjte003;
+                                                                                                 }
+                                                                                                 throw (Error)jjte003;
+                                                                                               } finally {
+                                                                                                 if (jjtc003) {
+                                                                                                   jjtree.closeNodeScope(jjtn003, true);
+                                                                                                   jjtn003.jjtSetLastToken(getToken(0));
+                                                                                                 }
+                                                                                               }
+/*@egen*/                   
 }
 
 void adt()       :

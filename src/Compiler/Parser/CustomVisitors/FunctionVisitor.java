@@ -1,6 +1,9 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 public class FunctionVisitor implements TestParserVisitor {
@@ -62,6 +65,11 @@ public class FunctionVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTOBJECT_TYPES node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAP node, Object data) {
+        return null; //TODO: fix
     }
 
     @Override
@@ -147,6 +155,11 @@ public class FunctionVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTCREATE node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
+        return null; //TODO: FIX
     }
 
     @Override
@@ -252,6 +265,21 @@ public class FunctionVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
         SymbolTable st = (SymbolTable) data;
+        SimpleNode returnNode = (SimpleNode) node.jjtGetChild(0);
+        String returnType = (String) returnNode.jjtGetValue();
+
+        TypeDescriptor returnTD = new TypeDescriptorFactory(returnType).create();
+        if (returnTD instanceof CollectionTypeDescriptor) {
+            System.out.println("fuck");
+        }
+
+        SimpleNode idNode = (SimpleNode) node.jjtGetChild(1);
+        String idValue = (String) idNode.jjtGetValue();
+
+
+
+        //FunctionAttributes functionAttributes = new FunctionAttributes();
+        //st.enterSymbol(idValue, );
         return null;
     }
 

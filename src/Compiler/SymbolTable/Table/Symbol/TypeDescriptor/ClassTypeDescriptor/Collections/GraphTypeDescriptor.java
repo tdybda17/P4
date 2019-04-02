@@ -1,6 +1,5 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.GraphElementTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
@@ -11,7 +10,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphTypeDescriptor extends CollectionTypeDescriptors {
+public class GraphTypeDescriptor extends CollectionTypeDescriptor {
     private EdgeTypeDescriptor edgeType;
 
     public GraphTypeDescriptor(EdgeTypeDescriptor edgeType) {

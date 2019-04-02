@@ -88,9 +88,12 @@ TOKEN : /* OPERATORS */
 | < RHARD : "]" >
 | < LPAREN : "(" >
 | < RPAREN : ")" >
+| < LANGLE : "<" >
+| < RANGLE : ">" >
 | < CONNECTION : "--" >
 | < VERTEX : "Vertex" >
 | < EDGE : "Edge" >
+| < DIEDGE : "DiEdge" >
 | < INT : "int" >
 | < REAL : "real" >
 | < BOOLEAN : "boolean" >
@@ -99,12 +102,13 @@ TOKEN : /* OPERATORS */
 | < TO : "to" >
 | < RETURN : "return" >
 | < DCL : "dcl" >
+| < MAP : "Map" >
 }
 
 TOKEN :
 {
   < GRAPH_TYPE : (< GRAPH >) >
-| < #GRAPH : "Graph" | "WeightedGraph" | "DiGraph" | "WeightedDiGraph" >
+| < #GRAPH : "Graph" | "DiGraph" >
 | < CONSTANTS : (< CONSTANT >) >
 | < #CONSTANT : "INF" | "NEG_INF" | "Ø" >
 | < ADD_SUB : (< addsub >) >
@@ -116,7 +120,7 @@ TOKEN :
 | < RELATIONAL_OP : (< relational_ope >) >
 | < #relational_ope : "<" | ">" | "<=" | ">=" >
 | < COLLECTION_TYPE : (< collection >) >
-| < #collection : "Array" | "List" | "Set" | "Queue" | "PriorityQueue" | "Stack" >
+| < #collection : "Set" | "Queue" | "MinQueue" | "MaxQueue" | "Stack" >
 | < INUM_VAL : (< DIGIT >) >
 | < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
 | < FNUM_VAL : (< DIGITF >) >
@@ -246,13 +250,19 @@ void initialization() #void :
 void object_types() #OBJECT_TYPES :
 {}
 {
-    graph_type() | collection_type() | graph_element_types()
+    graph_type() | collection_type() | map() | graph_element_types()
+}
+
+void map() #MAP :
+{}
+{
+    <MAP> <LANGLE> type() <COMMA> type() <RANGLE>
 }
 
 void collection_type() #COLLECTION_TYPE :
 {Token t;}
 {
-    t = <COLLECTION_TYPE> {jjtThis.value = t.image;}
+    t = <COLLECTION_TYPE> <LANGLE> type() <RANGLE> {jjtThis.value = t.image;}
 }
 
 void graph_element_types() #GRAPH_ELEMENT_TYPES :
@@ -408,7 +418,7 @@ void block_content() #void :
 void dcl() #void :
 {}
 {
-    (< CREATE > adt() < END >) #CREATE | (simple_types() identifier() initialization()) #DCL
+    (< CREATE > adt() < END >) #CREATE | (simple_types() identifier() initialization()) #DCL | (graph_element_types() identifier()) #GRAPH_ELEMENT_DCL
 }
 
 void adt() #void :

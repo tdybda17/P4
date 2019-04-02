@@ -78,6 +78,11 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTMAP node, Object data) {
+        return null; //TODO: FIX
+    }
+
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
@@ -143,6 +148,11 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     public Object visit(ASTCREATE node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
+        return null; //TODO: FIX
     }
 
     public Object visit(ASTGRAPH_DCL node, Object data) {
