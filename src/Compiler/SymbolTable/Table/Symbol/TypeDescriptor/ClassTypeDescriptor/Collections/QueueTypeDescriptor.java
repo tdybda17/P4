@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class QueueTypeDescriptor extends CollectionTypeDescriptors {
+public class QueueTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor elementType;
 
     QueueTypeDescriptor(TypeDescriptor elementType) {

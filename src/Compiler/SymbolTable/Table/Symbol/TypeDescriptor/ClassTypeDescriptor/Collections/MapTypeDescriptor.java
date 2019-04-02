@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MapTypeDescriptor extends CollectionTypeDescriptors {
+public class MapTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor keyType;
     private TypeDescriptor elementType;
 
