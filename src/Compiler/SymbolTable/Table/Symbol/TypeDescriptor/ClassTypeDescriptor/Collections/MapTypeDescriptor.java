@@ -20,6 +20,7 @@ public class MapTypeDescriptor extends CollectionTypeDescriptors {
     }
 
     private void addMethods(){
+        this.addMethod(containsKey());
     }
 
     private Method containsKey(){
