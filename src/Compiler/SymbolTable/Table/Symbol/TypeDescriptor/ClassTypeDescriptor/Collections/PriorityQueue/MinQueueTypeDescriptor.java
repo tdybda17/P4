@@ -16,6 +16,11 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
         this.addMethods();
     }
 
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+    }
+
     private void addMethods(){
         addMethod(minimum());
         addMethod(extractMin());

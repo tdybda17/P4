@@ -23,6 +23,11 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
         this.addMethod(containsKey());
     }
 
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+    }
+
     private Method containsKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(keyType);

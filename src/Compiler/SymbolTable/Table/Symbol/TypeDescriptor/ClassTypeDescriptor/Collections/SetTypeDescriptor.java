@@ -17,6 +17,11 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
         this.addMethods();
     }
 
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+    }
+
     private void addMethods(){
         this.addMethod(add());
         this.addMethod(remove());

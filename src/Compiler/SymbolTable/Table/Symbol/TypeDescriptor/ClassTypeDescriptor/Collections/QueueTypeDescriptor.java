@@ -23,6 +23,11 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
     }
 
     @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+    }
+
+    @Override
     public String getTypeName() {
         return "Queue";
     }
