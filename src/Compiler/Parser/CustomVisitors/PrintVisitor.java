@@ -1,10 +1,10 @@
-package Compiler.Parser;
+package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
 
 public class PrintVisitor implements TestParserVisitor {
 
-    public Object defaultVisit(SimpleNode node, Object data){
+    private Object defaultVisit(SimpleNode node, Object data){
         node.childrenAccept(this, data);
         return data;
     }
@@ -87,6 +87,12 @@ public class PrintVisitor implements TestParserVisitor {
     public Object visit(ASTOBJECT_TYPES node, Object data){
         return defaultVisit(node, data);
     }
+
+    @Override
+    public Object visit(ASTMAP node, Object data) {
+        return null; //TODO: FIX
+    }
+
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data){
         System.out.print(node.jjtGetValue());
@@ -194,6 +200,12 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("end\n");
         return data;
     }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
+        return null; //TODO: FIX
+    }
+
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);

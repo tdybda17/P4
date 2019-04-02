@@ -1,0 +1,8 @@
+function main()
+    int a = 0
+    if 10 > 2 then
+        a = 1
+    else
+        a = 2
+    end
+end
