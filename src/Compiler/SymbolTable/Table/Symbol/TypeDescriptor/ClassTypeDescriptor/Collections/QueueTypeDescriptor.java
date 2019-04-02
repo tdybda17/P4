@@ -11,7 +11,7 @@ import java.util.Objects;
 public class QueueTypeDescriptor extends CollectionTypeDescriptors {
     private TypeDescriptor elementType;
 
-    QueueTypeDescriptor(TypeDescriptor elementType) {
+    public QueueTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
