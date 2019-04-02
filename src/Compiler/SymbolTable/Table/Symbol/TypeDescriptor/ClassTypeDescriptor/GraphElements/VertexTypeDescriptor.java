@@ -3,13 +3,19 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Gra
 import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.ColorTypeDescriptor;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
+    private static Set<Field> fields = getStandardFields();
+    private static Set<Method> methods = getStandardMethods();
+
     public VertexTypeDescriptor() {
         super();
-        this.addMethods();
-        this.addFields();
     }
 
     @Override
@@ -17,26 +23,38 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
         return "Vertex";
     }
 
-    private void addMethods(){
-        //We do not have any methods for vertexes yet
+    @Override
+    public Set<Method> getMethods() {
+        return methods;
     }
 
-    private void addFields() {
-        this.addField(color());
+    @Override
+    public Set<Field> getFields() {
+        return fields;
     }
 
+    private static Set<Method> getStandardMethods() {
+        //We do not have any methods for vertices yet
+        return new HashSet<>();
+    }
 
-    private Field color(){
+    private static Set<Field> getStandardFields() {
+        Set<Field> standardFields = new HashSet<>();
+        standardFields.add(color());
+        return standardFields;
+    }
+
+    private static Field color(){
         return new Field("color", new ColorTypeDescriptor());
     }
 
-    public void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
-        for (Field field: this.getFields()) {
+    public static void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
+        for(Field field : fields) {
             if(field.equals(userAttribute)) {
                 throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an field already existing in the vertex type.");
             }
         }
 
-        this.addField(userAttribute);
+        fields.add(userAttribute);
     }
 }
