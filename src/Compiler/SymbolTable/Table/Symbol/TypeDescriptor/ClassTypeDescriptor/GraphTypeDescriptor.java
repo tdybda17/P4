@@ -1,19 +1,16 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor;
 
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.GraphElementTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.EdgeTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class GraphTypeDescriptor extends CollectionTypeDescriptors {
+public class GraphTypeDescriptor extends ClassTypeDescriptor {
     private EdgeTypeDescriptor edgeType;
 
     public GraphTypeDescriptor(EdgeTypeDescriptor edgeType) {
@@ -25,7 +22,7 @@ public class GraphTypeDescriptor extends CollectionTypeDescriptors {
 
     @Override
     public String getTypeName() {
-        return "GraphElements";
+        return "Graph";
     }
 
     private void addMethods(){
@@ -81,10 +78,6 @@ public class GraphTypeDescriptor extends CollectionTypeDescriptors {
         return new Method("getNeighbours", returnType, parameters);
     }
 
-
-
-
-
     private void addFields() {
         this.addField(vertices());
         this.addField(edges());
@@ -98,4 +91,17 @@ public class GraphTypeDescriptor extends CollectionTypeDescriptors {
         return new Field("edges", new SetTypeDescriptor(edgeType));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        GraphTypeDescriptor that = (GraphTypeDescriptor) o;
+        return Objects.equals(edgeType, that.edgeType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), edgeType);
+    }
 }

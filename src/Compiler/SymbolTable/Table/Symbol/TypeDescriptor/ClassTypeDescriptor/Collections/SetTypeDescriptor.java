@@ -8,13 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SetTypeDescriptor extends CollectionTypeDescriptors {
+public class SetTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor elementType;
 
     public SetTypeDescriptor(TypeDescriptor elementType) {
         super();
         this.elementType = elementType;
         this.addMethods();
+    }
+
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
     }
 
     private void addMethods(){

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class QueueTypeDescriptor extends CollectionTypeDescriptors {
+public class QueueTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor elementType;
 
     public QueueTypeDescriptor(TypeDescriptor elementType) {
@@ -20,6 +20,11 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptors {
     private void addMethods(){
         this.addMethod(enqueue());
         this.addMethod(dequeue());
+    }
+
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
     }
 
     @Override
