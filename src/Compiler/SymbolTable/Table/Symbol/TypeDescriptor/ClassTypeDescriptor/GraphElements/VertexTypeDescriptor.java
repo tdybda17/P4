@@ -30,7 +30,8 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
 
     @Override
     public Set<Field> getFields() {
-        return new HashSet<>(fields);
+        return new HashSet<>(fields)
+                ;
     }
 
     private static Set<Method> getStandardMethods() {
