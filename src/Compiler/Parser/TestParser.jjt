@@ -23,20 +23,20 @@ import java.io.FileReader;
 public class TestParser {
     public static void main(String[] args) {
         try {
-            //parseTextFile("src/Compiler/Parser/test");
+            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
             useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void parseTextFile(String path) throws Exception {
+    public static String parseTextFile(String path) throws Exception {
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         TestParser parser = new TestParser(reader);
         Node root = parser.start();
-        //root.dump("");
-        System.out.println(whatever.createDotOutput(root));
+
+        return whatever.createDotOutput(root);
   }
 
     public static void useVisitorMethod(TestParserVisitor visitor, String filePath) throws Exception {
@@ -82,14 +82,12 @@ TOKEN : /* OPERATORS */
 | < IF : "if" >
 | < THEN : "then" >
 | < ELSE : "else" >
-| < LCURLY  : "{" >
+| < LCURLY : "{" >
 | < RCURLY : "}" >
 | < LHARD : "[" >
 | < RHARD : "]" >
 | < LPAREN : "(" >
 | < RPAREN : ")" >
-| < LANGLE : "<" >
-| < RANGLE : ">" >
 | < CONNECTION : "--" >
 | < VERTEX : "Vertex" >
 | < EDGE : "Edge" >
@@ -118,7 +116,9 @@ TOKEN :
 | < EQUALITY_OP : (< equality_ope >) >
 | < #equality_ope : "==" | "!=" >
 | < RELATIONAL_OP : (< relational_ope >) >
-| < #relational_ope : "<" | ">" | "<=" | ">=" >
+| < #relational_ope : "<=" | ">=" >
+| < LANGLE : "<" >
+| < RANGLE : ">" >
 | < COLLECTION_TYPE : (< collection >) >
 | < #collection : "Set" | "Queue" | "MinQueue" | "MaxQueue" | "Stack" >
 | < INUM_VAL : (< DIGIT >) >
@@ -247,7 +247,7 @@ void initialization() #void :
     < ASSIGN > expr() | empty()
 }
 
-void object_types() #OBJECT_TYPES :
+void object_types() #void :
 {}
 {
     graph_type() | collection_type() | map() | graph_element_types()
@@ -316,7 +316,13 @@ void rel_expr() #REL_EXPR(>1) :
 Token rel_expr1() #void :
 {Token t;}
 {
-  t = < RELATIONAL_OP > arith_expr() {return t;} | empty() {return new Token();}
+  t = relational_op() arith_expr() {return t;} | empty() {return new Token();}
+}
+
+Token relational_op() #void :
+{Token t;}
+{
+    t = <LANGLE> {return t;} | t = <RANGLE> {return t;} | t = <RELATIONAL_OP> {return t;}
 }
 
 void arith_expr() #ADD_SUB(>1) :

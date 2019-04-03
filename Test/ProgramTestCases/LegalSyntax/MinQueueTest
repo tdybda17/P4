@@ -1,5 +1,5 @@
 function main()
-    create PriorityQueue q
+    create MinQueue<int> q
         5
         6
         7

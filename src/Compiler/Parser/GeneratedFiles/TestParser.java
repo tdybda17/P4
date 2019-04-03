@@ -9,20 +9,20 @@ import java.io.FileReader;
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, TestParserConstants {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();public static void main(String[] args) {
         try {
-            //parseTextFile("src/Compiler/Parser/test");
+            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
             useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void parseTextFile(String path) throws Exception {
+    public static String parseTextFile(String path) throws Exception {
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         TestParser parser = new TestParser(reader);
         Node root = parser.start();
-        //root.dump("");
-        System.out.println(whatever.createDotOutput(root));
+
+        return whatever.createDotOutput(root);
   }
 
     public static void useVisitorMethod(TestParserVisitor visitor, String filePath) throws Exception {
@@ -771,8 +771,10 @@ if (jjtc000) {
 
   final public Token rel_expr1() throws ParseException {Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case RELATIONAL_OP:{
-      t = jj_consume_token(RELATIONAL_OP);
+    case RELATIONAL_OP:
+    case LANGLE:
+    case RANGLE:{
+      t = relational_op();
       arith_expr();
 {if ("" != null) return t;}
       break;
@@ -781,6 +783,31 @@ if (jjtc000) {
       jj_la1[12] = jj_gen;
       empty();
 {if ("" != null) return new Token();}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Token relational_op() throws ParseException {Token t;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case LANGLE:{
+      t = jj_consume_token(LANGLE);
+{if ("" != null) return t;}
+      break;
+      }
+    case RANGLE:{
+      t = jj_consume_token(RANGLE);
+{if ("" != null) return t;}
+      break;
+      }
+    case RELATIONAL_OP:{
+      t = jj_consume_token(RELATIONAL_OP);
+{if ("" != null) return t;}
+      break;
+      }
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
     throw new Error("Missing return statement in function");
   }
@@ -829,7 +856,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[14] = jj_gen;
       empty();
 {if ("" != null) return new Token();}
     }
@@ -880,7 +907,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[14] = jj_gen;
+      jj_la1[15] = jj_gen;
       empty();
 {if ("" != null) return new Token();}
     }
@@ -929,7 +956,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[16] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -952,7 +979,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[17] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1027,7 +1054,7 @@ jjtn000.value = t.image;
         break;
         }
       default:
-        jj_la1[17] = jj_gen;
+        jj_la1[18] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1125,7 +1152,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[19] = jj_gen;
       empty();
 {if ("" != null) return false;}
     }
@@ -1140,7 +1167,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[20] = jj_gen;
       empty();
     }
   }
@@ -1163,7 +1190,7 @@ if (jjtc002) {
         break;
         }
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[21] = jj_gen;
         empty();
       }
     } catch (Throwable jjte000) {
@@ -1201,7 +1228,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[22] = jj_gen;
       empty();
     }
   }
@@ -1287,7 +1314,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[23] = jj_gen;
       empty();
     }
   }
@@ -1313,7 +1340,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[24] = jj_gen;
       empty();
     }
   }
@@ -1416,7 +1443,7 @@ if (jjtc003) {
       break;
       }
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[25] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1433,7 +1460,7 @@ if (jjtc003) {
       break;
       }
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[26] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1554,7 +1581,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[27] = jj_gen;
       empty();
     }
   }
@@ -1568,7 +1595,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[27] = jj_gen;
+      jj_la1[28] = jj_gen;
       empty();
     }
   }
@@ -1611,7 +1638,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[29] = jj_gen;
       empty();
     }
   }
@@ -1655,7 +1682,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[30] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1700,7 +1727,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[30] = jj_gen;
+      jj_la1[31] = jj_gen;
       empty();
     }
   }
@@ -1719,7 +1746,7 @@ if (jjtc001) {
         break;
         }
       default:
-        jj_la1[31] = jj_gen;
+        jj_la1[32] = jj_gen;
         empty();
       }
     } catch (Throwable jjte000) {
@@ -1816,7 +1843,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[32] = jj_gen;
+      jj_la1[33] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1830,7 +1857,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[33] = jj_gen;
+      jj_la1[34] = jj_gen;
       empty();
 {if ("" != null) return false;}
     }
@@ -1857,7 +1884,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[34] = jj_gen;
+      jj_la1[35] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -2030,7 +2057,7 @@ jjtn000.value = t.image;
         break;
         }
       default:
-        jj_la1[35] = jj_gen;
+        jj_la1[36] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -2244,7 +2271,7 @@ if (jjtc001) {
         break;
         }
       default:
-        jj_la1[36] = jj_gen;
+        jj_la1[37] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -2344,7 +2371,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[37] = jj_gen;
+      jj_la1[38] = jj_gen;
       empty();
     }
   }
@@ -2443,7 +2470,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[38] = jj_gen;
+      jj_la1[39] = jj_gen;
       empty();
     }
   }
@@ -2465,7 +2492,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[39] = jj_gen;
+      jj_la1[40] = jj_gen;
       empty();
     }
   }
@@ -2492,7 +2519,7 @@ if (jjtc002) {
         break;
         }
       default:
-        jj_la1[40] = jj_gen;
+        jj_la1[41] = jj_gen;
         empty();
       }
     } catch (Throwable jjte000) {
@@ -2598,7 +2625,7 @@ if (jjtc000) {
         break;
         }
       default:
-        jj_la1[41] = jj_gen;
+        jj_la1[42] = jj_gen;
         empty();
       }
     } catch (Throwable jjte000) {
@@ -2662,7 +2689,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[42] = jj_gen;
+      jj_la1[43] = jj_gen;
       empty();
     }
   }
@@ -2680,7 +2707,7 @@ if (jjtc001) {
       break;
       }
     default:
-      jj_la1[43] = jj_gen;
+      jj_la1[44] = jj_gen;
       empty();
     }
   }
@@ -2732,7 +2759,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[44] = jj_gen;
+      jj_la1[45] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -2751,7 +2778,7 @@ if (jjtc000) {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[45];
+  final private int[] jj_la1 = new int[46];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -2761,13 +2788,13 @@ if (jjtc000) {
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x100,0x0,0x0,0x0,0x0,0x0,0x2000,0x0,0x0,0x8000,0x4000,0x0,0x0,0x0,0x0,0x20010000,0x20000000,0x0,0x20000400,0x400,0x20010000,0x200,0x5c0120,0x5c0020,0x20,0x0,0x2100,0x0,0x0,0x2000000,0x200,0x8000000,0x5c0000,0x2000,0x1c0000,0x0,0x1000040,0x20010020,0x2100,0x0,0x20000,0x0,0x0,0x200,0x0,};
+      jj_la1_0 = new int[] {0x100,0x0,0x0,0x0,0x0,0x0,0x2000,0x0,0x0,0x8000,0x4000,0x0,0x0,0x0,0x0,0x0,0x20010000,0x20000000,0x0,0x20000400,0x400,0x20010000,0x200,0x5c0120,0x5c0020,0x20,0x0,0x2100,0x0,0x80000000,0x2000000,0x200,0x8000000,0x5c0000,0x2000,0x1c0000,0x0,0x1000040,0x20010020,0x2100,0x0,0x20000,0x0,0x0,0x200,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0xc,0x8,0x4,0x40060ec,0xe0,0x0,0x400600c,0xc,0x0,0x0,0x400000,0x1000000,0x40000,0x100000,0x50010100,0x50010100,0x50010100,0x0,0x0,0x50010100,0x0,0x8ec,0x8ec,0xec,0x4004000,0x0,0x0,0x2,0x0,0x0,0x0,0x800,0x0,0x0,0x10000000,0x0,0x50010100,0x0,0x50010100,0x40060ec,0x40060ec,0x40060ec,0x0,0x40060ec,};
+      jj_la1_1 = new int[] {0x0,0x3,0x2,0x1,0x400183b,0x38,0x0,0x4001803,0x3,0x0,0x0,0x100000,0x3400000,0x3400000,0x10000,0x40000,0x50004040,0x50004040,0x50004040,0x0,0x0,0x50004040,0x0,0x23b,0x23b,0x3b,0x4001000,0x0,0x0,0x0,0x0,0x0,0x0,0x200,0x0,0x0,0x10000000,0x0,0x50004040,0x0,0x50004040,0x400183b,0x400183b,0x400183b,0x0,0x400183b,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x1,0x0,0x0,0x1,0x0,0x1,0x1,0x0,0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x1,0x0,0x0,0x1,0x0,0x1,0x0,0x1,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x1,0x0,0x0,0x1,0x0,0x1,0x1,0x0,0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x1,0x0,0x0,0x1,0x0,0x1,0x0,0x1,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -2781,7 +2808,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -2796,7 +2823,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -2806,7 +2833,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -2817,7 +2844,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -2826,7 +2853,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -2836,7 +2863,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 45; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -2892,7 +2919,7 @@ if (jjtc000) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 45; i++) {
+    for (int i = 0; i < 46; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

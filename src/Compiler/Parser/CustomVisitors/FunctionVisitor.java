@@ -69,7 +69,7 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAP node, Object data) {
-        return null; //TODO: fix
+        return defaultVisit(node, data);
     }
 
     @Override
