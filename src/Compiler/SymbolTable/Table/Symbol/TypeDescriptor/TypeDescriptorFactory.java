@@ -21,6 +21,7 @@ public class TypeDescriptorFactory {
 
     public TypeDescriptor create(String typeName) throws IllegalTypeException {
         switch (typeName) {
+            case "Void": return new VoidTypeDescriptor();
             case "Integer": case "int": return new IntegerTypeDescriptor();
             case "Real": case "real": return new RealTypeDescriptor();
             case "Color": case "color": return new ColorTypeDescriptor();
