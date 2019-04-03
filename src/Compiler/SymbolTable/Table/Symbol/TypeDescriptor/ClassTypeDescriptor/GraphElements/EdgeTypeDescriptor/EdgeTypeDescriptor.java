@@ -4,32 +4,49 @@ import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.GraphElementTypeDescriptors;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.RealTypeDescriptor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class EdgeTypeDescriptor extends GraphElementTypeDescriptors {
-    //TODO: få lavet statisk udgave af fields osv.
+    private static Set<Field> fields = getStandardFields();
+    private static Set<Method> methods = getStandardMethods();
+
 
     public EdgeTypeDescriptor() {
         super();
-        this.addMethods();
-        this.addFields();
     }
 
-    private void addMethods(){
-        //We do not have any methods for the Edge Type yet
+    @Override
+    public Set<Method> getMethods() {
+        return methods;
     }
 
-    private void addFields() {
-        this.addField(color());
-        this.addField(weight());
+    @Override
+    public Set<Field> getFields() {
+        return fields;
     }
 
-    private Field color(){
+    private static Set<Field> getStandardFields() {
+        Set<Field> standardFields = new HashSet<>();
+        standardFields.add(color());
+        standardFields.add(weight());
+        return standardFields;
+    }
+
+    private static Set<Method> getStandardMethods() {
+        //Edges do not have any methods yet
+        return new HashSet<>();
+    }
+
+    private static Field color(){
         return new Field("color", new ColorTypeDescriptor());
     }
 
-    private Field weight(){
+    private static Field weight(){
         return new Field("weight", new RealTypeDescriptor());
     }
 
@@ -40,6 +57,6 @@ public abstract class EdgeTypeDescriptor extends GraphElementTypeDescriptors {
             }
         }
 
-        this.addField(userAttribute);
+        fields.add(userAttribute);
     }
 }
