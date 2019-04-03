@@ -1,6 +1,8 @@
 package ProgramTestCases.LegalSyntax;
 
 import Compiler.Parser.GeneratedFiles.TestParser;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,7 +67,7 @@ class TestParserTest {
 
     @Test
     void testPriorityQueue() {
-        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "PriorityQueueTest"));
+        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "MinQueueTest"));
     }
 
     @Test

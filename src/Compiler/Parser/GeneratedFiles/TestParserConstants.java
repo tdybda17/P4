@@ -63,59 +63,59 @@ public interface TestParserConstants {
   /** RegularExpression Id. */
   int RPAREN = 30;
   /** RegularExpression Id. */
-  int LANGLE = 31;
+  int CONNECTION = 31;
   /** RegularExpression Id. */
-  int RANGLE = 32;
+  int VERTEX = 32;
   /** RegularExpression Id. */
-  int CONNECTION = 33;
+  int EDGE = 33;
   /** RegularExpression Id. */
-  int VERTEX = 34;
+  int DIEDGE = 34;
   /** RegularExpression Id. */
-  int EDGE = 35;
+  int INT = 35;
   /** RegularExpression Id. */
-  int DIEDGE = 36;
+  int REAL = 36;
   /** RegularExpression Id. */
-  int INT = 37;
+  int BOOLEAN = 37;
   /** RegularExpression Id. */
-  int REAL = 38;
+  int BOOL_VAL = 38;
   /** RegularExpression Id. */
-  int BOOLEAN = 39;
+  int DO = 39;
   /** RegularExpression Id. */
-  int BOOL_VAL = 40;
+  int TO = 40;
   /** RegularExpression Id. */
-  int DO = 41;
+  int RETURN = 41;
   /** RegularExpression Id. */
-  int TO = 42;
+  int DCL = 42;
   /** RegularExpression Id. */
-  int RETURN = 43;
+  int MAP = 43;
   /** RegularExpression Id. */
-  int DCL = 44;
+  int GRAPH_TYPE = 44;
   /** RegularExpression Id. */
-  int MAP = 45;
+  int GRAPH = 45;
   /** RegularExpression Id. */
-  int GRAPH_TYPE = 46;
+  int CONSTANTS = 46;
   /** RegularExpression Id. */
-  int GRAPH = 47;
+  int CONSTANT = 47;
   /** RegularExpression Id. */
-  int CONSTANTS = 48;
+  int ADD_SUB = 48;
   /** RegularExpression Id. */
-  int CONSTANT = 49;
+  int addsub = 49;
   /** RegularExpression Id. */
-  int ADD_SUB = 50;
+  int MUL_DIV = 50;
   /** RegularExpression Id. */
-  int addsub = 51;
+  int muldiv = 51;
   /** RegularExpression Id. */
-  int MUL_DIV = 52;
+  int EQUALITY_OP = 52;
   /** RegularExpression Id. */
-  int muldiv = 53;
+  int equality_ope = 53;
   /** RegularExpression Id. */
-  int EQUALITY_OP = 54;
+  int RELATIONAL_OP = 54;
   /** RegularExpression Id. */
-  int equality_ope = 55;
+  int relational_ope = 55;
   /** RegularExpression Id. */
-  int RELATIONAL_OP = 56;
+  int LANGLE = 56;
   /** RegularExpression Id. */
-  int relational_ope = 57;
+  int RANGLE = 57;
   /** RegularExpression Id. */
   int COLLECTION_TYPE = 58;
   /** RegularExpression Id. */
@@ -169,8 +169,6 @@ public interface TestParserConstants {
     "\"]\"",
     "\"(\"",
     "\")\"",
-    "\"<\"",
-    "\">\"",
     "\"--\"",
     "\"Vertex\"",
     "\"Edge\"",
@@ -196,6 +194,8 @@ public interface TestParserConstants {
     "<equality_ope>",
     "<RELATIONAL_OP>",
     "<relational_ope>",
+    "\"<\"",
+    "\">\"",
     "<COLLECTION_TYPE>",
     "<collection>",
     "<INUM_VAL>",
