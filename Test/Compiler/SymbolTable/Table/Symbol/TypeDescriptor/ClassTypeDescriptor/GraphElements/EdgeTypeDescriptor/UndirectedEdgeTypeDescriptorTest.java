@@ -55,7 +55,7 @@ class UndirectedEdgeTypeDescriptorTest {
 
     @Test
     void testAddUserAttributes1(){
-        Field testField = new Field("test", new IntegerTypeDescriptor());
+        Field testField = new Field("testUndirected", new IntegerTypeDescriptor());
         undirectedEdgeTypeDescriptor.addUserAttribute(testField);
 
         assertTrue(undirectedEdgeTypeDescriptor.getFields().contains(testField));
@@ -66,6 +66,13 @@ class UndirectedEdgeTypeDescriptorTest {
         Field sameAsExistingField = new Field("color", new ColorTypeDescriptor());
 
         assertThrows(TypeDescriptorException.class, () -> undirectedEdgeTypeDescriptor.addUserAttribute(sameAsExistingField));
+    }
+
+    @Test
+    void testAddUserAttributes3(){
+        Field testField = new Field("testUndirected2", new IntegerTypeDescriptor());
+        undirectedEdgeTypeDescriptor.addUserAttribute(testField);
+        assertTrue(new DirectedEdgeTypeDescriptor().getFields().contains(testField));
     }
 
     @Test

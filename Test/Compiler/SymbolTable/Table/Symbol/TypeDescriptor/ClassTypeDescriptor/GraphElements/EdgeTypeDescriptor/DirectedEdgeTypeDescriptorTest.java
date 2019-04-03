@@ -64,7 +64,7 @@ class DirectedEdgeTypeDescriptorTest {
 
     @Test
     void testAddUserAttributes1(){
-        Field testField = new Field("test", new IntegerTypeDescriptor());
+        Field testField = new Field("testDirected", new IntegerTypeDescriptor());
         directedEdgeTypeDescriptor.addUserAttribute(testField);
 
         assertTrue(directedEdgeTypeDescriptor.getFields().contains(testField));
@@ -80,7 +80,7 @@ class DirectedEdgeTypeDescriptorTest {
     //Testing that all our edge type descriptors get the added user attributes
     @Test
     void testAddUserAttributes3(){
-        Field testField = new Field("test2", new IntegerTypeDescriptor());
+        Field testField = new Field("testDirected2", new IntegerTypeDescriptor());
 
         directedEdgeTypeDescriptor.addUserAttribute(testField);
 
