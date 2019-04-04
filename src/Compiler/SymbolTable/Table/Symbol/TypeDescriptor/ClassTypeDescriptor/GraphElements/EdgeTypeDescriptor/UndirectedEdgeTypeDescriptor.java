@@ -3,15 +3,31 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Gra
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.SetTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
+
+import java.util.Set;
 
 public class UndirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
     public UndirectedEdgeTypeDescriptor() {
         super();
-        this.addUndirectedFields();
     }
 
-    private void addUndirectedFields() {
-        this.addField(this.vertices());
+    @Override
+    public Set<Method> getMethods() {
+        return super.getMethods();
+    }
+
+    @Override
+    public Set<Field> getFields() {
+        Set<Field> fields = super.getFields();
+        addUndirectedFields(fields);
+
+        return super.getFields();
+    }
+
+
+    private void addUndirectedFields(Set<Field> fields) {
+        fields.add(vertices());
     }
 
     private Field vertices() {

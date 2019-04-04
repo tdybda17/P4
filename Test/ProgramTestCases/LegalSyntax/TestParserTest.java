@@ -1,12 +1,14 @@
 package ProgramTestCases.LegalSyntax;
 
 import Compiler.Parser.GeneratedFiles.TestParser;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestParserTest {
-    String absPath = "Test/ProgramTestCases/LegalSyntax/";
+    private String absPath = "Test/ProgramTestCases/LegalSyntax/";
 
     @Test
     void testVertexDcl() {
@@ -65,7 +67,7 @@ class TestParserTest {
 
     @Test
     void testPriorityQueue() {
-        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "PriorityQueueTest"));
+        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "MinQueueTest"));
     }
 
     @Test
@@ -78,6 +80,10 @@ class TestParserTest {
         assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "ConstantTest"));
     }
 
+    @Test
+    void testIfElse() {
+        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "IfElseTest"));
+    }
 
 
 

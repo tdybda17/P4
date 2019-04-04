@@ -57,7 +57,7 @@ class VertexTypeDescriptorTest {
     void testAddUserAttributes2(){
         Field sameAsExistingField = new Field("color", new ColorTypeDescriptor());
 
-        assertThrows(TypeDescriptorException.class, () -> vertexTypeDescriptor.addUserAttribute(sameAsExistingField));
+        assertThrows(TypeDescriptorException.class, () -> VertexTypeDescriptor.addUserAttribute(sameAsExistingField));
     }
     @Test
     void equals1() {

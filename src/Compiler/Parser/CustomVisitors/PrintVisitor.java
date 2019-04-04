@@ -1,10 +1,10 @@
-package Compiler.Parser;
+package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
 
 public class PrintVisitor implements TestParserVisitor {
 
-    public Object defaultVisit(SimpleNode node, Object data){
+    private Object defaultVisit(SimpleNode node, Object data){
         node.childrenAccept(this, data);
         return data;
     }
@@ -87,9 +87,23 @@ public class PrintVisitor implements TestParserVisitor {
     public Object visit(ASTOBJECT_TYPES node, Object data){
         return defaultVisit(node, data);
     }
+
+    @Override
+    public Object visit(ASTMAP node, Object data) {
+        System.out.print("Map<");
+        node.jjtGetChild(0).jjtAccept(this, data);
+        System.out.print(", ");
+        node.jjtGetChild(1).jjtAccept(this, data);
+        System.out.print(">");
+        return data;
+    }
+
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data){
         System.out.print(node.jjtGetValue());
+        System.out.print("<");
+        node.jjtGetChild(0).jjtAccept(this, data);
+        System.out.print(">");
         return data;
     }
     @Override
@@ -99,38 +113,34 @@ public class PrintVisitor implements TestParserVisitor {
     }
     @Override
     public Object visit(ASTOR_EXPR node, Object data){
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" | ");
-        node.jjtGetChild(1).jjtAccept(this, data);
-        return data;
+        return simpleExpr(node, data, "|");
     }
     @Override
     public Object visit(ASTAND_EXPR node, Object data){
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" & ");
-        node.jjtGetChild(1).jjtAccept(this, data);
-        return data;
+        return simpleExpr(node, data, "&");
     }
     @Override
     public Object visit(ASTEQUAL_EXPR node, Object data){
-        return simpleExpr(node, data);
+        return simpleExpr(node, data, node.jjtGetValue().toString());
     }
     @Override
     public Object visit(ASTREL_EXPR node, Object data){
-        return simpleExpr(node, data);
+        return simpleExpr(node, data, node.jjtGetValue().toString());
     }
     @Override
     public Object visit(ASTADD_SUB node, Object data){
-        return simpleExpr(node, data);
+        return simpleExpr(node, data, node.jjtGetValue().toString());
     }
     @Override
     public Object visit(ASTMUL_DIV node, Object data){
-        return simpleExpr(node, data);
+        return simpleExpr(node, data, node.jjtGetValue().toString());
     }
     @Override
     public Object visit(ASTNEG_EXPR node, Object data){
         System.out.print("!");
+        System.out.print("(");
         node.jjtGetChild(0).jjtAccept(this, data);
+        System.out.print(")");
         return data;
     }
     @Override
@@ -194,6 +204,16 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("end\n");
         return data;
     }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
+        node.jjtGetChild(0).jjtAccept(this, data);
+        System.out.print(" ");
+        node.jjtGetChild(1).jjtAccept(this, data);
+        System.out.print("\n");
+        return data;
+    }
+
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);
@@ -408,10 +428,12 @@ public class PrintVisitor implements TestParserVisitor {
         return data;
     }
 
-    private Object simpleExpr(SimpleNode node, Object data) {
+    private Object simpleExpr(SimpleNode node, Object data, String operator) {
+        System.out.print("(");
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" " + node.jjtGetValue() + " ");
+        System.out.print(" " + operator + " ");
         node.jjtGetChild(1).jjtAccept(this, data);
+        System.out.print(")");
         return data;
     }
 }

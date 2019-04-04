@@ -36,26 +36,29 @@ class UndirectedEdgeTypeDescriptorTest {
     }
 
     @Test
-    void getFields() {
-        Set<Field> expected = new HashSet<>();
-        expected.add(new Field("color", new ColorTypeDescriptor()));
-        expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor())));
-        assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
+    void getFieldColor() {
+        Field expected = new Field("color", new ColorTypeDescriptor());
+        assertTrue(undirectedEdgeTypeDescriptor.getFields().contains(expected));
+    }
+
+    @Test
+    void getFieldWeight() {
+        Field expected = new Field("weight", new RealTypeDescriptor());
+        assertTrue(undirectedEdgeTypeDescriptor.getFields().contains(expected));
+    }
+
+    @Test
+    void getFieldVertices() {
+        Field expected = new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor()));
+        assertTrue(undirectedEdgeTypeDescriptor.getFields().contains(expected));
     }
 
     @Test
     void testAddUserAttributes1(){
-        Field testField = new Field("test", new IntegerTypeDescriptor());
+        Field testField = new Field("testUndirected", new IntegerTypeDescriptor());
         undirectedEdgeTypeDescriptor.addUserAttribute(testField);
 
-
-        Set<Field> expected = new HashSet<>();
-        expected.add(new Field("color", new ColorTypeDescriptor()));
-        expected.add(new Field("weight", new RealTypeDescriptor()));
-        expected.add(new Field("vertices", new SetTypeDescriptor(new VertexTypeDescriptor())));
-        expected.add(testField);
-        assertEquals(expected, undirectedEdgeTypeDescriptor.getFields());
+        assertTrue(undirectedEdgeTypeDescriptor.getFields().contains(testField));
     }
 
     @Test
@@ -64,6 +67,14 @@ class UndirectedEdgeTypeDescriptorTest {
 
         assertThrows(TypeDescriptorException.class, () -> undirectedEdgeTypeDescriptor.addUserAttribute(sameAsExistingField));
     }
+
+    @Test
+    void testAddUserAttributes3(){
+        Field testField = new Field("testUndirected2", new IntegerTypeDescriptor());
+        undirectedEdgeTypeDescriptor.addUserAttribute(testField);
+        assertTrue(new DirectedEdgeTypeDescriptor().getFields().contains(testField));
+    }
+
     @Test
     void equals1() {
         EdgeTypeDescriptor expected = new UndirectedEdgeTypeDescriptor();
@@ -71,20 +82,9 @@ class UndirectedEdgeTypeDescriptorTest {
         assertEquals(expected, undirectedEdgeTypeDescriptor);
     }
 
-    //Right now two type descriptors are still equal if they have different fields, however in our langauge you cannot make two
-    //different versions of edges.
-    @Test
-    void equals2() {
-        Field testField = new Field("test", new IntegerTypeDescriptor());
-        undirectedEdgeTypeDescriptor.addUserAttribute(testField);
-
-        EdgeTypeDescriptor expected = new UndirectedEdgeTypeDescriptor();
-        assertEquals(expected, undirectedEdgeTypeDescriptor);
-    }
-
     //Testing that directed edges are not equal to undirected edges.
     @Test
-    void equals3() {
+    void equals2() {
         EdgeTypeDescriptor directedEdgeTypeDescriptor = new DirectedEdgeTypeDescriptor();
         assertNotEquals(directedEdgeTypeDescriptor, this.undirectedEdgeTypeDescriptor);
     }
