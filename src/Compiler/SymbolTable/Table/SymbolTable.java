@@ -48,8 +48,8 @@ public class SymbolTable implements ISymbolTable {
 
         Symbol oldSymbol = hashMap.get(name);
         if(oldSymbol == null) {
-            Symbol newSymbol = new Symbol(name, attributes, depth);
-            scopeDisplay.add(newSymbol);
+            Symbol newSymbol = new Symbol(name, attributes);
+            scopeDisplay.add(newSymbol, depth);
             addToHashTable(newSymbol);
         } else {
             throw new DuplicateSymbolError(oldSymbol);

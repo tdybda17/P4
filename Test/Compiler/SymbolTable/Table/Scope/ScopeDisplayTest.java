@@ -18,23 +18,25 @@ class ScopeDisplayTest {
 
     @Test
     void testThatNoDuplicatesCanBeAddedToSameScope() {
-        var symbol1 = new Symbol("name", 1);
-        var symbol2 = new Symbol("name", 1);
+        var symbol1 = new Symbol("name");
+        var symbol2 = new Symbol("name");
         var expectedList = new SymbolList(symbol1);
-        scopeDisplay.open(1);
-        scopeDisplay.add(symbol1);
-        scopeDisplay.add(symbol2);
+        int depth = 1;
+        scopeDisplay.open(depth);
+        scopeDisplay.add(symbol1, depth);
+        scopeDisplay.add(symbol2, depth);
         assertEquals(expectedList, scopeDisplay.get(1));
     }
 
     @Test
     void testGetSymbol01() {
-        var symbol1 = new Symbol("name", 1);
-        var symbol2 = new Symbol("name2", 1);
+        var symbol1 = new Symbol("name");
+        var symbol2 = new Symbol("name2");
         var expectedList = new SymbolList(symbol1, symbol2);
-        scopeDisplay.open(1);
-        scopeDisplay.add(symbol1);
-        scopeDisplay.add(symbol2);
+        int depth = 1;
+        scopeDisplay.open(depth);
+        scopeDisplay.add(symbol1, depth);
+        scopeDisplay.add(symbol2, depth);
         assertEquals(expectedList, scopeDisplay.get(1));
     }
 

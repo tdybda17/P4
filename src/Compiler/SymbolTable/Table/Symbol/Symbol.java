@@ -8,29 +8,18 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private int depth;
 
     public Symbol(String name) {
         this.name = name;
     }
 
-    public Symbol(String name, int depth) {
-        this.name = name;
-        this.depth = depth;
-    }
-
-    public Symbol(String name, Attributes attributes, int depth) {
+    public Symbol(String name, Attributes attributes) {
         this.name = name;
         this.attributes = attributes;
-        this.depth = depth;
     }
 
     public String getName() {
         return name;
-    }
-
-    public int getDepth() {
-        return depth;
     }
 
     public Attributes getAttributes() {

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ScopeDisplay {
-
-    private int currentDepth = 0;
     private Map<Integer, SymbolList> symbolMap;
 
     public ScopeDisplay() {
@@ -23,22 +21,21 @@ public class ScopeDisplay {
     }
 
     public void open(final int depth) {
-        currentDepth++;
         symbolMap.put(depth, new SymbolList());
     }
 
-    public void add(Symbol symbol) {
-        if(currentDepth > 0)
-            symbolMap.get(this.currentDepth).add(symbol);
-        else throw new AddingToClosedScopeDisplayError();
+    public void add(Symbol symbol, int depth) {
+        SymbolList symbolList = symbolMap.get(depth);
+        if(symbolList == null) {
+            throw new AddingToClosedScopeDisplayError("The depth: " + depth + ", was already closed.");
+        } else {
+            symbolMap.get(depth).add(symbol);
+        }
     }
 
     public List<Symbol> remove(int depth) {
         List<Symbol> symbolsToRemove = symbolMap.get(depth).asList();
         symbolMap.remove(depth);
-        if(currentDepth > 0)
-            currentDepth--;
-
         return symbolsToRemove;
     }
 
