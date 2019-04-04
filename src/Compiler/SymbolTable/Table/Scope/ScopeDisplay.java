@@ -1,6 +1,7 @@
 package Compiler.SymbolTable.Table.Scope;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.AddingToClosedScopeDisplayError;
+import Compiler.Exceptions.SymbolTable.ScopeError.GettingFromClosedScopeDisplayError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
@@ -17,7 +18,12 @@ public class ScopeDisplay {
     }
 
     public SymbolList get(final int depth) {
-        return symbolMap.get(depth);
+        SymbolList symbolList = symbolMap.get(depth);
+        if(symbolList == null) {
+            throw new GettingFromClosedScopeDisplayError("You tried to get the symbol list of a closed scope");
+        } else {
+            return symbolMap.get(depth);
+        }
     }
 
     public void open(final int depth) {
