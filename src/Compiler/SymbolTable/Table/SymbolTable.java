@@ -2,12 +2,12 @@ package Compiler.SymbolTable.Table;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.ScopeError.IllegalSymbolNameError;
+import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.SymbolTable.Table.Scope.ScopeDisplay;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class SymbolTable implements ISymbolTable {
     private int depth;
     private ScopeDisplay scopeDisplay;
-    private Map<String, SymbolList> hashMap;
+    private Map<String, Symbol> hashMap;
 
     public SymbolTable() {
         this.depth = 0;
@@ -45,7 +45,8 @@ public class SymbolTable implements ISymbolTable {
     @Override
     public void enterSymbol(String name, Attributes attributes) {
         validateInputName(name);
-        Symbol oldSymbol = retrieveSymbol(name);
+
+        Symbol oldSymbol = hashMap.get(name);
         if(oldSymbol == null) {
             Symbol newSymbol = new Symbol(name, attributes, depth);
             scopeDisplay.add(newSymbol);
@@ -63,17 +64,20 @@ public class SymbolTable implements ISymbolTable {
 
     private void addToHashTable(Symbol symbol) {
         String name = symbol.getName();
-        if(!hashMap.containsKey(name))
-            hashMap.put(name, new SymbolList());
-        hashMap.get(name).add(symbol);
+        if(!hashMap.containsKey(name)) {
+            hashMap.put(name, symbol);
+        }
+        else {
+            throw new DuplicateSymbolError("An symbol with the name: " + name + ", already exists in the table");
+        }
     }
 
     @Override
     public Symbol retrieveSymbol(String name) {
-        SymbolList symbolList = hashMap.get(name);
-        if(symbolList != null)
-            return symbolList.get(name);
-        else return null;
+        Symbol symbol = hashMap.get(name);
+        if(symbol!= null)
+            return symbol;
+        else throw new SymbolTableException("The given name: " + name + ", could not be retrieved because no mapping from it exists");
     }
 
     @Override
@@ -82,7 +86,7 @@ public class SymbolTable implements ISymbolTable {
     }
 
     /* Method for testing */
-    Map<String, SymbolList> getHashMap() {
+    Map<String, Symbol> getHashMap() {
         return hashMap;
     }
 
