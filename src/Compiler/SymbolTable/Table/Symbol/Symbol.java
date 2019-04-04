@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private SymbolList symbolList; //TODO ret sikker på vi kan slette denne
     private int depth;
 
     public Symbol(String name) {
@@ -20,11 +19,10 @@ public class Symbol implements Comparable<Symbol> {
         this.depth = depth;
     }
 
-    public Symbol(String name, Attributes attributes, int depth, SymbolList symbolList) {
+    public Symbol(String name, Attributes attributes, int depth) {
         this.name = name;
         this.attributes = attributes;
         this.depth = depth;
-        this.symbolList = symbolList;
     }
 
     public String getName() {
@@ -37,10 +35,6 @@ public class Symbol implements Comparable<Symbol> {
 
     public Attributes getAttributes() {
         return attributes;
-    }
-
-    public SymbolList getSymbolList() {
-        return symbolList;
     }
 
     public void setName(String name) {

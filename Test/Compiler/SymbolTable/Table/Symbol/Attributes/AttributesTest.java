@@ -25,7 +25,7 @@ class AttributesTest {
 
     @Test
     void testingInstanceOfFuncAttr(){
-        Symbol testSymbol = new Symbol("testFunctionSymbol", funcAttr, 1, new SymbolList());
+        Symbol testSymbol = new Symbol("testFunctionSymbol", funcAttr, 1);
 
         Attributes attributes = testSymbol.getAttributes();
 
@@ -41,7 +41,7 @@ class AttributesTest {
 
     @Test
     void testingInstanceOfIdentifierAttr(){
-        Symbol testSymbol = new Symbol("testFunctionSymbol", variableAttr, 1, new SymbolList());
+        Symbol testSymbol = new Symbol("testFunctionSymbol", variableAttr, 1);
 
         Attributes attributes = testSymbol.getAttributes();
 

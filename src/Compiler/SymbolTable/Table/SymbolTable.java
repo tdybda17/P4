@@ -47,7 +47,7 @@ public class SymbolTable implements ISymbolTable {
         validateInputName(name);
         Symbol oldSymbol = retrieveSymbol(name);
         if(oldSymbol == null) {
-            Symbol newSymbol = new Symbol(name, attributes, depth, scopeDisplay.get(depth));
+            Symbol newSymbol = new Symbol(name, attributes, depth);
             scopeDisplay.add(newSymbol);
             addToHashTable(newSymbol);
         } else {
