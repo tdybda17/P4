@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private SymbolList symbolList;
+    private SymbolList symbolList; //TODO ret sikker på vi kan slette denne
     private int depth;
 
     public Symbol(String name) {
