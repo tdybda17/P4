@@ -21,6 +21,10 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
 
     private void addMethods(){
         this.addMethod(containsKey());
+        this.addMethod(containsValue());
+        this.addMethod(add());
+        this.addMethod(remove());
+        this.addMethod(get());
     }
 
     @Override
@@ -28,11 +32,41 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
         this.elementType = elementType;
     }
 
+    public void setKeyType(TypeDescriptor keyType) {
+        this.keyType = keyType;
+    }
+
     private Method containsKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(keyType);
         return new Method("containsKey", new BooleanTypeDescriptor(), parameters);
     }
+
+    private Method containsValue(){
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(elementType);
+        return new Method("containsValue", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method add() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(keyType);
+        parameters.add(elementType);
+        return new Method("add", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method remove() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(keyType);
+        return new Method("remove", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method get() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(keyType);
+        return new Method("get", elementType , parameters);
+    }
+
 
     @Override
     public String getTypeName() {
