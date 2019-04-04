@@ -15,7 +15,7 @@ import java.util.Map;
 public class SymbolTable implements ISymbolTable {
     private int depth;
     private ScopeDisplay scopeDisplay;
-    private Map<String, SymbolList> hashMap;
+    private Map<String, SymbolList> hashMap; //TODO: why map to SymbolList and not Symbol?
 
     public SymbolTable() {
         this.depth = 0;
@@ -89,5 +89,18 @@ public class SymbolTable implements ISymbolTable {
     /* Method for testing */
     SymbolList getCurrentScopeDisplay() {
         return scopeDisplay.get(depth);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SymbolTable{" +
+                "\ndepth=" + depth +
+                "\nscopeDisplay=" + scopeDisplay);
+        sb.append("\nhashMap=\n");
+        for (SymbolList symbolList : hashMap.values())
+            sb.append("  ").append(symbolList.toString());
+        sb.append('}');
+        return sb.toString();
     }
 }

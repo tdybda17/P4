@@ -1,10 +1,16 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
+import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
+import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FunctionVisitor implements TestParserVisitor {
     private Object defaultVisit(SimpleNode node, Object data){
@@ -59,11 +65,6 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTOBJECT_TYPES node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -265,22 +266,53 @@ public class FunctionVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
         SymbolTable st = (SymbolTable) data;
-        SimpleNode returnNode = (SimpleNode) node.jjtGetChild(0);
-        String returnType = (String) returnNode.jjtGetValue();
-
-        TypeDescriptor returnTD = new TypeDescriptorFactory().create(returnType);
-        if (returnTD instanceof CollectionTypeDescriptor) {
-            System.out.println("fuck");
-        }
+        Attributes functionAttributes = new FunctionAttributes(getReturnType(node), getParameterTypes(node));
 
         SimpleNode idNode = (SimpleNode) node.jjtGetChild(1);
         String idValue = (String) idNode.jjtGetValue();
 
+        st.enterSymbol(idValue, functionAttributes);
+        return data;
+    }
 
+    private TypeDescriptor getReturnType(SimpleNode node) {
+        SimpleNode returnNode = (SimpleNode) node.jjtGetChild(0);
+        if (returnNode.jjtGetNumChildren() == 0)
+            return new VoidTypeDescriptor();
+        else {
+            SimpleNode returnTypeNode = (SimpleNode) returnNode.jjtGetChild(0);
+            TypeDescriptor returnTypeDescriptor = new TypeDescriptorFactory().create(returnTypeNode.jjtGetValue().toString());
+            setElementType(returnTypeDescriptor, returnTypeNode);
 
-        //FunctionAttributes functionAttributes = new FunctionAttributes();
-        //st.enterSymbol(idValue, );
-        return null;
+            return returnTypeDescriptor;
+        }
+    }
+
+    private void setElementType(TypeDescriptor typeDescriptor, SimpleNode typeNode) {
+        if (typeDescriptor instanceof CollectionTypeDescriptor) {
+            SimpleNode elementTypeNode = (SimpleNode) typeNode.jjtGetChild(0);
+            TypeDescriptor elementTypeDescriptor = new TypeDescriptorFactory().create(elementTypeNode.jjtGetValue().toString());
+            ((CollectionTypeDescriptor) typeDescriptor).setElementType(elementTypeDescriptor);
+            setElementType(elementTypeDescriptor, elementTypeNode);
+        }
+    }
+
+    private List<TypeDescriptor> getParameterTypes(SimpleNode node) {
+        List<TypeDescriptor> parameterTypes = new ArrayList<>();
+        SimpleNode parametersNode = (SimpleNode) node.jjtGetChild(2);
+        int numberOfParams = parametersNode.jjtGetNumChildren();
+
+        for (int i = 0; i < numberOfParams; i++)
+            addParameter(parameterTypes, (SimpleNode) parametersNode.jjtGetChild(i));
+
+        return parameterTypes;
+    }
+
+    private void addParameter(List<TypeDescriptor> parameterTypes, SimpleNode parameterNode) {
+        SimpleNode parameterTypeNode = (SimpleNode) parameterNode.jjtGetChild(0);
+        TypeDescriptor parameterType = new TypeDescriptorFactory().create(parameterTypeNode.jjtGetValue().toString());
+        setElementType(parameterType, parameterTypeNode);
+        parameterTypes.add(parameterType);
     }
 
     @Override

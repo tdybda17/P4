@@ -16,7 +16,7 @@ PARSER_BEGIN(TestParser)
 
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.whatever;import java.io.BufferedReader;
+import Compiler.Parser.CustomVisitors.FunctionVisitor;import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.whatever;import Compiler.SymbolTable.Table.SymbolTable;import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
@@ -24,27 +24,30 @@ public class TestParser {
     public static void main(String[] args) {
         try {
             //System.out.println(parseTextFile("src/Compiler/Parser/test"));
-            useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test");
+            //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
+            SymbolTable st = new SymbolTable();
+            st.openScope();
+            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static String parseTextFile(String path) throws Exception {
-        File file = new File(path);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        TestParser parser = new TestParser(reader);
-        Node root = parser.start();
-
+    public static String parseTextFile(String filePath) throws Exception {
+        Node root = createParseTree(filePath);
         return whatever.createDotOutput(root);
   }
 
-    public static void useVisitorMethod(TestParserVisitor visitor, String filePath) throws Exception {
+    public static void useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
+        Node root = createParseTree(filePath);
+        root.jjtAccept(visitor, data);
+    }
+
+    private static Node createParseTree(String filePath) throws Exception {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         TestParser parser = new TestParser(reader);
-        Node root = parser.start();
-        root.jjtAccept(visitor, null);
+        return parser.start();
     }
 }
   
@@ -166,7 +169,7 @@ SimpleNode start() #START :
 void prog() #PROG(>1) :
 {}
 {
-    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() skip_to_EOF() <EOF>
+    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() #FUNCS_DCL(>1) skip_to_EOF() <EOF>
 }
 
 void newlines_plus() #void :
@@ -589,7 +592,7 @@ void element_list_continuous() #void :
     element_list() | empty()
 }
 
-void funcs_dcl() #FUNCS_DCL(>1) :
+void funcs_dcl() #void :
 {}
 {
     func_dcl() newlines_plus() funcs_dcl() | empty()
@@ -607,10 +610,10 @@ void ret() #RETURN_TYPE :
     type() | empty()
 }
 
-void formal_parameters() #void :
+void formal_parameters() #FORMAL_PARAMETERS :
 {}
 {
-    formal_parameter_list() #FORMAL_PARAMETERS(>1) | empty()
+    formal_parameter_list() | empty()
 }
 
 void formal_parameter_list() #void :
