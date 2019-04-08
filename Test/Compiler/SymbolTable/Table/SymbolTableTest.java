@@ -16,6 +16,7 @@ class SymbolTableTest {
         symbolTable = new SymbolTable();
     }
 
+    //Testing that you cannot enter the same symbol twice in the same scope
     @Test
     void testEnterSymbol01() {
         String name = "firstSymbol";
@@ -24,6 +25,7 @@ class SymbolTableTest {
         assertThrows(DuplicateSymbolError.class, () -> symbolTable.enterSymbol(name, null));
     }
 
+    //Testing that you cannot enter the same symbol twice in different scopes
     @Test
     void testEnterSymbol02() {
         String name = "firstSymbol";
@@ -33,6 +35,7 @@ class SymbolTableTest {
         assertThrows(DuplicateSymbolError.class, () -> symbolTable.enterSymbol(name, null));
     }
 
+    //Testing that you can reenter a symbol in the symbol table if the scope with the earlier declaration is closed
     @Test
     void testEnterSymbol03() {
         String name1 = "firstSymbol";
@@ -45,6 +48,8 @@ class SymbolTableTest {
         symbolTable.enterSymbol(name2, null);
     }
 
+
+    //Testing that you can reenter two symbols in the symbol table if the scope with their earlier declarations is closed
     @Test
     void testEnterSymbol04() {
         String name1 = "firstSymbol";

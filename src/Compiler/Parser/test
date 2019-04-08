@@ -5,6 +5,8 @@ end
 
 
 function main()
+    int sum
+    int a = 7
     sum.total = a().b.c().d
     create Graph g
         a -- b
