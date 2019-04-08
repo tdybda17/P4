@@ -44,14 +44,4 @@ public class ScopeDisplay {
         symbolMap.remove(depth);
         return symbolsToRemove;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i <= currentDepth; i++) {
-            stringBuilder.append("\n ").append(i).append(": \n  ");
-            stringBuilder.append(symbolMap.get(i));
-        }
-        return stringBuilder.toString();
-    }
 }
