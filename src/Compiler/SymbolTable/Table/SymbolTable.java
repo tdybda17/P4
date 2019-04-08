@@ -8,6 +8,7 @@ import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

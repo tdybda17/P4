@@ -19,4 +19,9 @@ public abstract class TypeDescriptor {
     public int hashCode() {
         return  Objects.hash(this.getTypeName());
     }
+
+    @Override
+    public String toString() {
+        return getTypeName();
+    }
 }

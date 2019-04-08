@@ -15,6 +15,9 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTPROG node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTFUNCS_DCL node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTVERTEX_ATTRIBUTES node, Object data){
     return defaultVisit(node, data);
   }
@@ -34,9 +37,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
   public Object visit(ASTIDENTIFIER node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTOBJECT_TYPES node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTMAP node, Object data){
@@ -153,9 +153,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTELEMENT_LIST node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTFUNCS_DCL node, Object data){
-    return defaultVisit(node, data);
-  }
   public Object visit(ASTFUNC_DCL node, Object data){
     return defaultVisit(node, data);
   }
@@ -169,4 +166,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=984edaa82f5675b91a3130f73e7548f7 (do not edit this line) */
+/* JavaCC - OriginalChecksum=f6f10c807933ca1fda44f390409e0246 (do not edit this line) */
