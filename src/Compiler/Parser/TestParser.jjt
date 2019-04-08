@@ -184,16 +184,16 @@ void newlines_star() #void :
     <NEWLINE> newlines_star() | empty()
 }
 
-void vertex_edge_attributes() #void :
+void vertex_edge_attributes() #VERTEX_EDGE_ATTR(>1) :
 {}
 {
     vertex_attributes() | edge_attributes() | newlines_star()
 }
 
-void vertex_attributes() #VERTEX_ATTRIBUTES :
+void vertex_attributes() #void :
 {}
 {
-    vertex_attr_dcl() newlines_star() vertex_attr_tail()
+    vertex_attr_dcl() #VERTEX_ATTRIBUTES newlines_star() vertex_attr_tail() #EDGE_ATTRIBUTES
 }
 
 void vertex_attr_dcl() #void :
@@ -208,10 +208,10 @@ void vertex_attr_tail() #void :
     edge_attr_dcl() newlines_star() | empty()
 }
 
-void edge_attributes() #EDGE_ATTRIBUTES :
+void edge_attributes() #void :
 {}
 {
-    edge_attr_dcl() newlines_star() edge_attr_tail()
+    edge_attr_dcl() #EDGE_ATTRIBUTES newlines_star() edge_attr_tail() #VERTEX_ATTRIBUTES
 }
 
 void edge_attr_dcl() #void :
@@ -571,7 +571,7 @@ void return_expr() #void :
 void collection_adt() #COLLECTION_ADT :
 {}
 {
-    collection_type() identifier() collection_dcl()
+    collection_type() <LANGLE> type() <RANGLE> identifier() collection_dcl()
 }
 
 void collection_dcl() #void :
