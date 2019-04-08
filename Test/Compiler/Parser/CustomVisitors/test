@@ -4,10 +4,10 @@ function main()
     real r
 end
 
-int function i(real a, real b)
+int function foo(real a, real b)
     int x
     return 1
 end
 
-function a()
+function bar()
 end
