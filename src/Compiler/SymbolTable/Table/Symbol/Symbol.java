@@ -9,6 +9,7 @@ public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
 
+
     public Symbol(String name) {
         this.name = name;
     }

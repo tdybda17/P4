@@ -3,6 +3,7 @@ package Compiler.Parser.GeneratedFiles;
 import Compiler.Parser.whatever;
 import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -35,6 +36,7 @@ class DeclarationVisitorTest {
     void wrongRootNodeType() {
     }
 
+    @Disabled
     @Test
     void printAST() {
         System.out.println(whatever.createDotOutput(root));

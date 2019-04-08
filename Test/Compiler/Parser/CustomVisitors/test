@@ -1,0 +1,5 @@
+function main()
+    int sum
+    boolean b
+    real r
+end
