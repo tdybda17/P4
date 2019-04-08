@@ -127,11 +127,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTOBJECT_TYPES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTMAP node, Object data) {
         return defaultVisit(node, data);
     }
