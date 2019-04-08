@@ -18,9 +18,9 @@ class BinarySymbolSearchTest {
     @Test
     void testCorrectSymbolReturned01() {
         symbolList.add(
-                new Symbol("name1", 1),
-                new Symbol("name2", 1),
-                new Symbol("name3", 1)
+                new Symbol("name1"),
+                new Symbol("name2"),
+                new Symbol("name3")
         );
         Symbol expectedSymbol = symbolList.get(1);
         assertEquals(expectedSymbol, BinarySymbolSearch.find(symbolList, expectedSymbol.getName()));
@@ -29,10 +29,10 @@ class BinarySymbolSearchTest {
     @Test
     void testCorrectSymbolReturned02() {
         symbolList.add(
-                new Symbol("name", 1),
-                new Symbol("name", 2), // Not added!
-                new Symbol("name", 3), // Not added!
-                new Symbol("id", 3)
+                new Symbol("name"),
+                new Symbol("name"), // Not added!
+                new Symbol("name"), // Not added!
+                new Symbol("id")
         );
         Symbol expectedSymbol = symbolList.get(0);
         assertEquals(expectedSymbol, BinarySymbolSearch.find(symbolList, expectedSymbol.getName()));
@@ -40,19 +40,19 @@ class BinarySymbolSearchTest {
 
     @Test
     void testCorrectSymbolReturned03() {
-        symbolList.add(new Symbol("name", 1));
+        symbolList.add(new Symbol("name"));
         assertNull(BinarySymbolSearch.find(symbolList, "name2"));
     }
 
     @Test
     void testSymbolExists01() {
-        symbolList.add(new Symbol("name", 1));
-        assertFalse(BinarySymbolSearch.exists(symbolList, new Symbol("name2", 2)));
+        symbolList.add(new Symbol("name"));
+        assertFalse(BinarySymbolSearch.exists(symbolList, new Symbol("name2")));
     }
 
     @Test
     void testSymbolExists02() {
-        symbolList.add(new Symbol("symbolname", 1));
-        assertTrue(BinarySymbolSearch.exists(symbolList, new Symbol("symbolname", 1)));
+        symbolList.add(new Symbol("symbolname"));
+        assertTrue(BinarySymbolSearch.exists(symbolList, new Symbol("symbolname")));
     }
 }

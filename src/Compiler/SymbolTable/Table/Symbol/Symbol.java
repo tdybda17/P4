@@ -8,39 +8,23 @@ import java.util.Objects;
 public class Symbol implements Comparable<Symbol> {
     private String name;
     private Attributes attributes;
-    private SymbolList symbolList; //TODO ret sikker på vi kan slette denne
-    private int depth;
+
 
     public Symbol(String name) {
         this.name = name;
     }
 
-    public Symbol(String name, int depth) {
-        this.name = name;
-        this.depth = depth;
-    }
-
-    public Symbol(String name, Attributes attributes, int depth, SymbolList symbolList) {
+    public Symbol(String name, Attributes attributes) {
         this.name = name;
         this.attributes = attributes;
-        this.depth = depth;
-        this.symbolList = symbolList;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getDepth() {
-        return depth;
-    }
-
     public Attributes getAttributes() {
         return attributes;
-    }
-
-    public SymbolList getSymbolList() {
-        return symbolList;
     }
 
     public void setName(String name) {
@@ -63,14 +47,5 @@ public class Symbol implements Comparable<Symbol> {
     @Override
     public int hashCode() {
         return Objects.hash(getName());
-    }
-
-    @Override
-    public String toString() {
-        return "Symbol{" +
-                "name='" + name + '\'' +
-                ", attributes=" + attributes +
-                ", depth=" + depth +
-                '}';
     }
 }
