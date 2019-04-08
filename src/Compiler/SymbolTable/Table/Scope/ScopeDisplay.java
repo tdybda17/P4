@@ -44,5 +44,4 @@ public class ScopeDisplay {
         symbolMap.remove(depth);
         return symbolsToRemove;
     }
-
 }

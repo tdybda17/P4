@@ -6,14 +6,14 @@ public interface TestParserTreeConstants
   public int JJTVOID = 0;
   public int JJTSTART = 1;
   public int JJTPROG = 2;
-  public int JJTVERTEX_ATTRIBUTES = 3;
-  public int JJTEDGE_ATTRIBUTES = 4;
-  public int JJTATTRIBUTE_DCL = 5;
-  public int JJTDCL = 6;
-  public int JJTOBJECT_TYPE = 7;
-  public int JJTSIMPLE_TYPES = 8;
-  public int JJTIDENTIFIER = 9;
-  public int JJTOBJECT_TYPES = 10;
+  public int JJTFUNCS_DCL = 3;
+  public int JJTVERTEX_ATTRIBUTES = 4;
+  public int JJTEDGE_ATTRIBUTES = 5;
+  public int JJTATTRIBUTE_DCL = 6;
+  public int JJTDCL = 7;
+  public int JJTOBJECT_TYPE = 8;
+  public int JJTSIMPLE_TYPES = 9;
+  public int JJTIDENTIFIER = 10;
   public int JJTMAP = 11;
   public int JJTCOLLECTION_TYPE = 12;
   public int JJTGRAPH_ELEMENT_TYPES = 13;
@@ -52,17 +52,17 @@ public interface TestParserTreeConstants
   public int JJTRETURN_STMT = 46;
   public int JJTCOLLECTION_ADT = 47;
   public int JJTELEMENT_LIST = 48;
-  public int JJTFUNCS_DCL = 49;
-  public int JJTFUNC_DCL = 50;
-  public int JJTRETURN_TYPE = 51;
-  public int JJTFORMAL_PARAMETERS = 52;
-  public int JJTFORMAL_PARAMETER = 53;
+  public int JJTFUNC_DCL = 49;
+  public int JJTRETURN_TYPE = 50;
+  public int JJTFORMAL_PARAMETERS = 51;
+  public int JJTFORMAL_PARAMETER = 52;
 
 
   public String[] jjtNodeName = {
     "void",
     "START",
     "PROG",
+    "FUNCS_DCL",
     "VERTEX_ATTRIBUTES",
     "EDGE_ATTRIBUTES",
     "ATTRIBUTE_DCL",
@@ -70,7 +70,6 @@ public interface TestParserTreeConstants
     "OBJECT_TYPE",
     "SIMPLE_TYPES",
     "IDENTIFIER",
-    "OBJECT_TYPES",
     "MAP",
     "COLLECTION_TYPE",
     "GRAPH_ELEMENT_TYPES",
@@ -109,11 +108,10 @@ public interface TestParserTreeConstants
     "RETURN_STMT",
     "COLLECTION_ADT",
     "ELEMENT_LIST",
-    "FUNCS_DCL",
     "FUNC_DCL",
     "RETURN_TYPE",
     "FORMAL_PARAMETERS",
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=44ed9184640d508c3f769215917538c8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=dd46a2783364c9046cd801865efe0d20 (do not edit this line) */

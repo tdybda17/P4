@@ -64,4 +64,9 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
     public int hashCode() {
         return Objects.hash(super.hashCode(), elementType);
     }
+
+    @Override
+    public String toString() {
+        return "Set<" + elementType + '>';
+    }
 }
