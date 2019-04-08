@@ -78,8 +78,10 @@ public class SymbolList {
         for (Symbol symbol : symbols) {
             stringBuilder.append(symbol).append(", ");
         }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        if(!symbols.isEmpty()) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
         stringBuilder.append('}');
         return stringBuilder.toString();
     }
