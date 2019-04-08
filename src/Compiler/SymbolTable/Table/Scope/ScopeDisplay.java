@@ -5,10 +5,7 @@ import Compiler.Exceptions.SymbolTable.ScopeError.GettingFromClosedScopeDisplayE
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ScopeDisplay {
     private Map<Integer, SymbolList> symbolMap;
@@ -55,5 +52,18 @@ public class ScopeDisplay {
         stringBuilder.append('}');
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScopeDisplay that = (ScopeDisplay) o;
+        return Objects.equals(symbolMap, that.symbolMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(symbolMap);
     }
 }

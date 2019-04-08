@@ -45,7 +45,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        System.out.println(symbolTable);
         symbolTable.closeScope();
         return null;
     }

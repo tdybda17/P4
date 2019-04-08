@@ -8,10 +8,7 @@ import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTable implements ISymbolTable {
     private int depth;
@@ -101,5 +98,20 @@ public class SymbolTable implements ISymbolTable {
         return "currDepth = " + depth + "\n" +
                 scopeDisplay.toString() + "\n" +
                 "hashMap = " + hashMap + "\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SymbolTable that = (SymbolTable) o;
+        return depth == that.depth &&
+                Objects.equals(scopeDisplay, that.scopeDisplay) &&
+                Objects.equals(hashMap, that.hashMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(depth, scopeDisplay, hashMap);
     }
 }
