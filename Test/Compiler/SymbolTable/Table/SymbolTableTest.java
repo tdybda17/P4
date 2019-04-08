@@ -1,6 +1,7 @@
 package Compiler.SymbolTable.Table;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.SymbolTable.ScopeError.GettingFromClosedScopeDisplayError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -111,6 +112,6 @@ class SymbolTableTest {
         symbolTable.enterSymbol(name1, null);
         symbolTable.enterSymbol(name2, null);
         symbolTable.closeScope();
-        assertNull(symbolTable.getCurrentScopeDisplay());
+        assertThrows(GettingFromClosedScopeDisplayError.class,()->symbolTable.getCurrentScopeDisplay());
     }
 }

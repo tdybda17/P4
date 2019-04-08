@@ -74,10 +74,6 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTOBJECT_TYPES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
     @Override
     public Object visit(ASTMAP node, Object data) {
         return null; //TODO: FIX

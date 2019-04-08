@@ -36,4 +36,12 @@ public class FunctionAttributes implements Attributes {
     public int hashCode() {
         return Objects.hash(returnType, parameterTypes);
     }
+
+    @Override
+    public String toString() {
+        return "FunctionAttributes{" +
+                "returnType=" + returnType +
+                ", parameterTypes=" + parameterTypes +
+                '}';
+    }
 }

@@ -28,6 +28,7 @@ public class SymbolList {
             return true;
         } else {
             return false;
+            //TODO: maybe throw exception instead because this is called in void methods (e.g. in add(Symbol... symbols)) so the user will never know that it returned false
         }
     }
 
@@ -68,5 +69,15 @@ public class SymbolList {
     @Override
     public int hashCode() {
         return Objects.hash(symbols);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SymbolList: \n");
+        for (Symbol symbol : symbols) {
+            stringBuilder.append('\t').append(symbol).append('\n');
+        }
+        return stringBuilder.toString();
     }
 }

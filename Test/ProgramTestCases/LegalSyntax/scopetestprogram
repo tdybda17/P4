@@ -1,0 +1,23 @@
+function main()
+	int a
+	int b
+
+	f(a)
+	b = g(a, b)
+            c = a
+end
+
+function f (int z)
+	int x
+	real y
+end
+
+int function g(int x, int y)
+	if(x > y) then
+		int z
+		z = x*y
+		return z
+	else
+		return x + y  + z
+	end
+end

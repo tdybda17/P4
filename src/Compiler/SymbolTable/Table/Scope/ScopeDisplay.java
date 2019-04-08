@@ -1,6 +1,7 @@
 package Compiler.SymbolTable.Table.Scope;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.AddingToClosedScopeDisplayError;
+import Compiler.Exceptions.SymbolTable.ScopeError.GettingFromClosedScopeDisplayError;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 
@@ -10,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ScopeDisplay {
-
-    private int currentDepth = 0;
     private Map<Integer, SymbolList> symbolMap;
 
     public ScopeDisplay() {
@@ -19,27 +18,40 @@ public class ScopeDisplay {
     }
 
     public SymbolList get(final int depth) {
-        return symbolMap.get(depth);
+        SymbolList symbolList = symbolMap.get(depth);
+        if(symbolList == null) {
+            throw new GettingFromClosedScopeDisplayError("You tried to get the symbol list of a closed scope");
+        } else {
+            return symbolMap.get(depth);
+        }
     }
 
     public void open(final int depth) {
-        currentDepth++;
         symbolMap.put(depth, new SymbolList());
     }
 
-    public void add(Symbol symbol) {
-        if(currentDepth > 0)
-            symbolMap.get(this.currentDepth).add(symbol);
-        else throw new AddingToClosedScopeDisplayError();
+    public void add(Symbol symbol, int depth) {
+        SymbolList symbolList = symbolMap.get(depth);
+        if(symbolList == null) {
+            throw new AddingToClosedScopeDisplayError("The depth: " + depth + ", was already closed.");
+        } else {
+            symbolMap.get(depth).add(symbol);
+        }
     }
 
     public List<Symbol> remove(int depth) {
         List<Symbol> symbolsToRemove = symbolMap.get(depth).asList();
         symbolMap.remove(depth);
-        if(currentDepth > 0)
-            currentDepth--;
-
         return symbolsToRemove;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i <= currentDepth; i++) {
+            stringBuilder.append("\n ").append(i).append(": \n  ");
+            stringBuilder.append(symbolMap.get(i));
+        }
+        return stringBuilder.toString();
+    }
 }
