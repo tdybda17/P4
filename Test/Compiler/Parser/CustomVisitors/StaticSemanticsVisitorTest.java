@@ -24,7 +24,7 @@ class StaticSemanticsVisitorTest {
     @Test
     void visit() throws Exception {
         TestParser.useVisitorMethod(new StaticSemanticsVisitor(), path, symbolTable);
-        System.out.println(symbolTable);
+        //System.out.println(symbolTable);
     }
 
     @Test

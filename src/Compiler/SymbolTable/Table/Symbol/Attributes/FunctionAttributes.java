@@ -39,7 +39,7 @@ public class FunctionAttributes implements Attributes {
 
     @Override
     public String toString() {
-        return "FunctionAttributes{" +
+        return "Function{" +
                 "returnType=" + returnType +
                 ", parameterTypes=" + parameterTypes +
                 '}';
