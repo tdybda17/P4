@@ -95,4 +95,11 @@ public class SymbolTable implements ISymbolTable {
     SymbolList getCurrentScopeDisplay() {
         return scopeDisplay.get(depth);
     }
+
+    @Override
+    public String toString() {
+        return "currDepth = " + depth + "\n" +
+                scopeDisplay.toString() + "\n" +
+                "hashMap = " + hashMap + "\n";
+    }
 }
