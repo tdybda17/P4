@@ -3,3 +3,11 @@ function main()
     boolean b
     real r
 end
+
+int function i(real a, real b)
+    int x
+    return 1
+end
+
+function a()
+end

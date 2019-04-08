@@ -74,10 +74,15 @@ public class SymbolList {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SymbolList: \n");
+        stringBuilder.append("{");
         for (Symbol symbol : symbols) {
-            stringBuilder.append('\t').append(symbol).append('\n');
+            stringBuilder.append(symbol).append(", ");
         }
+        if(!symbols.isEmpty()) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
+        stringBuilder.append('}');
         return stringBuilder.toString();
     }
 }

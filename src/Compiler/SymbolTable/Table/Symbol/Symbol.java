@@ -48,4 +48,14 @@ public class Symbol implements Comparable<Symbol> {
     public int hashCode() {
         return Objects.hash(getName());
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(name).append(":");
+        stringBuilder.append(attributes);
+
+
+        return stringBuilder.toString();
+    }
 }

@@ -10,11 +10,6 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
-    private Object defaultVisit(SimpleNode node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
-    }
-
     private TypeDescriptor convertToTypeDescriptor(Object data){
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
@@ -37,6 +32,21 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else {
             throw new IllegalTypeException("The given data object was not a SimpleNode");
         }
+    }
+
+    private Object defaultVisit(SimpleNode node, Object data) {
+        node.childrenAccept(this, data);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTBLOCK node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        symbolTable.openScope();
+        node.childrenAccept(this, data);
+        System.out.println(symbolTable);
+        symbolTable.closeScope();
+        return null;
     }
 
     @Override
@@ -206,10 +216,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTBLOCK node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTCREATE node, Object data) {

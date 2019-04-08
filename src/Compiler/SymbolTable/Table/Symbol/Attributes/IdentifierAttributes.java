@@ -12,4 +12,9 @@ public class IdentifierAttributes implements Attributes {
     public TypeDescriptor getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

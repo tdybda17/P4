@@ -44,4 +44,16 @@ public class ScopeDisplay {
         symbolMap.remove(depth);
         return symbolsToRemove;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("ScopeDisplay {\n");
+        for(Integer key : symbolMap.keySet()) {
+            stringBuilder.append('\t').append(key).append(": ").append(symbolMap.get(key)).append('\n');
+        }
+        stringBuilder.append('}');
+
+        return stringBuilder.toString();
+    }
 }
