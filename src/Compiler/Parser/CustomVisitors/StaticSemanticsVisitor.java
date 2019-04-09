@@ -6,6 +6,7 @@ import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.SymbolTable;
@@ -178,7 +179,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
+        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
             Node typeNode = dclNode.jjtGetChild(0);
             //We call the visit method for the simple data type node to get the type descriptor
             TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
@@ -197,7 +198,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        return defaultVisit(node, data);
+        SimpleNode collectionTypeNode = convertToSimpleNode(node);
+
+        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
+        if(type instanceof CollectionTypeDescriptor) {
+            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
+
+            Node childNode = node.jjtGetChild(0);
+            //We make a recursive call to the visit method.
+            TypeDescriptor elementType = convertToTypeDescriptor(childNode.jjtAccept(this, data));
+            collectionTypeDescriptor.setElementType(elementType);
+            return collectionTypeDescriptor;
+        } else {
+            throw new IncorrectTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
+        }
     }
 
     @Override
@@ -367,9 +381,10 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            TypeDescriptor type = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
-
+            Symbol symbol = createSymbolFromDCLnode(node, data);
+            symbolTable.enterSymbol(symbol);
 
             if(node.jjtGetNumChildren() == 3) {
                 //TODO: make stuff for member function call and element list
