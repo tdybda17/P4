@@ -90,7 +90,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
             }
             //TODO: making it so that evaluations can be type checked
-            TypeDescriptor actualType = new VoidTypeDescriptor();
+            Node RHSvalue = node.jjtGetChild(2);
+            TypeDescriptor actualType = convertToTypeDescriptor(RHSvalue.jjtAccept(this, data));
 
             if(expectedType.equals(actualType)) {
                 return null;
