@@ -31,7 +31,7 @@ class StaticSemanticsVisitorTest {
 
     @Test
     void visitDeclarationNodeTest1() {
-        ASTDCL intDclNode = createDCLnode("int", "i");
+        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "i");
         staticSemanticsVisitor.visit(intDclNode, symbolTable);
 
         SymbolTable expected = new SymbolTable();
@@ -43,7 +43,7 @@ class StaticSemanticsVisitorTest {
     @Test
     void visitDeclarationNodeTest2() {
         //TODO: opdater denne test til at inkludere en initilazation
-        ASTDCL realDclNode = createDCLnode("real", "r");
+        ASTSIMPLE_DCL realDclNode = createDCLnode("real", "r");
         staticSemanticsVisitor.visit(realDclNode, symbolTable);
 
         SymbolTable expected = new SymbolTable();
@@ -52,8 +52,8 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
-    private ASTDCL createDCLnode(String type, String id) {
-        ASTDCL dclNode = new ASTDCL(1);
+    private ASTSIMPLE_DCL createDCLnode(String type, String id) {
+        ASTSIMPLE_DCL dclNode = new ASTSIMPLE_DCL(1);
         ASTSIMPLE_TYPES simpleDataTypeNode = new ASTSIMPLE_TYPES(2);
         simpleDataTypeNode.jjtSetValue(type);
 

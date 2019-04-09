@@ -11,8 +11,8 @@ public interface TestParserTreeConstants
   public int JJTVERTEX_ATTRIBUTES = 5;
   public int JJTEDGE_ATTRIBUTES = 6;
   public int JJTATTRIBUTE_DCL = 7;
-  public int JJTDCL = 8;
-  public int JJTOBJECT_TYPE = 9;
+  public int JJTOBJECT_TYPE = 8;
+  public int JJTSIMPLE_DCL = 9;
   public int JJTSIMPLE_TYPES = 10;
   public int JJTIDENTIFIER = 11;
   public int JJTMAP = 12;
@@ -35,8 +35,8 @@ public interface TestParserTreeConstants
   public int JJTACTUAL_PARAMETERS = 29;
   public int JJTMAIN = 30;
   public int JJTBLOCK = 31;
-  public int JJTCREATE = 32;
-  public int JJTGRAPH_ELEMENT_DCL = 33;
+  public int JJTGRAPH_ELEMENT_DCL = 32;
+  public int JJTCREATE = 33;
   public int JJTGRAPH_DCL = 34;
   public int JJTGRAPH_TYPE = 35;
   public int JJTGRAPH_ASSIGN = 36;
@@ -71,8 +71,8 @@ public interface TestParserTreeConstants
     "VERTEX_ATTRIBUTES",
     "EDGE_ATTRIBUTES",
     "ATTRIBUTE_DCL",
-    "DCL",
     "OBJECT_TYPE",
+    "SIMPLE_DCL",
     "SIMPLE_TYPES",
     "IDENTIFIER",
     "MAP",
@@ -95,8 +95,8 @@ public interface TestParserTreeConstants
     "ACTUAL_PARAMETERS",
     "MAIN",
     "BLOCK",
-    "CREATE",
     "GRAPH_ELEMENT_DCL",
+    "CREATE",
     "GRAPH_DCL",
     "GRAPH_TYPE",
     "GRAPH_ASSIGN",
@@ -122,4 +122,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=b9483bbfaebdbb8b9af6931f92170916 (do not edit this line) */
+/* JavaCC - OriginalChecksum=765b117640e4f52b0cbda19946ca1fba (do not edit this line) */
