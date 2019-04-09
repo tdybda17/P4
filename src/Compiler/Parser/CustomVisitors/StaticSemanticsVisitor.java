@@ -113,6 +113,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            Symbol symbol = createSymbolFromDCLnode(node, data);
+            symbolTable.enterSymbol(symbol);
+
+            if(node.jjtGetNumChildren() == 3) {
+
+            }
+
+        } else {
+            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
+        }
+
+
         return defaultVisit(node, data);
     }
 
@@ -196,7 +210,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
+        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
             Node typeNode = dclNode.jjtGetChild(0);
             //We call the visit method for the simple data type node to get the type descriptor
             TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
@@ -204,7 +218,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             String id = getIdentifierName(dclNode.jjtGetChild(1));
             return new Symbol(id, new IdentifierAttributes(type));
         } else {
-            throw new IllegalArgumentException("The given node was not an DCL node or GRAPH ELEMENT DCL node");
+            throw new IllegalArgumentException("The given node was not an DCL, GRAPH_DCL or GRAPH_ELEMENT_DCL node");
         }
     }
 

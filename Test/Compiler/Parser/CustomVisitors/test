@@ -10,13 +10,15 @@ function main()
     //Edge B
     //DiEdge C
 
-    create Graph g
-        a -- b
-        b -- c
-        c -- a[3.0]
-    end
+    //create Graph testGraph
+    //    a -- b
+    //    b -- c
+    //    c -- a
+    //end
 
-    create DiGraph testGraph end
+    create DiGraph g end
+
+    create Graph XYZ = g end
 
     create Stack<Stack<int>> S end
 
