@@ -1,6 +1,7 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
+import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.DirectedEdgeTypeDescriptor;
@@ -78,8 +79,18 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
-    void visitGraphElementDeclarationNodeTest2(){
+    void visitGraphElementDeclarationNodeTest2() {
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
+        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "a");
+
+        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+        assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, symbolTable));
+    }
+
+    @Test
+    void addingSameSymbolnameTwiceTest(){
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
+
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
 

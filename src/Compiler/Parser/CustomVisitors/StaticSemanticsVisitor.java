@@ -149,30 +149,31 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
-            return null;
-        } else if(node.jjtGetNumChildren() == 3) { //WE HAVE AN INTIALIZATION
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
             Symbol symbol = createSymbolFromDCLnode(node, data);
             symbolTable.enterSymbol(symbol);
-
-            TypeDescriptor expectedType;
-            if (symbol.getAttributes() instanceof IdentifierAttributes) {
-                IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
-                expectedType = attributes.getType();
-            } else {
-                throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+            if(node.jjtGetNumChildren() == 3) {
+                checkIntilizationNode(symbol, node.jjtGetChild(2), data);
             }
-            //TODO: making it so that evaluations can be type checked
-            TypeDescriptor actualType = new VoidTypeDescriptor();
-
-            if(expectedType.equals(actualType)) {
-                return null;
-            } else {
-                throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
-            }
+            return null;
         } else {
             throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    private void checkIntilizationNode(Symbol symbol, Node node, Object data) {
+        TypeDescriptor expectedType;
+        if (symbol.getAttributes() instanceof IdentifierAttributes) {
+            IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
+            expectedType = attributes.getType();
+        } else {
+            throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+        }
+        //TODO: making it so that evaluations can be type checked
+        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtAccept(this, data));
+
+        if (!expectedType.equals(actualType)) {
+            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
         }
     }
 
@@ -366,6 +367,16 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+
+
+            if(node.jjtGetNumChildren() == 3) {
+                //TODO: make stuff for member function call and element list
+            }
+
+        } else {
+            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
+        }
         return defaultVisit(node, data);
     }
 

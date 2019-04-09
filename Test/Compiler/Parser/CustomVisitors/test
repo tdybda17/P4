@@ -3,6 +3,8 @@ function main()
     boolean b
     real r
 
+
+    Vertex r
     //real x = 8.0 + 15.5 * true
 
     Vertex A
@@ -15,6 +17,14 @@ function main()
         c -- a[3.0]
     end
 
+    create Stack<Stack<int>> S end
+
+    create Queue<real> Q
+        6.0
+        8.0
+    end
+
+    create Set<Vertex> vertices = g.vertices() end
 
 end
 
