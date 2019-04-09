@@ -1,7 +1,9 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.UndirectedEdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
@@ -13,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StaticSemanticsVisitorTest {
     private SymbolTable symbolTable;
     private String path;
+    private StaticSemanticsVisitor staticSemanticsVisitor;
 
 
     @BeforeEach
@@ -20,23 +23,29 @@ class StaticSemanticsVisitorTest {
         path = "Test/Compiler/Parser/CustomVisitors/test";
         symbolTable = new SymbolTable();
         symbolTable.openScope();
-        //We use the function visitor to fill up our symbol table with initial values
-        TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
+
+        staticSemanticsVisitor = new StaticSemanticsVisitor();
     }
 
     @Test
-    void visitDeclarationNodeTest() {
+    void visitDeclarationNodeTest1() {
         ASTDCL intDclNode = createDCLnode("int", "i");
-        ASTDCL realDclNode = createDCLnode("real", "r");
-
-        SymbolTable symbolTable = new SymbolTable();
-        symbolTable.openScope();
-        intDclNode.jjtAccept(new StaticSemanticsVisitor(), symbolTable);
-        realDclNode.jjtAccept(new StaticSemanticsVisitor(), symbolTable);
+        staticSemanticsVisitor.visit(intDclNode, symbolTable);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
         expected.enterSymbol("i", new IdentifierAttributes(new IntegerTypeDescriptor()));
+        assertEquals(expected, symbolTable);
+    }
+
+    @Test
+    void visitDeclarationNodeTest2() {
+        //TODO: opdater denne test til at inkludere en initilazation
+        ASTDCL realDclNode = createDCLnode("real", "r");
+        staticSemanticsVisitor.visit(realDclNode, symbolTable);
+
+        SymbolTable expected = new SymbolTable();
+        expected.openScope();
         expected.enterSymbol("r", new IdentifierAttributes(new RealTypeDescriptor()));
         assertEquals(expected, symbolTable);
     }
@@ -55,32 +64,44 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
+    void visitGraphElementDeclarationNodeTest(){
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("Edge", "a");
+
+        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+
+        SymbolTable expected = new SymbolTable();
+        expected.openScope();
+        expected.enterSymbol("a", new IdentifierAttributes(new UndirectedEdgeTypeDescriptor()));
+        assertEquals(expected, symbolTable);
+    }
+
+    private ASTGRAPH_ELEMENT_DCL createGraphElementDCLnode(String type, String id) {
+        ASTGRAPH_ELEMENT_DCL dclNode = new ASTGRAPH_ELEMENT_DCL(1);
+        ASTGRAPH_ELEMENT_TYPES graph_element_types = new ASTGRAPH_ELEMENT_TYPES(2);
+
+        graph_element_types.jjtSetValue(type);
+
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(3);
+        identifierNode.jjtSetValue(id);
+
+        dclNode.jjtAddChild(graph_element_types, 0);
+        dclNode.jjtAddChild(identifierNode, 1);
+        return dclNode;
+    }
+
+
+    @Test
     void visit1() throws Exception {
         System.out.println(TestParser.parseTextFile(path));
     }
 
     @Test
     void visit2() throws Exception{
+        symbolTable = new SymbolTable();
+        symbolTable.openScope();
+        //We use the function visitor to fill up our symbol table with functions
+        TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
+
         TestParser.useVisitorMethod(new StaticSemanticsVisitor(), path, symbolTable);
-    }
-
-    @Test
-    void visit3() {
-    }
-
-    @Test
-    void visit4() {
-    }
-
-    @Test
-    void visit5() {
-    }
-
-    @Test
-    void visit6() {
-    }
-
-    @Test
-    void visit7() {
     }
 }
