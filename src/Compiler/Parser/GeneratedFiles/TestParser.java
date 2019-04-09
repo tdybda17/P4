@@ -9,8 +9,8 @@ import java.io.FileReader;
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, TestParserConstants {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();public static void main(String[] args) {
         try {
-            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
-            useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
+            System.out.println(parseTextFile("src/Compiler/Parser/test"));
+            //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
 //            SymbolTable st = new SymbolTable();
 //            st.openScope();
 //            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);

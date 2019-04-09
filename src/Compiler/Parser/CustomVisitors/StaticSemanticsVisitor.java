@@ -6,6 +6,10 @@ import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
@@ -94,7 +98,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
-        return defaultVisit(node, data);
+        SymbolTable st = (SymbolTable) data;
+        return ((IdentifierAttributes)st.retrieveSymbol(node.jjtGetValue().toString()).getAttributes()).getType();
     }
 
     @Override
@@ -216,57 +221,95 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTOR_EXPR node, Object data) {
-        return defaultVisit(node, data);
+        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
+        return new BooleanTypeDescriptor();
+    }
+
+    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, Node parent, Object data) {
+        TypeDescriptor firstType = (TypeDescriptor) parent.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) parent.jjtGetChild(1).jjtAccept(this, data);
+        typeCheckChildren(expectedType, firstType, secondType);
+    }
+
+    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, TypeDescriptor child1, TypeDescriptor child2) {
+        typeCheck(expectedType, child1);
+        typeCheck(expectedType, child2);
+    }
+
+    private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
+        if (!expectedType.isInstance(actualType))
+            throw new IncorrectTypeException(expectedType.getTypeName(), actualType.getTypeName());
     }
 
     @Override
     public Object visit(ASTAND_EXPR node, Object data) {
-        return defaultVisit(node, data);
+        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
+        return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTEQUAL_EXPR node, Object data) {
-        return defaultVisit(node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if (!firstType.getClass().isInstance(secondType))
+            throw new IncorrectTypeException(firstType.getTypeName(), secondType.getTypeName());
+        return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTREL_EXPR node, Object data) {
-        return defaultVisit(node, data);
+        typeCheckChildren(NumberTypeDescriptor.class, node, data);
+        return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTADD_SUB node, Object data) {
-        return defaultVisit(node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
+        return getCorrectNumberTypeDescriptor(firstType, secondType);
+    }
+
+    private NumberTypeDescriptor getCorrectNumberTypeDescriptor(TypeDescriptor type1, TypeDescriptor type2) {
+        if (type1 instanceof RealTypeDescriptor || type2 instanceof RealTypeDescriptor)
+            return new RealTypeDescriptor();
+        else
+            return new IntegerTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTMUL_DIV node, Object data) {
-        return defaultVisit(node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
+        return getCorrectNumberTypeDescriptor(firstType, secondType);
     }
 
     @Override
     public Object visit(ASTNEG_EXPR node, Object data) {
-        return defaultVisit(node, data);
+        TypeDescriptor type = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        typeCheck(BooleanTypeDescriptor.class, type);
+        return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
-        return defaultVisit(node, data);
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
     public Object visit(ASTINUM_VAL node, Object data) {
-        return defaultVisit(node, data);
+        return new IntegerTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTFNUM_VAL node, Object data) {
-        return defaultVisit(node, data);
+        return new RealTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTBOOL_VAL node, Object data) {
-        return defaultVisit(node, data);
+        return new BooleanTypeDescriptor();
     }
 
     @Override
@@ -276,7 +319,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMEMBER node, Object data) {
-        return defaultVisit(node, data);
+        if (node.jjtGetNumChildren() == 0)
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        else {
+            SymbolTable st = (SymbolTable) data;
+            Symbol symbol = st.retrieveSymbol(((SimpleNode)node.jjtGetChild(0)).jjtGetValue().toString());
+            return data;
+        }
     }
 
     @Override
