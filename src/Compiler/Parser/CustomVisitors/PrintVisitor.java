@@ -435,7 +435,8 @@ public class PrintVisitor implements TestParserVisitor {
             node.jjtGetChild(i).jjtAccept(this, data);
             System.out.print(", ");
         }
-        node.jjtGetChild(numChildren - 1).jjtAccept(this, data);
+        if (numChildren > 0)
+            node.jjtGetChild(numChildren - 1).jjtAccept(this, data);
         return data;
     }
     @Override

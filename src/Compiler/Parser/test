@@ -4,11 +4,34 @@ Vertex dcl
 end
 
 Edge dcl
-	int k
-	Vertex v
+	int k = 1
 end
+
 
 function main()
+    sum.total = a().b.c().d
+    create Graph g
+        a -- b
+    end
+    create Set<Vertex> s = g.vertices() end
+    create MaxQueue<int> q = a end
+    boolean a = ((5 == 2 | 3 < 2) & (8 != 8) | (3 >= 3)) | true
+    int sum = 0
+    for i = 1 to 10 do
+       sum = sum + i
+    end
+    create MinQueue<int> q
+        5
+        6
+        7
+        8
+    end
 end
 
+function no()
+    return
+end
 
+Vertex function yes(int a, real b)
+    return a + a
+end
