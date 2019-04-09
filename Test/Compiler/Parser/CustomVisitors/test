@@ -4,7 +4,6 @@ function main()
     real r
 
 
-    Vertex r
     //real x = 8.0 + 15.5 * true
 
     Vertex A
