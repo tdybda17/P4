@@ -28,6 +28,11 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
     }
 
     @Override
+    public TypeDescriptor getElementType() {
+        return elementType;
+    }
+
+    @Override
     public String getTypeName() {
         return "Queue";
     }

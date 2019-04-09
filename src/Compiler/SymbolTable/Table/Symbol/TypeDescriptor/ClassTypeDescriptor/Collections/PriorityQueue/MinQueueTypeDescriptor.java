@@ -8,17 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
-    private TypeDescriptor elementType;
-
     public MinQueueTypeDescriptor(TypeDescriptor elementType) {
         super(elementType);
-        this.elementType = elementType;
         this.addMethods();
-    }
-
-    @Override
-    public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
     }
 
     private void addMethods(){
@@ -28,16 +20,16 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
     }
 
     private Method minimum(){
-        return new Method("minimum", elementType, new ArrayList<>());
+        return new Method("minimum", getElementType(), new ArrayList<>());
     }
 
     private Method extractMin(){
-        return new Method("extractMin", elementType, new ArrayList<>());
+        return new Method("extractMin", getElementType(), new ArrayList<>());
     }
 
     private Method decreaseKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         parameters.add(new RealTypeDescriptor());
         return new Method("decreaseKey", new BooleanTypeDescriptor(), parameters);
     }

@@ -15,7 +15,17 @@ public abstract class CollectionTypeDescriptor extends ClassTypeDescriptor {
 
     public abstract void setElementType(TypeDescriptor elementType);
 
+    public abstract TypeDescriptor getElementType();
+
     private Method isEmpty(){
         return new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>());
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.getTypeName()).append('<').append(getElementType()).append('>');
+        return stringBuilder.toString();
     }
 }
