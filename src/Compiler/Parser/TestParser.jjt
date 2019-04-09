@@ -571,7 +571,7 @@ void return_expr() #void :
 void collection_adt() #COLLECTION_ADT :
 {}
 {
-    collection_type() <LANGLE> type() <RANGLE> identifier() collection_dcl()
+    collection_type() identifier() collection_dcl()
 }
 
 void collection_dcl() #void :

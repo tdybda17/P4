@@ -2293,7 +2293,7 @@ void collection_adt()                 :
 {/*@bgen(jjtree) COLLECTION_ADT */
     try {
 /*@egen*/
-    collection_type() <LANGLE> type() <RANGLE> identifier() collection_dcl()/*@bgen(jjtree)*/
+    collection_type() identifier() collection_dcl()/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
