@@ -176,7 +176,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private Symbol createSymbolFromSimpleDCLnode(Node dclNode, Object data) {
+    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
         if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
             Node typeNode = dclNode.jjtGetChild(0);
             //We call the visit method for the simple data type node to get the type descriptor
