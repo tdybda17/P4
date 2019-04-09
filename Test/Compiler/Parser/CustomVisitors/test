@@ -6,15 +6,17 @@ function main()
 
     //real x = 8.0 + 15.5 * true
 
-    Vertex A
-    Edge B
-    DiEdge C
+    //Vertex A
+    //Edge B
+    //DiEdge C
 
     create Graph g
         a -- b
         b -- c
         c -- a[3.0]
     end
+
+    create DiGraph testGraph end
 
     create Stack<Stack<int>> S end
 

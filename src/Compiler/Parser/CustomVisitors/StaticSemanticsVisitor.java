@@ -55,7 +55,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private TypeDescriptor getTypeDescriptor(Object node){
-        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_ELEMENT_TYPES) {
+        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_ELEMENT_TYPES | node instanceof ASTGRAPH_TYPE) {
             SimpleNode simpleNode = convertToSimpleNode(node);
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
             return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
@@ -73,6 +73,21 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         System.out.println(symbolTable.toString());
         symbolTable.closeScope();
         return null;
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            Symbol symbol = createSymbolFromDCLnode(node, data);
+            symbolTable.enterSymbol(symbol);
+            if(node.jjtGetNumChildren() == 3) {
+                checkInitializationNode(getExpectedType(symbol), node.jjtGetChild(2), data);
+            }
+            return null;
+        } else {
+            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+        }
     }
 
     @Override
@@ -95,6 +110,19 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
         return getTypeDescriptor(node);
     }
+
+    @Override
+    public Object visit(ASTGRAPH_TYPE node, Object data) {
+        return getTypeDescriptor(node);
+    }
+
+
+    @Override
+    public Object visit(ASTGRAPH_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
@@ -149,21 +177,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDCLnode(node, data);
-            symbolTable.enterSymbol(symbol);
-            if(node.jjtGetNumChildren() == 3) {
-                checkInitializationNode(getExpectedType(symbol), node.jjtGetChild(2), data);
-            }
-            return null;
-        } else {
-            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
-        }
     }
 
     private TypeDescriptor getExpectedType(Symbol symbol) {
@@ -345,16 +358,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCREATE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
 
