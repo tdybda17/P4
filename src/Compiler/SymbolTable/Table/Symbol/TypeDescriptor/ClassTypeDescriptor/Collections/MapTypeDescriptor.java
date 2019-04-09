@@ -32,6 +32,11 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
         this.elementType = elementType;
     }
 
+    @Override
+    public TypeDescriptor getElementType() {
+        return elementType;
+    }
+
     public void setKeyType(TypeDescriptor keyType) {
         this.keyType = keyType;
     }
