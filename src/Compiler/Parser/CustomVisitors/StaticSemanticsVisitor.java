@@ -184,12 +184,27 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTVALUE node, Object data) {
+    public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
         return defaultVisit(node, data);
     }
 
     @Override
-    public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
+    public Object visit(ASTINUM_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTFNUM_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTBOOL_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTCONSTANT_VAL node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -212,7 +227,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTMAIN node, Object data) {
         return defaultVisit(node, data);
     }
-
 
     @Override
     public Object visit(ASTCREATE node, Object data) {

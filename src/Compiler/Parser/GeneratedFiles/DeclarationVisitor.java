@@ -116,17 +116,33 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTVALUE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
         return defaultVisit(node, data);
     }
 
     @Override
+    public Object visit(ASTINUM_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTFNUM_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTBOOL_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTCONSTANT_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
     public Object visit(ASTMEMBER node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTACTUAL_PARAMETERS node, Object data) {
@@ -248,7 +264,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTRETURN_TYPE node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTFORMAL_PARAMETERS node, Object data) {

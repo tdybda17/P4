@@ -364,10 +364,34 @@ void atomic_expr() #void :
     < LPAREN > expr() < RPAREN > | value()
 }
 
-void value() #VALUE(jjtree.nodeArity() == 0) :
+void value() #void :
 {Token t;}
 {
-    member_function_call() #MEMBER_FUNCTION_CALL | t = <INUM_VAL> {jjtThis.value = t.image;} | t = <FNUM_VAL> {jjtThis.value = t.image;} | t = < BOOL_VAL > {jjtThis.value = t.image;} | t = <CONSTANTS> {jjtThis.value = t.image;}
+    member_function_call() #MEMBER_FUNCTION_CALL | inum_val() | fnum_val() | bool_val() | constant_val()
+}
+
+void inum_val() #INUM_VAL :
+{Token t;}
+{
+    t = <INUM_VAL> {jjtThis.value = t.image;}
+}
+
+void fnum_val() #FNUM_VAL :
+{Token t;}
+{
+    t = <FNUM_VAL> {jjtThis.value = t.image;}
+}
+
+void bool_val() #BOOL_VAL :
+{Token t;}
+{
+    t = <BOOL_VAL> {jjtThis.value = t.image;}
+}
+
+void constant_val() #CONSTANT_VAL :
+{Token t;}
+{
+    t = <CONSTANTS> {jjtThis.value = t.image;}
 }
 
 void member_function_call() #void :

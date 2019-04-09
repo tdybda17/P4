@@ -72,10 +72,19 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTNEG_EXPR node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTVALUE node, Object data){
+  public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
+  public Object visit(ASTINUM_VAL node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTFNUM_VAL node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTBOOL_VAL node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTCONSTANT_VAL node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTMEMBER node, Object data){
@@ -169,4 +178,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=29b8bfd98d37aa63862e933ac386736b (do not edit this line) */
+/* JavaCC - OriginalChecksum=3e005b92d38e6c8a261289ade16f5e99 (do not edit this line) */
