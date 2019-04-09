@@ -451,7 +451,13 @@ void block_content() #void :
 void dcl() #void :
 {}
 {
-    (< CREATE > adt() < END >) #CREATE | (simple_types() identifier() initialization()) #DCL | (graph_element_types() identifier()) #GRAPH_ELEMENT_DCL
+    create() | (simple_types() identifier() initialization()) #DCL | (graph_element_types() identifier()) #GRAPH_ELEMENT_DCL
+}
+
+void create() #CREATE :
+{}
+{
+    < CREATE > adt() < END >
 }
 
 void adt() #void :
@@ -589,7 +595,7 @@ void return_statement() #RETURN_STMT :
 void return_expr() #void :
 {}
 {
-    expr() | (< CREATE > adt() < END >) #CREATE | empty()
+    expr() | create() | empty()
 }
 
 void collection_adt() #COLLECTION_ADT :
