@@ -1,7 +1,7 @@
 function main()
-    int sum
-    boolean b
-    real r
+    //int sum
+    //boolean b
+    //real r
 
 
     //real x = 8.0 + 15.5 * true
