@@ -112,14 +112,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_TYPE node, Object data) {
-        return getTypeDescriptor(node);
-    }
-
-
-    @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_TYPE node, Object data) {
+        return getTypeDescriptor(node);
     }
 
 
