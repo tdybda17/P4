@@ -8,7 +8,6 @@ import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
@@ -153,7 +152,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             Symbol symbol = createSymbolFromDCLnode(node, data);
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
-                checkIntilizationNode(symbol, node.jjtGetChild(2), data);
+                checkInitializationNode(symbol, node.jjtGetChild(2), data);
             }
             return null;
         } else {
@@ -161,7 +160,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private void checkIntilizationNode(Symbol symbol, Node node, Object data) {
+    private void checkInitializationNode(Symbol symbol, Node initializationNode, Object data) {
         TypeDescriptor expectedType;
         if (symbol.getAttributes() instanceof IdentifierAttributes) {
             IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
@@ -170,8 +169,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
         }
         //TODO: making it so that evaluations can be type checked
-        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtAccept(this, data));
-
+        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
         if (!expectedType.equals(actualType)) {
             throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
         }
