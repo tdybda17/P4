@@ -16,16 +16,16 @@ class StaticSemanticsVisitorTest {
 
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         path = "Test/Compiler/Parser/CustomVisitors/test";
         symbolTable = new SymbolTable();
         symbolTable.openScope();
         //We use the function visitor to fill up our symbol table with initial values
-        TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
+        //TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
     }
 
     @Test
-    void visitDeclarationNodeTest() throws Exception {
+    void visitDeclarationNodeTest() {
         ASTDCL intDclNode = createDCLnode("int", "i");
         ASTDCL realDclNode = createDCLnode("real", "r");
 
@@ -55,7 +55,8 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
-    void visit1() {
+    void visit1() throws Exception {
+        System.out.println(TestParser.parseTextFile(path));
     }
 
     @Test

@@ -2,6 +2,11 @@ function main()
     int sum
     boolean b
     real r
+
+
+    Vertex A
+    Edge B
+    DiEdge C
 end
 
 int function foo(real a, real b)

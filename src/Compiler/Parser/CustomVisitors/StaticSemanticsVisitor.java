@@ -88,9 +88,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
         SimpleNode simpleNode = (SimpleNode) node;
-
         TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
-
         return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
     }
 
