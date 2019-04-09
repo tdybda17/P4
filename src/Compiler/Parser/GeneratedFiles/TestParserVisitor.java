@@ -25,8 +25,11 @@ public interface TestParserVisitor
   public Object visit(ASTADD_SUB node, Object data);
   public Object visit(ASTMUL_DIV node, Object data);
   public Object visit(ASTNEG_EXPR node, Object data);
-  public Object visit(ASTVALUE node, Object data);
   public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data);
+  public Object visit(ASTINUM_VAL node, Object data);
+  public Object visit(ASTFNUM_VAL node, Object data);
+  public Object visit(ASTBOOL_VAL node, Object data);
+  public Object visit(ASTCONSTANT_VAL node, Object data);
   public Object visit(ASTMEMBER node, Object data);
   public Object visit(ASTFUNC_CALL node, Object data);
   public Object visit(ASTACTUAL_PARAMETERS node, Object data);
@@ -58,4 +61,4 @@ public interface TestParserVisitor
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
 }
-/* JavaCC - OriginalChecksum=a4b5668939bdee63c0d9a2bbdaa731c7 (do not edit this line) */
+/* JavaCC - OriginalChecksum=05d7da20875005a4cc86caf947c5cbd1 (do not edit this line) */

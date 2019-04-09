@@ -140,14 +140,34 @@ public class PrintVisitor implements TestParserVisitor {
         return data;
     }
     @Override
-    public Object visit(ASTVALUE node, Object data){
-        System.out.print(node.jjtGetValue());
-        return data;
-    }
-    @Override
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
         return defaultVisit(node, data);
     }
+
+    @Override
+    public Object visit(ASTINUM_VAL node, Object data) {
+        System.out.print(node.jjtGetValue());
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTFNUM_VAL node, Object data) {
+        System.out.print(node.jjtGetValue());
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTBOOL_VAL node, Object data) {
+        System.out.print(node.jjtGetValue());
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTCONSTANT_VAL node, Object data) {
+        System.out.print(node.jjtGetValue());
+        return data;
+    }
+
     @Override
     public Object visit(ASTMEMBER node, Object data) {
         node.jjtGetChild(0).jjtAccept(this, data);
@@ -352,18 +372,16 @@ public class PrintVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print("<");
+        System.out.print(" ");
         node.jjtGetChild(1).jjtAccept(this, data);
-        System.out.print("> ");
-        node.jjtGetChild(2).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 3) {
-            if (node.jjtGetChild(3).toString().equals("MEMBER_FUNCTION_CALL")) {
+        if (node.jjtGetNumChildren() > 2) {
+            if (node.jjtGetChild(2).toString().equals("MEMBER_FUNCTION_CALL")) {
                 System.out.print(" = ");
-                node.jjtGetChild(3).jjtAccept(this, data);
+                node.jjtGetChild(2).jjtAccept(this, data);
                 System.out.print(" ");
             }
             else
-                node.jjtGetChild(3).jjtAccept(this, data);
+                node.jjtGetChild(2).jjtAccept(this, data);
         }
         return data;
     }
@@ -396,13 +414,9 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("function ");
         node.jjtGetChild(1).jjtAccept(this, data);
         System.out.print("(");
-        if (node.jjtGetNumChildren() == 4)
-            node.jjtGetChild(2).jjtAccept(this, data);
+        node.jjtGetChild(2).jjtAccept(this, data);
         System.out.print(")\n");
-        if (node.jjtGetNumChildren() == 4)
-            node.jjtGetChild(3).jjtAccept(this, data);
-        else
-            node.jjtGetChild(2).jjtAccept(this, data);
+        node.jjtGetChild(3).jjtAccept(this, data);
         System.out.print("end\n");
         return data;
     }
