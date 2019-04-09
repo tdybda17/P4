@@ -1,28 +1,14 @@
+Vertex dcl
+	int a = INF
+	real man = 0.0
+end
+
+Edge dcl
+	int k
+	Vertex v
+end
 
 function main()
 end
 
-function no()
-    return
-end
-
-int function i(real a)
-    return 1
-end
-
-Vertex function yes(int a, real b)
-    return a + a
-end
-
-Set<Set<Set<int>>> function foo()
-    return
-end
-
-//Map<int, Vertex> function a()
-//    return
-//end
-
-Graph function g()
-    return
-end
 

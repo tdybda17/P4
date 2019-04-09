@@ -76,7 +76,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAP node, Object data) {
-        return null; //TODO: FIX
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
@@ -85,7 +85,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTOR_EXPR node, Object data) {
@@ -135,7 +135,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTBLOCK node, Object data) {
@@ -148,7 +148,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        return null; //TODO: FIX
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTGRAPH_DCL node, Object data) {
@@ -190,7 +190,7 @@ public class DeclarationVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     public Object visit(ASTFUNC_CALL node, Object data) {
@@ -234,6 +234,11 @@ public class DeclarationVisitor implements TestParserVisitor {
     }
 
     public Object visit(ASTFUNCS_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
         return defaultVisit(node, data);
     }
 

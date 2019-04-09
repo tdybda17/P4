@@ -24,14 +24,14 @@ public class PrintVisitor implements TestParserVisitor {
     public Object visit(ASTVERTEX_ATTRIBUTES node, Object data){
         System.out.print("Vertex dcl\n");
         node.childrenAccept(this, data);
-        System.out.print("end\n");
+        System.out.print("end\n\n");
         return data;
     }
     @Override
     public Object visit(ASTEDGE_ATTRIBUTES node, Object data){
         System.out.print("Edge dcl\n");
         node.childrenAccept(this, data);
-        System.out.print("end\n");
+        System.out.print("end\n\n");
         return data;
     }
     @Override
@@ -183,7 +183,7 @@ public class PrintVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
-        System.out.print("\nfunction main()\n");
+        System.out.print("function main()\n");
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print("end\n");
         return data;
@@ -352,16 +352,18 @@ public class PrintVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" ");
+        System.out.print("<");
         node.jjtGetChild(1).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 2) {
-            if (node.jjtGetChild(2).toString().equals("MEMBER_FUNCTION_CALL")) {
+        System.out.print("> ");
+        node.jjtGetChild(2).jjtAccept(this, data);
+        if (node.jjtGetNumChildren() > 3) {
+            if (node.jjtGetChild(3).toString().equals("MEMBER_FUNCTION_CALL")) {
                 System.out.print(" = ");
-                node.jjtGetChild(2).jjtAccept(this, data);
+                node.jjtGetChild(3).jjtAccept(this, data);
                 System.out.print(" ");
             }
             else
-                node.jjtGetChild(2).jjtAccept(this, data);
+                node.jjtGetChild(3).jjtAccept(this, data);
         }
         return data;
     }
@@ -382,6 +384,12 @@ public class PrintVisitor implements TestParserVisitor {
         }
         return data;
     }
+
+    @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
+        return defaultVisit(node, data);
+    }
+
     @Override
     public Object visit(ASTFUNC_DCL node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);

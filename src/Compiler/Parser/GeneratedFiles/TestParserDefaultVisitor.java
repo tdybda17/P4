@@ -18,6 +18,9 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTFUNCS_DCL node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTVERTEX_EDGE_ATTR node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTVERTEX_ATTRIBUTES node, Object data){
     return defaultVisit(node, data);
   }
@@ -166,4 +169,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=f6f10c807933ca1fda44f390409e0246 (do not edit this line) */
+/* JavaCC - OriginalChecksum=29b8bfd98d37aa63862e933ac386736b (do not edit this line) */

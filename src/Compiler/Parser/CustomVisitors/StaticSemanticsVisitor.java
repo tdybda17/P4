@@ -39,12 +39,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return data;
     }
 
+    //We open a new scope each time we meet a block node and then we close it right after the block is done
     @Override
     public Object visit(ASTBLOCK node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        System.out.println(symbolTable);
         symbolTable.closeScope();
         return null;
     }
@@ -56,7 +56,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
         TypeDescriptor expectedType = convertToTypeDescriptor(node.jjtGetChild(0));
         TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(1));
-
         if(expectedType.equals(actualType)) {
             return null;
         } else {
@@ -89,9 +88,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
         SimpleNode simpleNode = (SimpleNode) node;
-
         TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
-
         return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
     }
 
@@ -320,6 +317,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTFUNCS_DCL node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
+        return null;
     }
 
     @Override
