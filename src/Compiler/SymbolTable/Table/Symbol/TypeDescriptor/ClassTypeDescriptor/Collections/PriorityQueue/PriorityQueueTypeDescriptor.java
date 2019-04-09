@@ -29,6 +29,16 @@ abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptor {
     }
 
     @Override
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+    }
+
+    @Override
+    public TypeDescriptor getElementType() {
+        return elementType;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

@@ -10,17 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
-    private TypeDescriptor elementType;
-
     public MaxQueueTypeDescriptor(TypeDescriptor elementType) {
         super(elementType);
-        this.elementType = elementType;
         this.addMethods();
-    }
-
-    @Override
-    public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
     }
 
     private void addMethods(){
@@ -30,16 +22,16 @@ public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
     }
 
     private Method maximum(){
-        return new Method("maximum", elementType, new ArrayList<>());
+        return new Method("maximum", getElementType(), new ArrayList<>());
     }
 
     private Method extractMax(){
-        return new Method("extractMax", elementType, new ArrayList<>());
+        return new Method("extractMax", getElementType(), new ArrayList<>());
     }
 
     private Method increaseKey(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         parameters.add(new RealTypeDescriptor());
         return new Method("increaseKey", new BooleanTypeDescriptor(), parameters);
     }
