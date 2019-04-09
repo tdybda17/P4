@@ -61,12 +61,12 @@ public class FunctionVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTDCL node, Object data) {
+    public Object visit(ASTOBJECT_TYPE node, Object data) {
         return createFieldFromChildren(node);
     }
 
     @Override
-    public Object visit(ASTOBJECT_TYPE node, Object data) {
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
         return createFieldFromChildren(node);
     }
 

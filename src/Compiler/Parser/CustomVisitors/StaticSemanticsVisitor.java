@@ -71,50 +71,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return null;
     }
 
-    //The DCL node visitor
-    @Override
-    public Object visit(ASTDCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
-            return null;
-        } else if(node.jjtGetNumChildren() == 3) { //WE HAVE AN INTIALIZATION
-            Symbol symbol = createSymbolFromDCLnode(node, data);
-            symbolTable.enterSymbol(symbol);
-
-            TypeDescriptor expectedType;
-            if (symbol.getAttributes() instanceof IdentifierAttributes) {
-                IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
-                expectedType = attributes.getType();
-            } else {
-                throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
-            }
-            //TODO: making it so that evaluations can be type checked
-            TypeDescriptor actualType = new VoidTypeDescriptor();
-
-            if(expectedType.equals(actualType)) {
-                return null;
-            } else {
-                throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
-            }
-        } else {
-            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
-        }
-    }
-
-    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTDCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
-            Node typeNode = dclNode.jjtGetChild(0);
-            //We call the visit method for the simple data type node to get the type descriptor
-            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
-
-            String id = getIdentifierName(dclNode.jjtGetChild(1));
-            return new Symbol(id, new IdentifierAttributes(type));
-        } else {
-            throw new IllegalArgumentException("The given node was not an DCL node or GRAPH ELEMENT DCL node");
-        }
-    }
-
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
         return getTypeDescriptor(node);
@@ -124,7 +80,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
+            symbolTable.enterSymbol(createSymbolFromSimpleDCLnode(node, data));
         } else {
             throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
         }
@@ -188,6 +144,49 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2) {
+            symbolTable.enterSymbol(createSymbolFromSimpleDCLnode(node, data));
+            return null;
+        } else if(node.jjtGetNumChildren() == 3) { //WE HAVE AN INTIALIZATION
+            Symbol symbol = createSymbolFromSimpleDCLnode(node, data);
+            symbolTable.enterSymbol(symbol);
+
+            TypeDescriptor expectedType;
+            if (symbol.getAttributes() instanceof IdentifierAttributes) {
+                IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
+                expectedType = attributes.getType();
+            } else {
+                throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+            }
+            //TODO: making it so that evaluations can be type checked
+            TypeDescriptor actualType = new VoidTypeDescriptor();
+
+            if(expectedType.equals(actualType)) {
+                return null;
+            } else {
+                throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
+            }
+        } else {
+            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    private Symbol createSymbolFromSimpleDCLnode(Node dclNode, Object data) {
+        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
+            Node typeNode = dclNode.jjtGetChild(0);
+            //We call the visit method for the simple data type node to get the type descriptor
+            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
+
+            String id = getIdentifierName(dclNode.jjtGetChild(1));
+            return new Symbol(id, new IdentifierAttributes(type));
+        } else {
+            throw new IllegalArgumentException("The given node was not an DCL node or GRAPH ELEMENT DCL node");
+        }
     }
 
     @Override
