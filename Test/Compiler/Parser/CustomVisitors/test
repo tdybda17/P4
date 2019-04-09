@@ -5,8 +5,6 @@ function main()
 
     //real x = 8.0 + 15.5 * true
 
-    real r2 = x
-
     Vertex A
     Edge B
     DiEdge C
