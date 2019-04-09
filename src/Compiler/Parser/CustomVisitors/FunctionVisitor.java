@@ -4,6 +4,9 @@ import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.EdgeTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
@@ -35,27 +38,43 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
+        List<Field> fields = (List<Field>) node.jjtGetChild(0).jjtAccept(this, data);
+        for (Field field : fields)
+            VertexTypeDescriptor.addUserAttribute(field);
+        return data;
     }
 
     @Override
     public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
+        List<Field> fields = (List<Field>) node.jjtGetChild(0).jjtAccept(this, data);
+        for (Field field : fields)
+            EdgeTypeDescriptor.addUserAttribute(field);
+        return data;
     }
 
     @Override
     public Object visit(ASTATTRIBUTE_DCL node, Object data) {
-        return defaultVisit(node, data);
+        List<Field> fields = new ArrayList<>();
+        for (int i = 0; i < node.jjtGetNumChildren(); i++)
+            fields.addAll((List<Field>) node.jjtGetChild(i).jjtAccept(this, data));
+        return fields;
     }
 
     @Override
     public Object visit(ASTDCL node, Object data) {
-        return defaultVisit(node, data);
+        return createFieldFromChildren(node);
     }
 
     @Override
     public Object visit(ASTOBJECT_TYPE node, Object data) {
-        return defaultVisit(node, data);
+        return createFieldFromChildren(node);
+    }
+
+    private List<Field> createFieldFromChildren(SimpleNode node) {
+        String fieldName = ((SimpleNode)node.jjtGetChild(1)).jjtGetValue().toString();
+        String type = ((SimpleNode)node.jjtGetChild(0)).jjtGetValue().toString();
+        TypeDescriptor typeDescriptor = new TypeDescriptorFactory().create(type);
+        return List.of(new Field(fieldName, typeDescriptor));
     }
 
     @Override
@@ -160,7 +179,7 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        return null; //TODO: FIX
+        return defaultVisit(node, data);
     }
 
     @Override
@@ -260,6 +279,11 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNCS_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
         return defaultVisit(node, data);
     }
 

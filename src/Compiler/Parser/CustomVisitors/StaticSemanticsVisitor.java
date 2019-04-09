@@ -320,6 +320,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
+        return null;
+    }
+
+    @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
         return defaultVisit(node, data);
     }

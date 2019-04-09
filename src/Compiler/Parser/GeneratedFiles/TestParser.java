@@ -9,12 +9,11 @@ import java.io.FileReader;
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, TestParserConstants {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();public static void main(String[] args) {
         try {
-            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
+            System.out.println(parseTextFile("src/Compiler/Parser/test"));
             //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
-            SymbolTable st = new SymbolTable();
-            st.openScope();
-            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
-            System.out.println(st);
+//            SymbolTable st = new SymbolTable();
+//            st.openScope();
+//            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,31 +168,25 @@ if (jjtc000) {
     }
   }
 
-  final public void vertex_edge_attributes() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case VERTEX:{
-      vertex_attributes();
-      break;
-      }
-    case EDGE:{
-      edge_attributes();
-      break;
-      }
-    default:
-      jj_la1[1] = jj_gen;
-      newlines_star();
-    }
-  }
-
-  final public void vertex_attributes() throws ParseException {/*@bgen(jjtree) VERTEX_ATTRIBUTES */
-  ASTVERTEX_ATTRIBUTES jjtn000 = new ASTVERTEX_ATTRIBUTES(JJTVERTEX_ATTRIBUTES);
+  final public void vertex_edge_attributes() throws ParseException {/*@bgen(jjtree) #VERTEX_EDGE_ATTR(> 1) */
+  ASTVERTEX_EDGE_ATTR jjtn000 = new ASTVERTEX_EDGE_ATTR(JJTVERTEX_EDGE_ATTR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
-      vertex_attr_dcl();
-      newlines_star();
-      vertex_attr_tail();
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case VERTEX:{
+        vertex_attributes();
+        break;
+        }
+      case EDGE:{
+        edge_attributes();
+        break;
+        }
+      default:
+        jj_la1[1] = jj_gen;
+        newlines_star();
+      }
     } catch (Throwable jjte000) {
 if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -210,9 +203,65 @@ if (jjtc000) {
       {if (true) throw (Error)jjte000;}
     } finally {
 if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
+        jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
         jjtn000.jjtSetLastToken(getToken(0));
       }
+    }
+  }
+
+  final public void vertex_attributes() throws ParseException {
+ASTVERTEX_ATTRIBUTES jjtn001 = new ASTVERTEX_ATTRIBUTES(JJTVERTEX_ATTRIBUTES);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+      jjtn001.jjtSetFirstToken(getToken(1));
+    try {
+      vertex_attr_dcl();
+    } catch (Throwable jjte001) {
+if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        {if (true) throw (RuntimeException)jjte001;}
+      }
+      if (jjte001 instanceof ParseException) {
+        {if (true) throw (ParseException)jjte001;}
+      }
+      {if (true) throw (Error)jjte001;}
+    } finally {
+if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, true);
+        jjtn001.jjtSetLastToken(getToken(0));
+      }
+    }
+    newlines_star();
+ASTEDGE_ATTRIBUTES jjtn002 = new ASTEDGE_ATTRIBUTES(JJTEDGE_ATTRIBUTES);
+                                                           boolean jjtc002 = true;
+                                                           jjtree.openNodeScope(jjtn002);
+                                                           jjtn002.jjtSetFirstToken(getToken(1));
+    try {
+      vertex_attr_tail();
+    } catch (Throwable jjte002) {
+if (jjtc002) {
+                                                             jjtree.clearNodeScope(jjtn002);
+                                                             jjtc002 = false;
+                                                           } else {
+                                                             jjtree.popNode();
+                                                           }
+                                                           if (jjte002 instanceof RuntimeException) {
+                                                             {if (true) throw (RuntimeException)jjte002;}
+                                                           }
+                                                           if (jjte002 instanceof ParseException) {
+                                                             {if (true) throw (ParseException)jjte002;}
+                                                           }
+                                                           {if (true) throw (Error)jjte002;}
+    } finally {
+if (jjtc002) {
+                                                             jjtree.closeNodeScope(jjtn002, true);
+                                                             jjtn002.jjtSetLastToken(getToken(0));
+                                                           }
     }
   }
 
@@ -237,34 +286,59 @@ if (jjtc000) {
     }
   }
 
-  final public void edge_attributes() throws ParseException {/*@bgen(jjtree) EDGE_ATTRIBUTES */
-  ASTEDGE_ATTRIBUTES jjtn000 = new ASTEDGE_ATTRIBUTES(JJTEDGE_ATTRIBUTES);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-  jjtn000.jjtSetFirstToken(getToken(1));
+  final public void edge_attributes() throws ParseException {
+ASTEDGE_ATTRIBUTES jjtn001 = new ASTEDGE_ATTRIBUTES(JJTEDGE_ATTRIBUTES);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+      jjtn001.jjtSetFirstToken(getToken(1));
     try {
       edge_attr_dcl();
-      newlines_star();
-      edge_attr_tail();
-    } catch (Throwable jjte000) {
-if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
+    } catch (Throwable jjte001) {
+if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
       } else {
         jjtree.popNode();
       }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
+      if (jjte001 instanceof RuntimeException) {
+        {if (true) throw (RuntimeException)jjte001;}
       }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
+      if (jjte001 instanceof ParseException) {
+        {if (true) throw (ParseException)jjte001;}
       }
-      {if (true) throw (Error)jjte000;}
+      {if (true) throw (Error)jjte001;}
     } finally {
-if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-        jjtn000.jjtSetLastToken(getToken(0));
+if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, true);
+        jjtn001.jjtSetLastToken(getToken(0));
       }
+    }
+    newlines_star();
+ASTVERTEX_ATTRIBUTES jjtn002 = new ASTVERTEX_ATTRIBUTES(JJTVERTEX_ATTRIBUTES);
+                                                       boolean jjtc002 = true;
+                                                       jjtree.openNodeScope(jjtn002);
+                                                       jjtn002.jjtSetFirstToken(getToken(1));
+    try {
+      edge_attr_tail();
+    } catch (Throwable jjte002) {
+if (jjtc002) {
+                                                         jjtree.clearNodeScope(jjtn002);
+                                                         jjtc002 = false;
+                                                       } else {
+                                                         jjtree.popNode();
+                                                       }
+                                                       if (jjte002 instanceof RuntimeException) {
+                                                         {if (true) throw (RuntimeException)jjte002;}
+                                                       }
+                                                       if (jjte002 instanceof ParseException) {
+                                                         {if (true) throw (ParseException)jjte002;}
+                                                       }
+                                                       {if (true) throw (Error)jjte002;}
+    } finally {
+if (jjtc002) {
+                                                         jjtree.closeNodeScope(jjtn002, true);
+                                                         jjtn002.jjtSetLastToken(getToken(0));
+                                                       }
     }
   }
 
@@ -333,6 +407,7 @@ if (jjtc001) {
         }
       case VERTEX:
       case EDGE:
+      case DIEDGE:
       case MAP:
       case GRAPH_TYPE:
       case COLLECTION_TYPE:{
@@ -484,7 +559,8 @@ if (jjtc000) {
       break;
       }
     case VERTEX:
-    case EDGE:{
+    case EDGE:
+    case DIEDGE:{
       graph_element_types();
       break;
       }
@@ -585,6 +661,14 @@ jjtn000.value = t.image;
 jjtree.closeNodeScope(jjtn000, true);
                                                                jjtc000 = false;
                                                                jjtn000.jjtSetLastToken(getToken(0));
+jjtn000.value = t.image;
+        break;
+        }
+      case DIEDGE:{
+        t = jj_consume_token(DIEDGE);
+jjtree.closeNodeScope(jjtn000, true);
+                                                                                                         jjtc000 = false;
+                                                                                                         jjtn000.jjtSetLastToken(getToken(0));
 jjtn000.value = t.image;
         break;
         }
@@ -1307,6 +1391,7 @@ if (jjtc000) {
     case IF:
     case VERTEX:
     case EDGE:
+    case DIEDGE:
     case INT:
     case REAL:
     case BOOLEAN:
@@ -1328,6 +1413,7 @@ if (jjtc000) {
     case CREATE:
     case VERTEX:
     case EDGE:
+    case DIEDGE:
     case INT:
     case REAL:
     case BOOLEAN:{
@@ -1416,7 +1502,8 @@ if (jjtc002) {
       break;
       }
     case VERTEX:
-    case EDGE:{
+    case EDGE:
+    case DIEDGE:{
 ASTGRAPH_ELEMENT_DCL jjtn003 = new ASTGRAPH_ELEMENT_DCL(JJTGRAPH_ELEMENT_DCL);
                                                                                                  boolean jjtc003 = true;
                                                                                                  jjtree.openNodeScope(jjtn003);
@@ -2387,6 +2474,9 @@ if (jjtc001) {
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
       collection_type();
+      jj_consume_token(LANGLE);
+      type();
+      jj_consume_token(RANGLE);
       identifier();
       collection_dcl();
     } catch (Throwable jjte000) {
@@ -2506,6 +2596,7 @@ if (jjtc002) {
     case FUNCTION:
     case VERTEX:
     case EDGE:
+    case DIEDGE:
     case INT:
     case REAL:
     case BOOLEAN:
@@ -2594,6 +2685,7 @@ if (jjtc000) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case VERTEX:
       case EDGE:
+      case DIEDGE:
       case INT:
       case REAL:
       case BOOLEAN:
@@ -2638,6 +2730,7 @@ if (jjtc000) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case VERTEX:
       case EDGE:
+      case DIEDGE:
       case INT:
       case REAL:
       case BOOLEAN:
@@ -2725,6 +2818,7 @@ if (jjtc000) {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case VERTEX:
     case EDGE:
+    case DIEDGE:
     case MAP:
     case GRAPH_TYPE:
     case COLLECTION_TYPE:{
@@ -2770,7 +2864,7 @@ if (jjtc000) {
       jj_la1_0 = new int[] {0x100,0x0,0x0,0x0,0x0,0x0,0x2000,0x0,0x0,0x8000,0x4000,0x0,0x0,0x0,0x0,0x0,0x20010000,0x20000000,0x0,0x20000400,0x400,0x20010000,0x200,0x5c0120,0x5c0020,0x20,0x0,0x2100,0x0,0x80000000,0x2000000,0x200,0x8000000,0x5c0000,0x2000,0x1c0000,0x0,0x1000040,0x20010020,0x2100,0x0,0x20000,0x0,0x0,0x200,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x3,0x2,0x1,0x400183b,0x38,0x0,0x4001803,0x3,0x0,0x0,0x100000,0x3400000,0x3400000,0x10000,0x40000,0x50004040,0x50004040,0x50004040,0x0,0x0,0x50004040,0x0,0x23b,0x23b,0x3b,0x4001000,0x0,0x0,0x0,0x0,0x0,0x0,0x200,0x0,0x0,0x10000000,0x0,0x50004040,0x0,0x50004040,0x400183b,0x400183b,0x400183b,0x0,0x400183b,};
+      jj_la1_1 = new int[] {0x0,0x3,0x2,0x1,0x400183f,0x38,0x0,0x4001807,0x7,0x0,0x0,0x100000,0x3400000,0x3400000,0x10000,0x40000,0x50004040,0x50004040,0x50004040,0x0,0x0,0x50004040,0x0,0x23f,0x23f,0x3f,0x4001000,0x0,0x0,0x0,0x0,0x0,0x0,0x200,0x0,0x0,0x10000000,0x0,0x50004040,0x0,0x50004040,0x400183f,0x400183f,0x400183f,0x0,0x400183f,};
    }
    private static void jj_la1_init_2() {
       jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x1,0x0,0x0,0x1,0x0,0x1,0x1,0x0,0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x1,0x0,0x0,0x1,0x0,0x1,0x0,0x1,0x0,0x0,0x0,0x0,0x0,};

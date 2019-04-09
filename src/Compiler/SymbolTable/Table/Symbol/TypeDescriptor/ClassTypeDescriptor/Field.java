@@ -34,4 +34,12 @@ public class Field {
     public int hashCode() {
         return Objects.hash(fieldName);
     }
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "type=" + type +
+                ", fieldName='" + fieldName + '\'' +
+                '}';
+    }
 }

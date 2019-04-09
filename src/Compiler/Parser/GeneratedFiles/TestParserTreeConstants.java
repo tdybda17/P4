@@ -7,55 +7,56 @@ public interface TestParserTreeConstants
   public int JJTSTART = 1;
   public int JJTPROG = 2;
   public int JJTFUNCS_DCL = 3;
-  public int JJTVERTEX_ATTRIBUTES = 4;
-  public int JJTEDGE_ATTRIBUTES = 5;
-  public int JJTATTRIBUTE_DCL = 6;
-  public int JJTDCL = 7;
-  public int JJTOBJECT_TYPE = 8;
-  public int JJTSIMPLE_TYPES = 9;
-  public int JJTIDENTIFIER = 10;
-  public int JJTMAP = 11;
-  public int JJTCOLLECTION_TYPE = 12;
-  public int JJTGRAPH_ELEMENT_TYPES = 13;
-  public int JJTOR_EXPR = 14;
-  public int JJTAND_EXPR = 15;
-  public int JJTEQUAL_EXPR = 16;
-  public int JJTREL_EXPR = 17;
-  public int JJTADD_SUB = 18;
-  public int JJTMUL_DIV = 19;
-  public int JJTNEG_EXPR = 20;
-  public int JJTVALUE = 21;
-  public int JJTMEMBER_FUNCTION_CALL = 22;
-  public int JJTMEMBER = 23;
-  public int JJTFUNC_CALL = 24;
-  public int JJTACTUAL_PARAMETERS = 25;
-  public int JJTMAIN = 26;
-  public int JJTBLOCK = 27;
-  public int JJTCREATE = 28;
-  public int JJTGRAPH_ELEMENT_DCL = 29;
-  public int JJTGRAPH_DCL = 30;
-  public int JJTGRAPH_TYPE = 31;
-  public int JJTGRAPH_ASSIGN = 32;
-  public int JJTGRAPH_DCL_ELEMENTS = 33;
-  public int JJTGRAPH_VERTEX_DCL = 34;
-  public int JJTVERTEX_LIST = 35;
-  public int JJTVERTEX = 36;
-  public int JJTWEIGHT = 37;
-  public int JJTASSIGN = 38;
-  public int JJTFUNCTION_CALL = 39;
-  public int JJTWHILE_STATEMENT = 40;
-  public int JJTFOR_STATEMENT = 41;
-  public int JJTINTEGER_VALUE = 42;
-  public int JJTFOREACH_STATEMENT = 43;
-  public int JJTIF_STATEMENT = 44;
-  public int JJTELSE_STATEMENT = 45;
-  public int JJTRETURN_STMT = 46;
-  public int JJTCOLLECTION_ADT = 47;
-  public int JJTELEMENT_LIST = 48;
-  public int JJTFUNC_DCL = 49;
-  public int JJTRETURN_TYPE = 50;
-  public int JJTFORMAL_PARAMETERS = 51;
-  public int JJTFORMAL_PARAMETER = 52;
+  public int JJTVERTEX_EDGE_ATTR = 4;
+  public int JJTVERTEX_ATTRIBUTES = 5;
+  public int JJTEDGE_ATTRIBUTES = 6;
+  public int JJTATTRIBUTE_DCL = 7;
+  public int JJTDCL = 8;
+  public int JJTOBJECT_TYPE = 9;
+  public int JJTSIMPLE_TYPES = 10;
+  public int JJTIDENTIFIER = 11;
+  public int JJTMAP = 12;
+  public int JJTCOLLECTION_TYPE = 13;
+  public int JJTGRAPH_ELEMENT_TYPES = 14;
+  public int JJTOR_EXPR = 15;
+  public int JJTAND_EXPR = 16;
+  public int JJTEQUAL_EXPR = 17;
+  public int JJTREL_EXPR = 18;
+  public int JJTADD_SUB = 19;
+  public int JJTMUL_DIV = 20;
+  public int JJTNEG_EXPR = 21;
+  public int JJTVALUE = 22;
+  public int JJTMEMBER_FUNCTION_CALL = 23;
+  public int JJTMEMBER = 24;
+  public int JJTFUNC_CALL = 25;
+  public int JJTACTUAL_PARAMETERS = 26;
+  public int JJTMAIN = 27;
+  public int JJTBLOCK = 28;
+  public int JJTCREATE = 29;
+  public int JJTGRAPH_ELEMENT_DCL = 30;
+  public int JJTGRAPH_DCL = 31;
+  public int JJTGRAPH_TYPE = 32;
+  public int JJTGRAPH_ASSIGN = 33;
+  public int JJTGRAPH_DCL_ELEMENTS = 34;
+  public int JJTGRAPH_VERTEX_DCL = 35;
+  public int JJTVERTEX_LIST = 36;
+  public int JJTVERTEX = 37;
+  public int JJTWEIGHT = 38;
+  public int JJTASSIGN = 39;
+  public int JJTFUNCTION_CALL = 40;
+  public int JJTWHILE_STATEMENT = 41;
+  public int JJTFOR_STATEMENT = 42;
+  public int JJTINTEGER_VALUE = 43;
+  public int JJTFOREACH_STATEMENT = 44;
+  public int JJTIF_STATEMENT = 45;
+  public int JJTELSE_STATEMENT = 46;
+  public int JJTRETURN_STMT = 47;
+  public int JJTCOLLECTION_ADT = 48;
+  public int JJTELEMENT_LIST = 49;
+  public int JJTFUNC_DCL = 50;
+  public int JJTRETURN_TYPE = 51;
+  public int JJTFORMAL_PARAMETERS = 52;
+  public int JJTFORMAL_PARAMETER = 53;
 
 
   public String[] jjtNodeName = {
@@ -63,6 +64,7 @@ public interface TestParserTreeConstants
     "START",
     "PROG",
     "FUNCS_DCL",
+    "VERTEX_EDGE_ATTR",
     "VERTEX_ATTRIBUTES",
     "EDGE_ATTRIBUTES",
     "ATTRIBUTE_DCL",
@@ -114,4 +116,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=dd46a2783364c9046cd801865efe0d20 (do not edit this line) */
+/* JavaCC - OriginalChecksum=de4eabaf094f58b157b2a7092d27d5bd (do not edit this line) */

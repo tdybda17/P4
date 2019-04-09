@@ -51,7 +51,7 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
     public static void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
         for(Field field : fields) {
             if(field.equals(userAttribute)) {
-                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as an field already existing in the vertex type.");
+                throw new TypeDescriptorException("The specified field: " + field.getFieldName() + ", added by the user was the same as a field already existing in the vertex type.");
             }
         }
 
