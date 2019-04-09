@@ -729,6 +729,12 @@ void graph_element_types()                      :
                                                                jjtc000 = false;
                                                                jjtn000.jjtSetLastToken(getToken(0));
                                                              }
+/*@egen*/ {jjtn000.value = t.image;} | t = <DIEDGE>/*@bgen(jjtree)*/
+                                                                                                       {
+                                                                                                         jjtree.closeNodeScope(jjtn000, true);
+                                                                                                         jjtc000 = false;
+                                                                                                         jjtn000.jjtSetLastToken(getToken(0));
+                                                                                                       }
 /*@egen*/ {jjtn000.value = t.image;}/*@bgen(jjtree)*/
     } finally {
       if (jjtc000) {

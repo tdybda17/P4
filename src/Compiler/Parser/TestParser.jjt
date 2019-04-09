@@ -271,7 +271,7 @@ void collection_type() #COLLECTION_TYPE :
 void graph_element_types() #GRAPH_ELEMENT_TYPES :
 {Token t;}
 {
-    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;}
+    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;} | t = <DIEDGE> {jjtThis.value = t.image;}
 }
 
 void expr() #OR_EXPR(>1) :
