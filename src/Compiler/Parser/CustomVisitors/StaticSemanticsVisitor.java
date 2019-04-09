@@ -5,8 +5,10 @@ import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
+import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
@@ -26,11 +28,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private SimpleNode convertToSimpleNode(Object data) {
-        if(data instanceof SimpleNode) {
-            return (SimpleNode) data;
+    private SimpleNode convertToSimpleNode(Object node) {
+        if(node instanceof SimpleNode) {
+            return (SimpleNode) node;
         } else {
             throw new IllegalTypeException("The given data object was not a SimpleNode");
+        }
+    }
+
+    private String getIdentifierName(Node identifierNode) {
+        if(identifierNode instanceof ASTIDENTIFIER) {
+            SimpleNode simpleNode = (SimpleNode) identifierNode;
+            return (String) simpleNode.jjtGetValue();
+        } else {
+            throw new IllegalTypeException("The given node was not an IdentifierNode");
         }
     }
 
@@ -39,18 +50,99 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return data;
     }
 
+    private TypeDescriptor getTypeDescriptor(Object node){
+        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_ELEMENT_TYPES) {
+            SimpleNode simpleNode = convertToSimpleNode(node);
+            TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
+            return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
+        } else {
+            throw new IllegalArgumentException("You could not get a type descriptor for the given type");
+        }
+    }
+
     //We open a new scope each time we meet a block node and then we close it right after the block is done
     @Override
     public Object visit(ASTBLOCK node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
+        System.out.println(symbolTable.toString());
         symbolTable.closeScope();
         return null;
     }
 
+    //The DCL node visitor
     @Override
-    public Object visit(ASTASSIGN node, Object data) {
+    public Object visit(ASTDCL node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2) {
+            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
+            return null;
+        } else if(node.jjtGetNumChildren() == 3) { //WE HAVE AN INTIALIZATION
+            Symbol symbol = createSymbolFromDCLnode(node, data);
+            symbolTable.enterSymbol(symbol);
+
+            TypeDescriptor expectedType;
+            if (symbol.getAttributes() instanceof IdentifierAttributes) {
+                IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
+                expectedType = attributes.getType();
+            } else {
+                throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+            }
+            //TODO: making it so that evaluations can be type checked
+            TypeDescriptor actualType = new VoidTypeDescriptor();
+
+            if(expectedType.equals(actualType)) {
+                return null;
+            } else {
+                throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
+            }
+        } else {
+            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
+        if(dclNode instanceof ASTDCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
+            Node typeNode = dclNode.jjtGetChild(0);
+            //We call the visit method for the simple data type node to get the type descriptor
+            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
+
+            String id = getIdentifierName(dclNode.jjtGetChild(1));
+            return new Symbol(id, new IdentifierAttributes(type));
+        } else {
+            throw new IllegalArgumentException("The given node was not an DCL node or GRAPH ELEMENT DCL node");
+        }
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_TYPES node, Object data) {
+        return getTypeDescriptor(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2) {
+            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
+        } else {
+            throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
+        }
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
+        return getTypeDescriptor(node);
+    }
+
+    @Override
+    public Object visit(ASTIDENTIFIER node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTASSIGN node, Object data) { //TODO: Få lavet denne
         if(node.jjtGetNumChildren() != 2) {
             throw new WrongAmountOfChildrenException("The assignment node did not have two children");
         }
@@ -62,41 +154,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
         }
     }
-
-    //The DCL node visitor
-    @Override
-    public Object visit(ASTDCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2) {
-            Node typeNode = node.jjtGetChild(0);
-            //We call the visit method for the simple data type node.
-            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
-
-            SimpleNode identifierNode = convertToSimpleNode(node.jjtGetChild(1));
-            String id = (String) identifierNode.jjtGetValue();
-
-            symbolTable.enterSymbol(id, new IdentifierAttributes(type));
-            return null;
-        } else if(node.jjtGetNumChildren() == 3) {
-            //WE HAVE AN INTIALIZATION
-            return null;
-        } else {
-            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
-        }
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        SimpleNode simpleNode = (SimpleNode) node;
-        TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
-        return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
-    }
-
-    @Override
-    public Object visit(ASTIDENTIFIER node, Object data) {
-        return defaultVisit(node, data);
-    }
-
 
     @Override
     public Object visit(SimpleNode node, Object data) {
@@ -140,11 +197,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -230,11 +282,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCREATE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         return defaultVisit(node, data);
     }
 

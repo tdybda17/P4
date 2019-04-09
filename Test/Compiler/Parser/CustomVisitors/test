@@ -3,6 +3,9 @@ function main()
     boolean b
     real r
 
+    //real x = 8.0 + 15.5 * true
+
+    //r = x
 
     Vertex A
     Edge B

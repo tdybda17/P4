@@ -54,6 +54,10 @@ public class SymbolTable implements ISymbolTable {
         }
     }
 
+    public void enterSymbol(Symbol symbol) {
+        enterSymbol(symbol.getName(), symbol.getAttributes());
+    }
+
     private void validateInputName(String name) {
         if(name == null || name.isBlank()) {
             throw new IllegalSymbolNameError("Name were null or blank");

@@ -16,12 +16,12 @@ class StaticSemanticsVisitorTest {
 
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws Exception {
         path = "Test/Compiler/Parser/CustomVisitors/test";
         symbolTable = new SymbolTable();
         symbolTable.openScope();
         //We use the function visitor to fill up our symbol table with initial values
-        //TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
+        TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
     }
 
     @Test
@@ -60,7 +60,8 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
-    void visit2() {
+    void visit2() throws Exception{
+        TestParser.useVisitorMethod(new StaticSemanticsVisitor(), path, symbolTable);
     }
 
     @Test
