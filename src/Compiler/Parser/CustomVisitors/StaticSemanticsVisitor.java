@@ -80,7 +80,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromSimpleDCLnode(node, data));
+            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
         } else {
             throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
         }
@@ -150,10 +150,10 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTSIMPLE_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromSimpleDCLnode(node, data));
+            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
             return null;
         } else if(node.jjtGetNumChildren() == 3) { //WE HAVE AN INTIALIZATION
-            Symbol symbol = createSymbolFromSimpleDCLnode(node, data);
+            Symbol symbol = createSymbolFromDCLnode(node, data);
             symbolTable.enterSymbol(symbol);
 
             TypeDescriptor expectedType;
@@ -176,7 +176,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private Symbol createSymbolFromSimpleDCLnode(Node dclNode, Object data) {
+    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
         if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL) {
             Node typeNode = dclNode.jjtGetChild(0);
             //We call the visit method for the simple data type node to get the type descriptor
