@@ -66,7 +66,7 @@ class TestParserTest {
     }
 
     @Test
-    void testPriorityQueue() {
+    void testMinQueue() {
         assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "MinQueueTest"));
     }
 

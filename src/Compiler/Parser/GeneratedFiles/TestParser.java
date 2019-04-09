@@ -9,11 +9,11 @@ import java.io.FileReader;
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, TestParserConstants {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();public static void main(String[] args) {
         try {
-            System.out.println(parseTextFile("src/Compiler/Parser/test"));
+            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
             //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
-//            SymbolTable st = new SymbolTable();
-//            st.openScope();
-//            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
+            SymbolTable st = new SymbolTable();
+            st.openScope();
+            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -22,7 +22,7 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, Test
     public static String parseTextFile(String filePath) throws Exception {
         Node root = createParseTree(filePath);
         return whatever.createDotOutput(root);
-    }
+  }
 
     public static void useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
         Node root = createParseTree(filePath);
@@ -2474,9 +2474,6 @@ if (jjtc001) {
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
       collection_type();
-      jj_consume_token(LANGLE);
-      type();
-      jj_consume_token(RANGLE);
       identifier();
       collection_dcl();
     } catch (Throwable jjte000) {
