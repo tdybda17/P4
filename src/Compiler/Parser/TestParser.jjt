@@ -229,7 +229,13 @@ void edge_attr_tail() #void :
 void attribute_dcl() #ATTRIBUTE_DCL(>1) :
 {}
 {
-    (simple_types() identifier() initialization() < NEWLINE >) #DCL  attribute_dcl() | (object_types() identifier() < NEWLINE >) #OBJECT_TYPE attribute_dcl() | empty()
+    simple_dcl() <NEWLINE> attribute_dcl() | (object_types() identifier() < NEWLINE >) #OBJECT_TYPE attribute_dcl() | empty()
+}
+
+void simple_dcl() #SIMPLE_DCL :
+{}
+{
+    simple_types() identifier() initialization()
 }
 
 void simple_types() #SIMPLE_TYPES :
@@ -451,7 +457,7 @@ void block_content() #void :
 void dcl() #void :
 {}
 {
-    create() | (simple_types() identifier() initialization()) #DCL | (graph_element_types() identifier()) #GRAPH_ELEMENT_DCL
+    create() | simple_dcl() | (graph_element_types() identifier()) #GRAPH_ELEMENT_DCL
 }
 
 void create() #CREATE :

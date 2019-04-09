@@ -58,12 +58,14 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTDCL node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
+        return null;
     }
 
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
