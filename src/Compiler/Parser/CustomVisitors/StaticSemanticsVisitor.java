@@ -205,7 +205,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
 
             Node childNode = node.jjtGetChild(0);
-            //We make a recursive call to the visit method.
+            //We make a recursive call to the visit method for the sub node
             TypeDescriptor elementType = convertToTypeDescriptor(childNode.jjtAccept(this, data));
             collectionTypeDescriptor.setElementType(elementType);
             return collectionTypeDescriptor;
