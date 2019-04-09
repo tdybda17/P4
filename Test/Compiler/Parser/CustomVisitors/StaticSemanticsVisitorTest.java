@@ -3,7 +3,9 @@ package Compiler.Parser.CustomVisitors;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.DirectedEdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.UndirectedEdgeTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
@@ -64,7 +66,7 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
-    void visitGraphElementDeclarationNodeTest(){
+    void visitGraphElementDeclarationNodeTest1(){
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("Edge", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
@@ -72,6 +74,30 @@ class StaticSemanticsVisitorTest {
         SymbolTable expected = new SymbolTable();
         expected.openScope();
         expected.enterSymbol("a", new IdentifierAttributes(new UndirectedEdgeTypeDescriptor()));
+        assertEquals(expected, symbolTable);
+    }
+
+    @Test
+    void visitGraphElementDeclarationNodeTest2(){
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
+
+        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+
+        SymbolTable expected = new SymbolTable();
+        expected.openScope();
+        expected.enterSymbol("a", new IdentifierAttributes(new DirectedEdgeTypeDescriptor()));
+        assertEquals(expected, symbolTable);
+    }
+
+    @Test
+    void visitGraphElementDeclarationNodeTest3(){
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("Vertex", "a");
+
+        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+
+        SymbolTable expected = new SymbolTable();
+        expected.openScope();
+        expected.enterSymbol("a", new IdentifierAttributes(new VertexTypeDescriptor()));
         assertEquals(expected, symbolTable);
     }
 
