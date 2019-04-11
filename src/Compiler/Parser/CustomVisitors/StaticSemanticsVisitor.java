@@ -1,11 +1,14 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
@@ -14,6 +17,8 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Coll
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.SymbolTable;
+
+import java.util.*;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
     private TypeDescriptor convertToTypeDescriptor(Object data){
@@ -64,20 +69,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private TypeDescriptor getExpectedTypeForIdentifierSymbol(Symbol symbol) {
+    private TypeDescriptor getTypeForIdentifierSymbol(Symbol symbol) {
         if (symbol.getAttributes() instanceof IdentifierAttributes) {
             IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
             return attributes.getType();
         } else {
             throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
-        }
-    }
-
-    private void checkInitializationNode(TypeDescriptor expectedType, Node initializationNode, Object data) {
-        //TODO: making it so that evaluations can be type checked
-        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-        if (!expectedType.equals(actualType)) {
-            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
         }
     }
 
@@ -113,14 +110,23 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             Symbol symbol = createSymbolFromDCLnode(node, data);
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
-                TypeDescriptor expectedType = getExpectedTypeForIdentifierSymbol(symbol);
-                checkInitializationNode(expectedType, node.jjtGetChild(2), symbolTable);
+                TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
+                checkSimpleDclInitialization(expectedType, node.jjtGetChild(2), symbolTable);
             }
             return null;
         } else {
             throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
         }
     }
+
+    private void checkSimpleDclInitialization(TypeDescriptor expectedType, Node initializationNode, Object data) {
+        //TODO: making it so that evaluations can be type checked
+        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+        if (!expectedType.equals(actualType)) {
+            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
+        }
+    }
+
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
@@ -151,20 +157,92 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             symbolTable.enterSymbol(symbol);
 
             if(node.jjtGetNumChildren() == 3) {
-
+                Node initializationNode = node.jjtGetChild(2);
+                checkGraphDclInitialization(initializationNode, symbol, symbolTable);
             }
-
         } else {
             throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
         }
-
-
         return defaultVisit(node, data);
+    }
+
+    private void checkGraphDclInitialization(Node initializationNode, Symbol symbol, SymbolTable symbolTable) {
+        if(initializationNode instanceof ASTGRAPH_DCL_ELEMENTS) {
+            TypeDescriptor graphType = getTypeForIdentifierSymbol(symbol);
+            if(graphType instanceof DirectedGraphTypeDescriptor) {
+                visitDirectedGraphInitialization(initializationNode);
+            } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
+                visitUndirectedGraphInitialization(initializationNode);
+            } else {
+                throw new IllegalTypeException("Your graph was neither of the type directed or undirected");
+            }
+        } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
+            initializationNode.jjtAccept(this, symbolTable);
+        } else {
+            throw new IllegalTypeException("The node use for initialization of your graph dcl was not an correct type");
+        }
+    }
+
+    private void visitDirectedGraphInitialization(Node initializationNode){
+        Map<String, List<String>> allVertexDcls = new HashMap<>();
+
+        for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
+            Node child = initializationNode.jjtGetChild(i);
+
+            List<String> vertexPair = getVertexPair(child);
+
+            String firstVertex = vertexPair.get(0);
+            String secondVertex = vertexPair.get(1);
+            if(allVertexDcls.containsKey(firstVertex)) {
+                List<String> neighbours = allVertexDcls.get(firstVertex);
+                if(neighbours.contains(secondVertex)) {
+                    throw new DuplicateEdgeException("You tried to add more than one edge from " + firstVertex + " to " + secondVertex);
+                }
+                neighbours.add(secondVertex);
+                allVertexDcls.put(firstVertex, neighbours);
+            } else {
+                List<String> neighbours = new ArrayList<>();
+                neighbours.add(secondVertex);
+                allVertexDcls.put(firstVertex, neighbours);
+            }
+
+        }
+    }
+
+    private void visitUndirectedGraphInitialization(Node initializationNode){
+
+    }
+
+    private List<String> getVertexPair(Node node) {
+        ASTGRAPH_VERTEX_DCL vertexDclNode;
+        if(node instanceof ASTGRAPH_VERTEX_DCL) {
+            vertexDclNode = (ASTGRAPH_VERTEX_DCL) node;
+        } else {
+            throw new IllegalArgumentException("Your graph declaration had a child node that was not an graph vertex dcl node");
+        }
+        List<String> vertexPair = new ArrayList<>();
+
+        String firstVertex = getIdentifierName(vertexDclNode.jjtGetChild(0));
+        String secondVertex = getIdentifierName(vertexDclNode.jjtGetChild(1));
+        vertexPair.add(firstVertex);
+        vertexPair.add(secondVertex);
+        return vertexPair;
     }
 
     @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
         return getTypeDescriptor(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+
+    @Override
+    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
+        return defaultVisit(node, data);
     }
 
 
@@ -379,16 +457,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
         return defaultVisit(node, data);
     }
 
