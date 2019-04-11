@@ -3,4 +3,8 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescripto
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.SimpleDataTypeDescriptor;
 
 public abstract class NumberTypeDescriptor extends SimpleDataTypeDescriptor {
+    @Override
+    public String getTypeName() {
+        return "Number";
+    }
 }

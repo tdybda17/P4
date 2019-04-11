@@ -4,17 +4,17 @@ function main()
     //real r
 
 
-    //real x = 8.0 + 15.5 * true
+    real x = 8.0 + 15.5 * true
 
     //Vertex A
     //Edge B
     //DiEdge C
 
-    //create Graph testGraph
-    //    a -- b
-    //    b -- c
-    //    c -- a
-    //end
+    create Graph testGraph
+        a -- b
+        b -- c
+        c -- a
+    end
 
     create DiGraph g end
 

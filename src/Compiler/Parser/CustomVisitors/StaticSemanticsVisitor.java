@@ -60,9 +60,40 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
             return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
         } else {
-            throw new IllegalArgumentException("You could not get a type descriptor for the given type");
+            throw new IllegalArgumentException("You could not get a type descriptor for the given node type");
         }
     }
+
+    private TypeDescriptor getExpectedTypeForIdentifierSymbol(Symbol symbol) {
+        if (symbol.getAttributes() instanceof IdentifierAttributes) {
+            IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
+            return attributes.getType();
+        } else {
+            throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+        }
+    }
+
+    private void checkInitializationNode(TypeDescriptor expectedType, Node initializationNode, Object data) {
+        //TODO: making it so that evaluations can be type checked
+        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+        if (!expectedType.equals(actualType)) {
+            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
+        }
+    }
+
+    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
+        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
+            Node typeNode = dclNode.jjtGetChild(0);
+            //We call the visit method for the simple data type node to get the type descriptor
+            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
+
+            String id = getIdentifierName(dclNode.jjtGetChild(1));
+            return new Symbol(id, new IdentifierAttributes(type));
+        } else {
+            throw new IllegalArgumentException("The given node was not an DCL, GRAPH_DCL or GRAPH_ELEMENT_DCL node");
+        }
+    }
+
 
     //We open a new scope each time we meet a block node and then we close it right after the block is done
     @Override
@@ -70,7 +101,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        System.out.println(symbolTable.toString());
+        System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
         symbolTable.closeScope();
         return null;
     }
@@ -82,7 +113,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             Symbol symbol = createSymbolFromDCLnode(node, data);
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
-                checkInitializationNode(getExpectedType(symbol), node.jjtGetChild(2), data);
+                TypeDescriptor expectedType = getExpectedTypeForIdentifierSymbol(symbol);
+                checkInitializationNode(expectedType, node.jjtGetChild(2), symbolTable);
             }
             return null;
         } else {
@@ -139,8 +171,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
-        SymbolTable st = (SymbolTable) data;
-        return ((IdentifierAttributes)st.retrieveSymbol(node.jjtGetValue().toString()).getAttributes()).getType();
+        return defaultVisit(node, data);
+        //SymbolTable st = (SymbolTable) data;
+        //return ((IdentifierAttributes)st.retrieveSymbol(node.jjtGetValue().toString()).getAttributes()).getType();
     }
 
     @Override
@@ -192,36 +225,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    private TypeDescriptor getExpectedType(Symbol symbol) {
-        if (symbol.getAttributes() instanceof IdentifierAttributes) {
-            IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
-            return attributes.getType();
-        } else {
-            throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
-        }
-    }
-
-    private void checkInitializationNode(TypeDescriptor expectedType, Node initializationNode, Object data) {
-        //TODO: making it so that evaluations can be type checked
-        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-        if (!expectedType.equals(actualType)) {
-            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
-        }
-    }
-
-    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
-            Node typeNode = dclNode.jjtGetChild(0);
-            //We call the visit method for the simple data type node to get the type descriptor
-            TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
-
-            String id = getIdentifierName(dclNode.jjtGetChild(1));
-            return new Symbol(id, new IdentifierAttributes(type));
-        } else {
-            throw new IllegalArgumentException("The given node was not an DCL, GRAPH_DCL or GRAPH_ELEMENT_DCL node");
-        }
-    }
-
     @Override
     public Object visit(ASTMAP node, Object data) {
         return defaultVisit(node, data);
@@ -264,7 +267,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
         if (!expectedType.isInstance(actualType))
-            throw new IncorrectTypeException(expectedType.getTypeName(), actualType.getTypeName());
+            throw new IncorrectTypeException(expectedType.toString(), actualType.toString());
     }
 
     @Override
@@ -299,7 +302,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     private NumberTypeDescriptor getCorrectNumberTypeDescriptor(TypeDescriptor type1, TypeDescriptor type2) {
         if (type1 instanceof RealTypeDescriptor || type2 instanceof RealTypeDescriptor)
             return new RealTypeDescriptor();
-        else
+        else //We only have integers if both sides is integers
             return new IntegerTypeDescriptor();
     }
 
