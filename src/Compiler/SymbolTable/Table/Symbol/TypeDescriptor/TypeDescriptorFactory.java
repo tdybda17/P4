@@ -9,7 +9,9 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Coll
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.DirectedEdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.UndirectedEdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.GraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
@@ -29,8 +31,8 @@ public class TypeDescriptorFactory {
             case "Vertex": return new VertexTypeDescriptor();
             case "DiEdge": return new DirectedEdgeTypeDescriptor();
             case "Edge": return new UndirectedEdgeTypeDescriptor();
-            case "Graph": return new GraphTypeDescriptor(new UndirectedEdgeTypeDescriptor());
-            case "DiGraph": return new GraphTypeDescriptor(new DirectedEdgeTypeDescriptor());
+            case "Graph": return new UndirectedGraphTypeDescriptor();
+            case "DiGraph": return new DirectedGraphTypeDescriptor();
             case "Set": return new SetTypeDescriptor(new UndefinedTypeDescriptor());
             case "Stack": return new StackTypeDescriptor(new UndefinedTypeDescriptor());
             case "Queue": return new QueueTypeDescriptor(new UndefinedTypeDescriptor());
