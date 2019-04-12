@@ -199,7 +199,7 @@ void vertex_attributes() #void :
 void vertex_attr_dcl() #void :
 {}
 {
-    <VERTEX> <DCL> <NEWLINE> attribute_dcl() <END>
+    <VERTEX> <DCL> newlines_plus() attribute_dcl() <END>
 }
 
 void vertex_attr_tail() #void :
@@ -217,7 +217,7 @@ void edge_attributes() #void :
 void edge_attr_dcl() #void :
 {}
 {
-    <EDGE> <DCL> <NEWLINE> attribute_dcl() <END>
+    <EDGE> <DCL> newlines_plus() attribute_dcl() <END>
 }
 
 void edge_attr_tail() #void :
@@ -229,7 +229,7 @@ void edge_attr_tail() #void :
 void attribute_dcl() #ATTRIBUTE_DCL(>1) :
 {}
 {
-    simple_dcl() <NEWLINE> attribute_dcl() | (object_types() identifier() < NEWLINE >) #OBJECT_TYPE attribute_dcl() | empty()
+    simple_dcl() newlines_plus() attribute_dcl() | (object_types() identifier() newlines_plus()) #OBJECT_TYPE attribute_dcl() | empty()
 }
 
 void simple_dcl() #SIMPLE_DCL :
@@ -487,13 +487,13 @@ void graph_type() #GRAPH_TYPE :
 void graph_dcl() #void :
 {}
 {
-    (< ASSIGN > member_function_call()) #GRAPH_ASSIGN | (< NEWLINE > graph_vertex_dcl() <NEWLINE> graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
+    (< ASSIGN > member_function_call()) #GRAPH_ASSIGN | (newlines_plus() graph_vertex_dcl() newlines_plus() graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
 }
 
 void graph_elements() #void :
 {}
 {
-    graph_vertex_dcl() < NEWLINE > graph_elements() | empty()
+    graph_vertex_dcl() newlines_plus() graph_elements() | empty()
 }
 
 void graph_vertex_dcl() #GRAPH_VERTEX_DCL :
@@ -613,13 +613,13 @@ void collection_adt() #COLLECTION_ADT :
 void collection_dcl() #void :
 {}
 {
-   < ASSIGN > member_function_call() #MEMBER_FUNCTION_CALL | < NEWLINE > element_list() #ELEMENT_LIST | empty()
+   < ASSIGN > member_function_call() #MEMBER_FUNCTION_CALL | newlines_plus() element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
 {}
 {
-    value() < NEWLINE > element_list_continuous()
+    value() newlines_plus() element_list_continuous()
 }
 
 void element_list_continuous() #void :
