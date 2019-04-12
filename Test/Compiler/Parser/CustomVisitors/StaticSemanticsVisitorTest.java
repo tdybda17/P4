@@ -17,17 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StaticSemanticsVisitorTest {
     private SymbolTable symbolTable;
-    private String path;
     private StaticSemanticsVisitor staticSemanticsVisitor;
 
 
     @BeforeEach
     void beforeEach() throws Exception {
-        path = "Test/Compiler/Parser/CustomVisitors/test";
         symbolTable = new SymbolTable();
         symbolTable.openScope();
 
         staticSemanticsVisitor = new StaticSemanticsVisitor();
+    }
+
+    @Test
+    void visitInitializationNodeTest(){
+
     }
 
     @Test
@@ -79,16 +82,7 @@ class StaticSemanticsVisitorTest {
     }
 
     @Test
-    void visitGraphElementDeclarationNodeTest2() {
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
-        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "a");
-
-        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
-        assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, symbolTable));
-    }
-
-    @Test
-    void addingSameSymbolnameTwiceTest(){
+    void visitGraphElementDeclarationNodeTest2(){
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
 
 
@@ -126,19 +120,49 @@ class StaticSemanticsVisitorTest {
         return dclNode;
     }
 
+    @Test
+    void duplicateSymbolExceptionTest() throws Exception{
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
+        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "a");
+
+        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+        assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, symbolTable));
+    }
+
+    @Test
+    void duplicateSymbolInDifferentScopesTest() throws Exception {
+        ASTBLOCK block1 = new ASTBLOCK(0);
+        block1.jjtAddChild(createDCLnode("int", "a"), 0);
+
+        ASTBLOCK block2 = new ASTBLOCK(1);
+        block2.jjtAddChild(createDCLnode("int", "a"), 0);
+
+        staticSemanticsVisitor.visit(block1, symbolTable);
+        assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, symbolTable));
+    }
+
+    @Test
+    void graphDeclarationElementsDirectedDuplicateEdgeTest(){
+        //TODO: få lavet
+    }
+
+    @Test
+    void graphDeclarationElementsUndirectedDuplicateEdgeTest(){
+        //TODO: få lavet
+    }
 
     @Test
     void visit1() throws Exception {
+        String path = "Test/Compiler/Parser/CustomVisitors/test";
         System.out.println(TestParser.parseTextFile(path));
     }
 
     @Test
     void visit2() throws Exception{
-        symbolTable = new SymbolTable();
-        symbolTable.openScope();
+        String path = "Test/Compiler/Parser/CustomVisitors/test";
         //We use the function visitor to fill up our symbol table with functions
         TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
 
-        TestParser.useVisitorMethod(new StaticSemanticsVisitor(), path, symbolTable);
+        TestParser.useVisitorMethod(staticSemanticsVisitor, path, symbolTable);
     }
 }

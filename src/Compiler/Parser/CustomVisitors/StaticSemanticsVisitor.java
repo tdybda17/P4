@@ -193,24 +193,37 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
             String firstVertex = vertexPair.get(0);
             String secondVertex = vertexPair.get(1);
-            if(allVertexDcls.containsKey(firstVertex)) {
-                List<String> neighbours = allVertexDcls.get(firstVertex);
-                if(neighbours.contains(secondVertex)) {
-                    throw new DuplicateEdgeException("You tried to add more than one edge from " + firstVertex + " to " + secondVertex);
-                }
-                neighbours.add(secondVertex);
-                allVertexDcls.put(firstVertex, neighbours);
-            } else {
-                List<String> neighbours = new ArrayList<>();
-                neighbours.add(secondVertex);
-                allVertexDcls.put(firstVertex, neighbours);
-            }
-
+            addVertexToVertexDcls(allVertexDcls, firstVertex, secondVertex);
         }
     }
 
     private void visitUndirectedGraphInitialization(Node initializationNode){
+        Map<String, List<String>> allVertexDcls = new HashMap<>();
 
+        for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
+            Node child = initializationNode.jjtGetChild(i);
+
+            List<String> vertexPair = getVertexPair(child);
+            String firstVertex = vertexPair.get(0);
+            String secondVertex = vertexPair.get(1);
+            addVertexToVertexDcls(allVertexDcls, firstVertex, secondVertex);
+            addVertexToVertexDcls(allVertexDcls, secondVertex, firstVertex);
+        }
+    }
+
+    private void addVertexToVertexDcls(Map<String, List<String>> allVertexDcls, String key, String value) {
+        if(allVertexDcls.containsKey(key)) {
+            List<String> neighbours = allVertexDcls.get(key);
+            if(neighbours.contains(value)) {
+                throw new DuplicateEdgeException("You tried to add more than one edge from " + key + " to " + value);
+            }
+            neighbours.add(value);
+            allVertexDcls.put(key, neighbours);
+        } else {
+            List<String> neighbours = new ArrayList<>();
+            neighbours.add(value);
+            allVertexDcls.put(key, neighbours);
+        }
     }
 
     private List<String> getVertexPair(Node node) {

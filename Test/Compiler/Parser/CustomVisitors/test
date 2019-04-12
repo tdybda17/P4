@@ -2,8 +2,6 @@ function main()
     //int sum
     //boolean b
     //real r
-
-
     //real x = 8.0 + 15.5 * true
 
     //Vertex A
@@ -13,8 +11,6 @@ function main()
     create DiGraph testGraph
         a -- b
         b -- c
-        //a -- b
-        b -- a
         c -- a[9]
     end
 
@@ -30,7 +26,6 @@ function main()
     end
 
     create Set<Vertex> vertices = g.vertices() end
-
 end
 
 int function foo(real a, real b)

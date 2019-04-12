@@ -1,0 +1,7 @@
+function main()
+    int a
+end
+
+int function x()
+    int a
+end
