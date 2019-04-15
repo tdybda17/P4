@@ -38,7 +38,7 @@ public class ParseException extends Exception {
   }
 
   /**
-   * The following constructors are for use by you for whatever
+   * The following constructors are for use by you for TreePrinter
    * purpose you can think of.  Constructing the exception in this
    * manner makes the exception behave in the normal way - i.e., as
    * documented in the class "Throwable".  The fields "errorToken",
