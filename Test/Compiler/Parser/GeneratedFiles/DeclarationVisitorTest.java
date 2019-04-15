@@ -1,6 +1,6 @@
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.whatever;
+import Compiler.Parser.TreePrinter;
 import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DeclarationVisitorTest {
     private Node root;
@@ -39,6 +37,8 @@ class DeclarationVisitorTest {
     @Disabled
     @Test
     void printAST() {
-        System.out.println(whatever.createDotOutput(root));
+        System.out.println(TreePrinter.createDotOutput(root));
     }
+
+
 }

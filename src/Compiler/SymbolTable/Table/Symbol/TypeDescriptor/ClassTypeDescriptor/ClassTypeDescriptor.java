@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ClassTypeDescriptor extends TypeDescriptor {
+
     private Set<Method> methods;
     private Set<Field> fields;
+
     public ClassTypeDescriptor() {
         methods = new HashSet<>();
         fields = new HashSet<>();

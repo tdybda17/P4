@@ -3,7 +3,7 @@ package Compiler.Parser;
 import Compiler.Parser.GeneratedFiles.Node;
 import Compiler.Parser.GeneratedFiles.SimpleNode;
 
-public class whatever {
+public class TreePrinter {
     private static int suffix;
 
 
