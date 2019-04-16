@@ -14,7 +14,7 @@ function main()
         c -- a[9]
     end
 
-    create DiGraph g end
+    create Graph g end
 
     create Graph XYZ = g end
 
@@ -25,7 +25,8 @@ function main()
         8.0
     end
 
-    create Set<Vertex> vertices = g.vertices() end
+    create Set<Vertex> vertices = g.vertices end
+    real weight = edg(1, 2.2).weight
 end
 
 int function foo(real a, real b)
@@ -34,4 +35,8 @@ int function foo(real a, real b)
 end
 
 function bar()
+end
+
+Edge function edg(int a, real b)
+
 end

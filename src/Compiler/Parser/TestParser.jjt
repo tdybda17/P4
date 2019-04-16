@@ -16,7 +16,7 @@ PARSER_BEGIN(TestParser)
 
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.CustomVisitors.FunctionVisitor;import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.whatever;import Compiler.SymbolTable.Table.SymbolTable;import java.io.BufferedReader;
+import Compiler.Parser.CustomVisitors.FunctionVisitor;import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.TreePrinter;import Compiler.SymbolTable.Table.SymbolTable;import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
@@ -35,7 +35,7 @@ public class TestParser {
 
     public static String parseTextFile(String filePath) throws Exception {
         Node root = createParseTree(filePath);
-        return whatever.createDotOutput(root);
+        return TreePrinter.createDotOutput(root);
   }
 
     public static void useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
