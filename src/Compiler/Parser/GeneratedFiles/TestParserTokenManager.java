@@ -3,7 +3,6 @@
 package Compiler.Parser.GeneratedFiles;
 import Compiler.Parser.CustomVisitors.FunctionVisitor;
 import Compiler.Parser.CustomVisitors.PrintVisitor;
-import Compiler.Parser.whatever;
 import Compiler.SymbolTable.Table.SymbolTable;
 import java.io.BufferedReader;
 import java.io.File;

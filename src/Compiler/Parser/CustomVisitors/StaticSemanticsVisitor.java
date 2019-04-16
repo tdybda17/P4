@@ -2,13 +2,23 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
+import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
+import Compiler.Exceptions.Visitor.VisitorException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
+import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
+import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
@@ -17,6 +27,9 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Coll
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 import Compiler.SymbolTable.Table.SymbolTable;
+
+import java.util.List;
+import java.util.Optional;
 
 import java.util.*;
 
@@ -263,8 +276,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
         return defaultVisit(node, data);
-        //SymbolTable st = (SymbolTable) data;
-        //return ((IdentifierAttributes)st.retrieveSymbol(node.jjtGetValue().toString()).getAttributes()).getType();
     }
 
     @Override
@@ -414,7 +425,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
-        return node.jjtGetChild(0).jjtAccept(this, data);
+        return defaultVisit(node, data);
     }
 
     @Override
@@ -439,23 +450,123 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMEMBER node, Object data) {
-        if (node.jjtGetNumChildren() == 0)
-            return node.jjtGetChild(0).jjtAccept(this, data);
-        else {
+        TypeDescriptor memberType;
+        String identifier = getValueStringOfChild(node, 0);
+        if (data instanceof SymbolTable) {
             SymbolTable st = (SymbolTable) data;
-            Symbol symbol = st.retrieveSymbol(((SimpleNode)node.jjtGetChild(0)).jjtGetValue().toString());
-            return data;
+            Symbol symbol = st.retrieveSymbol(identifier);
+            memberType = getTypeForIdentifierSymbol(symbol);
+        }
+        else if (data instanceof TypeDescriptor) {
+            Field field = getFieldFromTypeDescriptor((TypeDescriptor) data, identifier);
+            memberType = field.getType();
+        }
+        else if (data instanceof FunctionAttributes) {
+            Field field = getFieldFromTypeDescriptor(((FunctionAttributes) data).getReturnType(), identifier);
+            memberType = field.getType();
+        }
+        else
+            throw new VisitorException("data in ASTMEMBER visitor method is of invalid type: " + data);
+
+        if (node.jjtGetNumChildren() > 1)
+            return node.jjtGetChild(1).jjtAccept(this, memberType);
+        else {
+            return memberType;
+        }
+    }
+
+    private Field getFieldFromTypeDescriptor(TypeDescriptor td, String identifier) {
+        if (td instanceof ClassTypeDescriptor) {
+            Optional<Field> field = ((ClassTypeDescriptor) td).getFields().stream().filter(e -> e.getFieldName().equals(identifier)).findAny();
+            if (field.isPresent())
+                return field.get();
+            else
+                throw new NoSuchFieldException(td, identifier);
+        }
+        else
+            throw new NoSuchFieldException(td, identifier);
+    }
+
+    private String getValueStringOfChild(Node node, int index) {
+        if (node.jjtGetNumChildren() <= index)
+            throw new VisitorException("Tried to get child with index " + index + " from an " + node.toString()
+                    + " node but it has " + node.jjtGetNumChildren() + " children");
+        else {
+            Object value = ((SimpleNode)node.jjtGetChild(index)).jjtGetValue();
+            if (value == null)
+                throw new VisitorException("Tried to get value of an " + node.jjtGetChild(index).toString() + " node but it has no value");
+            return value.toString();
         }
     }
 
     @Override
     public Object visit(ASTFUNC_CALL node, Object data) {
-        return defaultVisit(node, data);
+        FunctionAttributes attributes;
+        String identifier = getValueStringOfChild(node, 0);
+        if (data instanceof SymbolTable) {
+            SymbolTable st = (SymbolTable) data;
+            Symbol symbol = st.retrieveSymbol(identifier);
+            attributes = getFunctionAttributes(symbol);
+        } else if (data instanceof TypeDescriptor) {
+            Method method = getMethodFromTypeDescriptor((TypeDescriptor) data, identifier);
+            attributes = new FunctionAttributes(method.getReturnType(), method.getParameterTypes());
+        } else if (data instanceof FunctionAttributes) {
+            Method method = getMethodFromTypeDescriptor(((FunctionAttributes) data).getReturnType(), identifier);
+            attributes = new FunctionAttributes(method.getReturnType(), method.getParameterTypes());
+        } else
+            throw new VisitorException("data in FUNC_CALL visitor method is of invalid type: " + data);
+
+        node.jjtGetChild(1).jjtAccept(this, attributes); //type check parameters
+
+        if (node.jjtGetNumChildren() > 2)
+            return node.jjtGetChild(2).jjtAccept(this, attributes);
+        else {
+            return attributes.getReturnType();
+        }
+    }
+
+    private FunctionAttributes getFunctionAttributes(Symbol symbol) {
+        Attributes attributes = symbol.getAttributes();
+        if (attributes instanceof FunctionAttributes)
+            return (FunctionAttributes) attributes;
+        else
+            throw new NoSuchMethodException(symbol);
+    }
+
+    private Method getMethodFromTypeDescriptor(TypeDescriptor td, String id) {
+        if (td instanceof ClassTypeDescriptor) {
+            Optional<Method> method = ((ClassTypeDescriptor) td).getMethods().stream().filter(e -> e.getMethodName().equals(id)).findAny();
+            if (method.isPresent())
+                return method.get();
+            else
+                throw new NoSuchMethodException(td, id);
+        }
+        else
+            throw new NoSuchMethodException(td, id);
     }
 
     @Override
     public Object visit(ASTACTUAL_PARAMETERS node, Object data) {
-        return defaultVisit(node, data);
+        FunctionAttributes attributes = (FunctionAttributes) data;
+        List<TypeDescriptor> formalParameters = attributes.getParameterTypes();
+        int numActualParameters = node.jjtGetNumChildren();
+        if (formalParameters == null) {
+            if (numActualParameters == 0)
+                return data;
+            else
+                throw new UnmatchedParametersException("Error: Tried to pass parameters to the parameterless function");
+        }
+        else if (numActualParameters == formalParameters.size()) {
+            for (int i = 0; i < numActualParameters; i++) {
+                TypeDescriptor formalParameterType = formalParameters.get(i);
+                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
+                if (!formalParameterType.getTypeName().equals(actualParameterType.getTypeName()))
+                    throw new UnmatchedParametersException(formalParameterType, actualParameterType);
+            }
+            return data;
+        }
+        else
+            throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
     }
 
     @Override

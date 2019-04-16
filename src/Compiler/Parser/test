@@ -9,7 +9,10 @@ end
 
 
 function main()
-    sum.total = a().b.c().d
+    int num = a()
+
+    real weight = edg(1, 2.2).weight
+
     create Graph g
         a -- b
     end
@@ -28,8 +31,8 @@ function main()
     end
 end
 
-function no()
-    return
+int function a()
+    return 1
 end
 
 Vertex function yes(int a, real b)
