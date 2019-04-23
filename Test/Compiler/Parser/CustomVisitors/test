@@ -26,7 +26,7 @@ function main()
     end
 
     create Set<Vertex> vertices = g.vertices end
-    real weight = edg(1, 2.2).weight
+    //real weight = edg(1, 2.2).weight
 end
 
 int function foo(real a, real b)
