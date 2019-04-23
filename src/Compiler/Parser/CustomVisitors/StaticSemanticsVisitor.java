@@ -38,7 +38,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
         } else {
-            throw new IllegalTypeException("The given data object was not a TypeDescriptor");
+            throw new IllegalTypeException("The given data object was not a TypeDescriptor but instead was " + data);
         }
     }
 
@@ -133,11 +133,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private void checkSimpleDclInitialization(TypeDescriptor expectedType, Node initializationNode, Object data) {
-        //TODO: making it so that evaluations can be type checked
         TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-        if (!expectedType.equals(actualType)) {
-            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
-        }
+        typeCheck(expectedType.getClass(), actualType);
     }
 
 
@@ -283,13 +280,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(node.jjtGetNumChildren() != 2) {
             throw new WrongAmountOfChildrenException("The assignment node did not have two children");
         }
-        TypeDescriptor expectedType = convertToTypeDescriptor(node.jjtGetChild(0));
-        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(1));
-        if(expectedType.equals(actualType)) {
-            return null;
-        } else {
-            throw new IncorrectTypeException("The expected type: " + expectedType.getTypeName() + ", was not the same as the actual type: " + actualType.getTypeName());
-        }
+        Node leftNode = node.jjtGetChild(0);
+        Node rightNode = node.jjtGetChild(1);
+
+        TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, data));
+        TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, data));
+        typeCheck(expectedType.getClass(), actualType);
+        return null;
     }
 
     @Override
@@ -369,7 +366,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
         if (!expectedType.isInstance(actualType))
-            throw new IncorrectTypeException(expectedType.toString(), actualType.toString());
+            throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.toString());
     }
 
     @Override
@@ -425,7 +422,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
-        return defaultVisit(node, data);
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override

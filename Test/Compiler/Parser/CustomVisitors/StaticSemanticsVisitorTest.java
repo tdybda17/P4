@@ -1,7 +1,7 @@
 package Compiler.Parser.CustomVisitors;
 
-import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.DirectedEdgeTypeDescriptor;
@@ -28,14 +28,10 @@ class StaticSemanticsVisitorTest {
         staticSemanticsVisitor = new StaticSemanticsVisitor();
     }
 
+    //Testing that we can make a simple declaration with no initialization
     @Test
-    void visitInitializationNodeTest(){
-
-    }
-
-    @Test
-    void visitDeclarationNodeTest1() {
-        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "i");
+    void visitSimpleDeclarationNodeTest1() {
+        ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "i");
         staticSemanticsVisitor.visit(intDclNode, symbolTable);
 
         SymbolTable expected = new SymbolTable();
@@ -44,10 +40,12 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
+    //Testing that we can initialize a real with a real value
     @Test
-    void visitDeclarationNodeTest2() {
-        //TODO: opdater denne test til at inkludere en initilazation
-        ASTSIMPLE_DCL realDclNode = createDCLnode("real", "r");
+    void visitSimpleDeclarationNodeTest2() {
+        ASTSIMPLE_DCL realDclNode = createSimpleDCLnode("real", "r");
+        realDclNode.jjtAddChild(new ASTFNUM_VAL(2), 2);
+
         staticSemanticsVisitor.visit(realDclNode, symbolTable);
 
         SymbolTable expected = new SymbolTable();
@@ -56,7 +54,16 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
-    private ASTSIMPLE_DCL createDCLnode(String type, String id) {
+    //Testing that we cannot initialize an integer with a real value
+    @Test
+    void visitSimpleDeclarationNodeTest3() {
+        ASTSIMPLE_DCL realDclNode = createSimpleDCLnode("int", "i");
+        realDclNode.jjtAddChild(new ASTFNUM_VAL(2), 2);
+
+        assertThrows(IncorrectTypeException.class, () -> staticSemanticsVisitor.visit(realDclNode, symbolTable));
+    }
+
+    private ASTSIMPLE_DCL createSimpleDCLnode(String type, String id) {
         ASTSIMPLE_DCL dclNode = new ASTSIMPLE_DCL(1);
         ASTSIMPLE_TYPES simpleDataTypeNode = new ASTSIMPLE_TYPES(2);
         simpleDataTypeNode.jjtSetValue(type);
@@ -67,6 +74,20 @@ class StaticSemanticsVisitorTest {
         dclNode.jjtAddChild(simpleDataTypeNode,0);
         dclNode.jjtAddChild(identifierNode, 1);
         return dclNode;
+    }
+
+
+    @Test
+    void visitAssignNodeTest1(){
+        //SKAL HUSKE AT ENTER MINE SYMBOLER I SYMBOL TABLE FØRST
+    }
+
+    private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
+        ASTASSIGN assignmentNode = new ASTASSIGN(0);
+        assignmentNode.jjtAddChild(leftNode, 0);
+        assignmentNode.jjtAddChild(rightNode, 1);
+
+        return assignmentNode;
     }
 
     @Test
@@ -123,7 +144,7 @@ class StaticSemanticsVisitorTest {
     @Test
     void duplicateSymbolExceptionTest() throws Exception{
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
-        ASTSIMPLE_DCL intDclNode = createDCLnode("int", "a");
+        ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
         assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, symbolTable));
@@ -132,10 +153,10 @@ class StaticSemanticsVisitorTest {
     @Test
     void duplicateSymbolInDifferentScopesTest() throws Exception {
         ASTBLOCK block1 = new ASTBLOCK(0);
-        block1.jjtAddChild(createDCLnode("int", "a"), 0);
+        block1.jjtAddChild(createSimpleDCLnode("int", "a"), 0);
 
         ASTBLOCK block2 = new ASTBLOCK(1);
-        block2.jjtAddChild(createDCLnode("int", "a"), 0);
+        block2.jjtAddChild(createSimpleDCLnode("int", "a"), 0);
 
         staticSemanticsVisitor.visit(block1, symbolTable);
         assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, symbolTable));

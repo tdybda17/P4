@@ -2,31 +2,33 @@ function main()
     //int sum
     //boolean b
     //real r
-    //real x = 8.0 + 15.5 * true
+    real x = 8.0
 
+    x = 6.0 + 8.0
+    i = 5
     //Vertex A
     //Edge B
     //DiEdge C
 
-    create DiGraph testGraph
-        a -- b
-        b -- c
-        c -- a[9]
-    end
+    //create DiGraph testGraph
+    //    a -- b
+    //    b -- c
+    //    c -- a[9]
+    //end
 
-    create Graph g end
+    //create Graph g end
 
-    create Graph XYZ = g end
+    //create Graph XYZ = g end
 
-    create Stack<Stack<int>> S end
+    //create Stack<Stack<int>> S end
 
-    create Queue<real> Q
-        6.0
-        8.0
-    end
+    //create Queue<real> Q
+    //    6.0
+    //    8.0
+    //end
 
-    create Set<Vertex> vertices = g.vertices end
-    //real weight = edg(1, 2.2).weight
+    //create Set<Vertex> vertices = g.vertices end
+    real weight = edg(1, 2.2).weight
 end
 
 int function foo(real a, real b)

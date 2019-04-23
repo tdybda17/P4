@@ -79,7 +79,7 @@ public class SymbolTable implements ISymbolTable {
         Symbol symbol = hashMap.get(name);
         if(symbol!= null)
             return symbol;
-        else throw new SymbolTableException("The given name: " + name + ", could not be retrieved because no mapping from it exists");
+        else throw new SymbolTableException("The given identifier name: " + name + ", could not be retrieved because no mapping from it exists");
     }
 
     @Override
