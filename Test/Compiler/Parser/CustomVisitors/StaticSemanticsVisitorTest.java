@@ -1,6 +1,7 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
@@ -77,10 +78,61 @@ class StaticSemanticsVisitorTest {
     }
 
 
+    //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
     @Test
     void visitAssignNodeTest1(){
-        //SKAL HUSKE AT ENTER MINE SYMBOLER I SYMBOL TABLE FØRST
+        ASTMEMBER leftNode = new ASTMEMBER(0);
+        String identifierName = "x";
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
+        identifierNode.jjtSetValue(identifierName);
+        symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
+
+        leftNode.jjtAddChild(identifierNode, 0);
+
+        ASTINUM_VAL rightNode = new ASTINUM_VAL(2);
+        rightNode.jjtSetValue("6");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
     }
+
+    //We test that we cannot assign the wrong value type to an identifier
+    @Test
+    void visitAssignNodeTest2(){
+        ASTMEMBER leftNode = new ASTMEMBER(0);
+        String identifierName = "x";
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
+        identifierNode.jjtSetValue(identifierName);
+        leftNode.jjtAddChild(identifierNode, 0);
+        symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
+
+
+        ASTFNUM_VAL rightNode = new ASTFNUM_VAL(2);
+        rightNode.jjtSetValue("6.5");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
+    }
+
+    //We test that if our left node is not entered in the symbol table then the assignment throws an exception
+    @Test
+    void visitAssignNodeTest3(){
+        ASTMEMBER leftNode = new ASTMEMBER(0);
+        String identifierName = "x";
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
+        identifierNode.jjtSetValue(identifierName);
+        leftNode.jjtAddChild(identifierNode, 0);
+
+        ASTINUM_VAL rightNode = new ASTINUM_VAL(2);
+        rightNode.jjtSetValue("6");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
+    }
+
+    //We test that we cannot a
+
+
 
     private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
         ASTASSIGN assignmentNode = new ASTASSIGN(0);
