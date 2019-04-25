@@ -127,19 +127,16 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
                 TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
-                checkSimpleDclInitialization(expectedType, node.jjtGetChild(2), symbolTable);
+                Node initializationNode = node.jjtGetChild(2);
+
+                TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+                typeCheck(expectedType.getClass(), actualType);
             }
             return null;
         } else {
             throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
         }
     }
-
-    private void checkSimpleDclInitialization(TypeDescriptor expectedType, Node initializationNode, Object data) {
-        TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-        typeCheck(expectedType.getClass(), actualType);
-    }
-
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
@@ -595,7 +592,19 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTWEIGHT node, Object data) {
-        return defaultVisit(node, data);
+        if(node.jjtGetNumChildren() == 0) {
+            return defaultVisit(node, data);
+        } else if (node.jjtGetNumChildren() == 1) {
+            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+            try {
+                typeCheck(RealTypeDescriptor.class, actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
+            }
+            return null;
+        } else {
+            throw new WrongAmountOfChildrenException("The weight node had a wrong amount of children, which was: " + node.jjtGetNumChildren());
+        }
     }
 
     @Override

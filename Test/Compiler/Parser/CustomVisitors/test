@@ -15,6 +15,7 @@ function main()
         a -- b
         b -- c
         c -- a[9]
+        d -- a[foo(3.0,3.0)]
     end
 
     //create Graph g end
