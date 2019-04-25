@@ -7,7 +7,7 @@ function main()
     test() = 7
 
     i = foo(3.0, 7.0)
-    i = foo(x, x)
+    //i = foo(x, x)
 
     //foo(x, x) = 100
 

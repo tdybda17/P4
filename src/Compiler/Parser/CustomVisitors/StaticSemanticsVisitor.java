@@ -119,7 +119,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     //We open a new scope each time we meet a block node and then we close it right after the block is done
     @Override
     public Object visit(ASTBLOCK node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
         //System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
@@ -129,7 +128,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
             Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
@@ -156,8 +154,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) { //TODO: Opdater denne til intialization
         if(node.jjtGetNumChildren() == 2) {
             symbolTable.enterSymbol(createSymbolFromDclNode(node, data));
         } else {
@@ -173,7 +170,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
             Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
@@ -421,7 +417,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        return !expectedType.getClass().isInstance(actualType);
+        return expectedType.getClass().isInstance(actualType);
     }
 
     @Override

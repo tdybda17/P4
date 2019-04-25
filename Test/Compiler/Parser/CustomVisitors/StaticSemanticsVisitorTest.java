@@ -28,7 +28,7 @@ class StaticSemanticsVisitorTest {
         symbolTable = new SymbolTable();
         symbolTable.openScope();
 
-        staticSemanticsVisitor = new StaticSemanticsVisitor();
+        staticSemanticsVisitor = new StaticSemanticsVisitor(symbolTable);
     }
 
     //Testing that we can make a simple declaration with no initialization
@@ -78,7 +78,6 @@ class StaticSemanticsVisitorTest {
         dclNode.jjtAddChild(identifierNode, 1);
         return dclNode;
     }
-
 
     //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
     @Test
@@ -221,7 +220,7 @@ class StaticSemanticsVisitorTest {
         assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, symbolTable));
     }
 
-    ASTGRAPH_DCL createGraphDclNode(String graphType, String identifier, ASTGRAPH_DCL_ELEMENTS graphDclElementsNode){
+    private ASTGRAPH_DCL createGraphDclNode(String graphType, String identifier, ASTGRAPH_DCL_ELEMENTS graphDclElementsNode){
         ASTGRAPH_DCL graphDclNode = new ASTGRAPH_DCL(0);
 
         ASTGRAPH_TYPE graphTypeNode = new ASTGRAPH_TYPE(1);
@@ -236,7 +235,7 @@ class StaticSemanticsVisitorTest {
         return graphDclNode;
     }
 
-    ASTGRAPH_VERTEX_DCL createVertexDclNode(String firstVertex, String secondVertex, ASTWEIGHT weightNode) {
+    private ASTGRAPH_VERTEX_DCL createVertexDclNode(String firstVertex, String secondVertex, ASTWEIGHT weightNode) {
         ASTGRAPH_VERTEX_DCL vertexDclNode = new ASTGRAPH_VERTEX_DCL(0);
 
         ASTIDENTIFIER firstVertexIdentifierNode = new ASTIDENTIFIER(1);
