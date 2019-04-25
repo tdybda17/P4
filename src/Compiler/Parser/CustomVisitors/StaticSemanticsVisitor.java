@@ -373,7 +373,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_TYPE node, Object data) {
+    public Object visit(ASTCOLLECTION_TYPE node, Object data) { //TODO: få lavet så man kan lave med initialization
         SimpleNode collectionTypeNode = convertToSimpleNode(node);
 
         TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());

@@ -1,5 +1,6 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
@@ -10,6 +11,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Grap
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.VertexTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -193,15 +195,63 @@ class StaticSemanticsVisitorTest {
         return dclNode;
     }
 
+    //We test that we cannot add an edge from a to b twice in the same graph.
     @Test
-    void graphDeclarationElementsDirectedDuplicateEdgeTest(){
-        //TODO: få lavet
+    void DirectedGraphDuplicateEdgeTest(){
+        ASTGRAPH_DCL_ELEMENTS graphDclElementsNode = new ASTGRAPH_DCL_ELEMENTS(0);
+        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 0);
+        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 1);
+
+
+        ASTGRAPH_DCL graphDclNode = createGraphDclNode("DiGraph", "testDiGraph", graphDclElementsNode);
+
+        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, symbolTable));
     }
 
+    //We test that we cannot add both a to b and b to a in an undirected graph
     @Test
     void graphDeclarationElementsUndirectedDuplicateEdgeTest(){
-        //TODO: få lavet
+        ASTGRAPH_DCL_ELEMENTS graphDclElementsNode = new ASTGRAPH_DCL_ELEMENTS(0);
+        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 0);
+        graphDclElementsNode.jjtAddChild(createVertexDclNode("b", "a", new ASTWEIGHT(0)), 1);
+
+
+        ASTGRAPH_DCL graphDclNode = createGraphDclNode("Graph", "testGraph", graphDclElementsNode);
+
+        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, symbolTable));
     }
+
+    ASTGRAPH_DCL createGraphDclNode(String graphType, String identifier, ASTGRAPH_DCL_ELEMENTS graphDclElementsNode){
+        ASTGRAPH_DCL graphDclNode = new ASTGRAPH_DCL(0);
+
+        ASTGRAPH_TYPE graphTypeNode = new ASTGRAPH_TYPE(1);
+        graphTypeNode.jjtSetValue(graphType);
+        graphDclNode.jjtAddChild(graphTypeNode, 0);
+
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(2);
+        identifierNode.jjtSetValue(identifier);
+        graphDclNode.jjtAddChild(identifierNode, 1);
+
+        graphDclNode.jjtAddChild(graphDclElementsNode, 2);
+        return graphDclNode;
+    }
+
+    ASTGRAPH_VERTEX_DCL createVertexDclNode(String firstVertex, String secondVertex, ASTWEIGHT weightNode) {
+        ASTGRAPH_VERTEX_DCL vertexDclNode = new ASTGRAPH_VERTEX_DCL(0);
+
+        ASTIDENTIFIER firstVertexIdentifierNode = new ASTIDENTIFIER(1);
+        firstVertexIdentifierNode.jjtSetValue(firstVertex);
+        vertexDclNode.jjtAddChild(firstVertexIdentifierNode, 0);
+
+        ASTIDENTIFIER secondVertexIdentifierNode = new ASTIDENTIFIER(2);
+        secondVertexIdentifierNode.jjtSetValue(secondVertex);
+        vertexDclNode.jjtAddChild(secondVertexIdentifierNode, 1);
+
+        vertexDclNode.jjtAddChild(weightNode, 2);
+        return vertexDclNode;
+    }
+
+
 
 
 
