@@ -23,9 +23,9 @@ function main()
 
     //testGraph.vertices = 8.0
 
-    //create Graph g end
+    create Graph g end
 
-    //create Graph XYZ = g end
+    create Graph XYZ = g end
 
     //create Stack<Stack<int>> S end
 
@@ -51,4 +51,7 @@ end
 
 Edge function edg(int a, real b)
 
+end
+
+Graph function createGraph()
 end

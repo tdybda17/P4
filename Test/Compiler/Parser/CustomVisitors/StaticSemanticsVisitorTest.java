@@ -260,6 +260,8 @@ class StaticSemanticsVisitorTest {
         assertThrows(IncorrectTypeException.class, ()-> staticSemanticsVisitor.visit(createVertexDclNode("a", "b", weight), null));
     }
 
+    //TODO: mangler test med GraphAssign
+
     @Test
     void duplicateSymbolExceptionTest() throws Exception{
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");

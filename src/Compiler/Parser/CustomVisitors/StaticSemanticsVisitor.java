@@ -196,6 +196,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
             }
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
+            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, symbolTable));
+            try {
+                typeCheck(graphType.getClass(), actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("You had a graph of type \'" + graphType + "\' but tried to declare it with a value of the type \'" + actualType + "\'");
+            }
             return initializationNode.jjtAccept(this, symbolTable);
         } else {
             throw new IllegalTypeException("The node use for initialization of your graph dcl was not an correct type");
@@ -305,11 +311,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-
     @Override
     public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        //TODO: få lavet denne
-        return defaultVisit(node, data);
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
