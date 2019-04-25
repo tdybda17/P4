@@ -130,9 +130,6 @@ class StaticSemanticsVisitorTest {
         assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
     }
 
-    //We test that we cannot a
-
-
 
     private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
         ASTASSIGN assignmentNode = new ASTASSIGN(0);
@@ -142,9 +139,10 @@ class StaticSemanticsVisitorTest {
         return assignmentNode;
     }
 
+    //We try creating an Edge object and tests that it gets entered into the symbol table
     @Test
     void visitGraphElementDeclarationNodeTest1(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("Edge", "a");
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Edge", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
 
@@ -154,10 +152,10 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
+    //Testing that we can also create DiEdge objects
     @Test
     void visitGraphElementDeclarationNodeTest2(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
-
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
 
@@ -167,9 +165,10 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
+    //Testing that we can also create Vertex objects.
     @Test
     void visitGraphElementDeclarationNodeTest3(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("Vertex", "a");
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Vertex", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
 
@@ -179,7 +178,7 @@ class StaticSemanticsVisitorTest {
         assertEquals(expected, symbolTable);
     }
 
-    private ASTGRAPH_ELEMENT_DCL createGraphElementDCLnode(String type, String id) {
+    private ASTGRAPH_ELEMENT_DCL createGraphElementDclNode(String type, String id) {
         ASTGRAPH_ELEMENT_DCL dclNode = new ASTGRAPH_ELEMENT_DCL(1);
         ASTGRAPH_ELEMENT_TYPES graph_element_types = new ASTGRAPH_ELEMENT_TYPES(2);
 
@@ -188,14 +187,27 @@ class StaticSemanticsVisitorTest {
         ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(3);
         identifierNode.jjtSetValue(id);
 
+        //We set the type to be the first child of our graph element dcl node, and the id to be the second child
         dclNode.jjtAddChild(graph_element_types, 0);
         dclNode.jjtAddChild(identifierNode, 1);
         return dclNode;
     }
 
     @Test
+    void graphDeclarationElementsDirectedDuplicateEdgeTest(){
+        //TODO: få lavet
+    }
+
+    @Test
+    void graphDeclarationElementsUndirectedDuplicateEdgeTest(){
+        //TODO: få lavet
+    }
+
+
+
+    @Test
     void duplicateSymbolExceptionTest() throws Exception{
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDCLnode("DiEdge", "a");
+        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
@@ -214,15 +226,6 @@ class StaticSemanticsVisitorTest {
         assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, symbolTable));
     }
 
-    @Test
-    void graphDeclarationElementsDirectedDuplicateEdgeTest(){
-        //TODO: få lavet
-    }
-
-    @Test
-    void graphDeclarationElementsUndirectedDuplicateEdgeTest(){
-        //TODO: få lavet
-    }
 
     @Test
     void visit1() throws Exception {

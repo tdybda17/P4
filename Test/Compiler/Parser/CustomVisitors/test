@@ -3,6 +3,7 @@ function main()
     //boolean b
     //real r
     real x = 8.0
+    int i
 
     x = 6.0 + 8.0
     i = 5
@@ -10,11 +11,11 @@ function main()
     //Edge B
     //DiEdge C
 
-    //create DiGraph testGraph
-    //    a -- b
-    //    b -- c
-    //    c -- a[9]
-    //end
+    create DiGraph testGraph
+        a -- b
+        b -- c
+        c -- a[9]
+    end
 
     //create Graph g end
 

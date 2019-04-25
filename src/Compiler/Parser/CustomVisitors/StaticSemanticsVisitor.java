@@ -4,7 +4,6 @@ import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
-import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Exceptions.Visitor.VisitorException;
@@ -72,7 +71,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return data;
     }
 
-    private TypeDescriptor getTypeDescriptor(Object node){
+    //We get the value from the type node and convert it to a type descriptor
+    private TypeDescriptor getTypeDescriptorFromTypeNode(Object node){
         if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_ELEMENT_TYPES | node instanceof ASTGRAPH_TYPE) {
             SimpleNode simpleNode = convertToSimpleNode(node);
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
@@ -82,6 +82,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
+    //This is a help method to make it easier and more secure to get the type of an identifier symbol.
     private TypeDescriptor getTypeForIdentifierSymbol(Symbol symbol) {
         if (symbol.getAttributes() instanceof IdentifierAttributes) {
             IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
@@ -91,16 +92,18 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private Symbol createSymbolFromDCLnode(Node dclNode, Object data) {
+    //This is a helping method used to create symbols from our declaration nodes
+    private Symbol createSymbolFromDclNode(Node dclNode, Object data) {
         if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
+            //The first child of our dcl nodes is always their type, which we can then call the visit method on to get the child.
             Node typeNode = dclNode.jjtGetChild(0);
-            //We call the visit method for the simple data type node to get the type descriptor
             TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
 
+            //The second child is the the identifier of our declaration
             String id = getIdentifierName(dclNode.jjtGetChild(1));
             return new Symbol(id, new IdentifierAttributes(type));
         } else {
-            throw new IllegalArgumentException("The given node was not an DCL, GRAPH_DCL or GRAPH_ELEMENT_DCL node");
+            throw new IllegalArgumentException("The given node was not an SIMPLE_DCL, GRAPH_DCL, COLLECTION_ADT or GRAPH_ELEMENT_DCL node");
         }
     }
 
@@ -120,7 +123,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTSIMPLE_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDCLnode(node, data);
+            Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
                 TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
@@ -140,14 +143,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        return getTypeDescriptor(node);
+        return getTypeDescriptorFromTypeNode(node);
     }
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromDCLnode(node, data));
+            symbolTable.enterSymbol(createSymbolFromDclNode(node, data));
         } else {
             throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
         }
@@ -156,16 +159,15 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
-        return getTypeDescriptor(node);
+        return getTypeDescriptorFromTypeNode(node);
     }
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDCLnode(node, data);
+            Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
-
             if(node.jjtGetNumChildren() == 3) {
                 Node initializationNode = node.jjtGetChild(2);
                 checkGraphDclInitialization(initializationNode, symbol, symbolTable);
@@ -184,7 +186,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
                 visitUndirectedGraphInitialization(initializationNode);
             } else {
-                throw new IllegalTypeException("Your graph was neither of the type directed or undirected");
+                throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
             }
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
             initializationNode.jjtAccept(this, symbolTable);
@@ -194,7 +196,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private void visitDirectedGraphInitialization(Node initializationNode){
-        Map<String, List<String>> allVertexDcls = new HashMap<>();
+        Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
             Node child = initializationNode.jjtGetChild(i);
@@ -203,12 +205,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
             String firstVertex = vertexPair.get(0);
             String secondVertex = vertexPair.get(1);
-            addVertexToVertexDcls(allVertexDcls, firstVertex, secondVertex);
+            addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
         }
     }
 
     private void visitUndirectedGraphInitialization(Node initializationNode){
-        Map<String, List<String>> allVertexDcls = new HashMap<>();
+        Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
             Node child = initializationNode.jjtGetChild(i);
@@ -216,23 +218,23 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             List<String> vertexPair = getVertexPair(child);
             String firstVertex = vertexPair.get(0);
             String secondVertex = vertexPair.get(1);
-            addVertexToVertexDcls(allVertexDcls, firstVertex, secondVertex);
-            addVertexToVertexDcls(allVertexDcls, secondVertex, firstVertex);
+            addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
+            addVertexPairToGraph(verticesInGraph, secondVertex, firstVertex);
         }
     }
 
-    private void addVertexToVertexDcls(Map<String, List<String>> allVertexDcls, String key, String value) {
-        if(allVertexDcls.containsKey(key)) {
-            List<String> neighbours = allVertexDcls.get(key);
+    private void addVertexPairToGraph(Map<String, List<String>> verticesInGraph, String key, String value) {
+        if(verticesInGraph.containsKey(key)) {
+            List<String> neighbours = verticesInGraph.get(key);
             if(neighbours.contains(value)) {
                 throw new DuplicateEdgeException("You tried to add more than one edge from " + key + " to " + value);
             }
             neighbours.add(value);
-            allVertexDcls.put(key, neighbours);
+            verticesInGraph.put(key, neighbours);
         } else {
             List<String> neighbours = new ArrayList<>();
             neighbours.add(value);
-            allVertexDcls.put(key, neighbours);
+            verticesInGraph.put(key, neighbours);
         }
     }
 
@@ -254,7 +256,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
-        return getTypeDescriptor(node);
+        return getTypeDescriptorFromTypeNode(node);
     }
 
     @Override
@@ -640,7 +642,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
         SymbolTable symbolTable = convertToSymbolTable(data);
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDCLnode(node, data);
+            Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
 
             if(node.jjtGetNumChildren() == 3) {
