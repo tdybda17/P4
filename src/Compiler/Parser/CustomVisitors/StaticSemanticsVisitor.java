@@ -114,7 +114,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         SymbolTable symbolTable = convertToSymbolTable(data);
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
+        //System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
         symbolTable.closeScope();
         return null;
     }
@@ -130,9 +130,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 Node initializationNode = node.jjtGetChild(2);
 
                 TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-                typeCheck(expectedType.getClass(), actualType);
+                try {
+                    typeCheck(expectedType.getClass(), actualType);
+                } catch (IncorrectTypeException e) {
+                    throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
+                }
             }
-            return null;
+            return defaultVisit(node, data);
         } else {
             throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
         }
@@ -167,32 +171,34 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
                 Node initializationNode = node.jjtGetChild(2);
-                checkGraphDclInitialization(initializationNode, symbol, symbolTable);
+                return checkGraphDclInitialization(initializationNode, symbol, symbolTable);
+            } else  {
+                return defaultVisit(node, data);
             }
         } else {
             throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
         }
-        return defaultVisit(node, data);
+
     }
 
-    private void checkGraphDclInitialization(Node initializationNode, Symbol symbol, SymbolTable symbolTable) {
+    private Object checkGraphDclInitialization(Node initializationNode, Symbol symbol, SymbolTable symbolTable) {
         if(initializationNode instanceof ASTGRAPH_DCL_ELEMENTS) {
             TypeDescriptor graphType = getTypeForIdentifierSymbol(symbol);
             if(graphType instanceof DirectedGraphTypeDescriptor) {
-                visitDirectedGraphInitialization(initializationNode);
+                return visitDirectedGraphInitialization(initializationNode, symbolTable);
             } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
-                visitUndirectedGraphInitialization(initializationNode);
+                return visitUndirectedGraphInitialization(initializationNode, symbolTable);
             } else {
                 throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
             }
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
-            initializationNode.jjtAccept(this, symbolTable);
+            return initializationNode.jjtAccept(this, symbolTable);
         } else {
             throw new IllegalTypeException("The node use for initialization of your graph dcl was not an correct type");
         }
     }
 
-    private void visitDirectedGraphInitialization(Node initializationNode){
+    private Object visitDirectedGraphInitialization(Node initializationNode, SymbolTable symbolTable){
         Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
@@ -204,9 +210,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             String secondVertex = vertexPair.get(1);
             addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
         }
+
+        //We run through all the children to check the weights
+        return initializationNode.jjtAccept(this, symbolTable);
     }
 
-    private void visitUndirectedGraphInitialization(Node initializationNode){
+    private Object visitUndirectedGraphInitialization(Node initializationNode, SymbolTable symbolTable){
         Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
@@ -218,6 +227,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
             addVertexPairToGraph(verticesInGraph, secondVertex, firstVertex);
         }
+
+        //We run through all the children to check the weights
+        return initializationNode.jjtAccept(this, symbolTable);
     }
 
     private void addVertexPairToGraph(Map<String, List<String>> verticesInGraph, String key, String value) {
@@ -258,16 +270,42 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
+        //We just visit all the children of the graph dcl
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
+        if(node.jjtGetNumChildren() != 3) {
+            throw new WrongAmountOfChildrenException("One of your vertex specifications in your graph constructor did not have 3 children but instead had: " + node.jjtGetNumChildren());
+        } else {
+            Node weightNode = node.jjtGetChild(2);
+            return weightNode.jjtAccept(this, data);
+        }
+    }
+
+    @Override
+    public Object visit(ASTWEIGHT node, Object data) {
+        if(node.jjtGetNumChildren() == 0) {
+            return defaultVisit(node, data);
+        } else if (node.jjtGetNumChildren() == 1) {
+            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+            try {
+                typeCheck(RealTypeDescriptor.class, actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
+            }
+            return defaultVisit(node, data);
+        } else {
+            throw new WrongAmountOfChildrenException("The weight node had a wrong amount of children, which was: " + node.jjtGetNumChildren());
+        }
     }
 
 
     @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
+    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
         return defaultVisit(node, data);
     }
-
-
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
@@ -284,8 +322,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
         TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, data));
         TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, data));
-        typeCheck(expectedType.getClass(), actualType);
-        return null;
+        try {
+            typeCheck(expectedType.getClass(), actualType);
+        } catch (IncorrectTypeException e) {
+            //TODO: få navnet ud af venstre node
+            throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead fo the expected type \'" + expectedType + "\'");
+        }
+        return defaultVisit(node, data);
     }
 
     @Override
@@ -576,11 +619,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTVERTEX_LIST node, Object data) {
         return defaultVisit(node, data);
     }
@@ -588,23 +626,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTVERTEX node, Object data) {
         return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
-        if(node.jjtGetNumChildren() == 0) {
-            return defaultVisit(node, data);
-        } else if (node.jjtGetNumChildren() == 1) {
-            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
-            try {
-                typeCheck(RealTypeDescriptor.class, actualType);
-            } catch (IncorrectTypeException e) {
-                throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
-            }
-            return null;
-        } else {
-            throw new WrongAmountOfChildrenException("The weight node had a wrong amount of children, which was: " + node.jjtGetNumChildren());
-        }
     }
 
     @Override

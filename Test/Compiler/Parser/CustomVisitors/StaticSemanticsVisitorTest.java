@@ -226,19 +226,19 @@ class StaticSemanticsVisitorTest {
         assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, symbolTable));
     }
 
-
     @Test
-    void visit1() throws Exception {
-        String path = "Test/Compiler/Parser/CustomVisitors/test";
-        System.out.println(TestParser.parseTextFile(path));
-    }
-
-    @Test
-    void visit2() throws Exception{
+    void visit1() throws Exception{
         String path = "Test/Compiler/Parser/CustomVisitors/test";
         //We use the function visitor to fill up our symbol table with functions
         TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
 
         TestParser.useVisitorMethod(staticSemanticsVisitor, path, symbolTable);
     }
+
+    @Test
+    void visit2() throws Exception {
+        String path = "Test/Compiler/Parser/CustomVisitors/test";
+        System.out.println(TestParser.parseTextFile(path));
+    }
+
 }

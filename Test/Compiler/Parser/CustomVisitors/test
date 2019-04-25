@@ -1,22 +1,26 @@
 function main()
-    //int sum
-    //boolean b
-    //real r
-    real x = 8.0
+    real x = 7.8
     int i
 
     x = 6.0 + 8.0
-    i = 5
-    //Vertex A
-    //Edge B
-    //DiEdge C
+
+    test() = 7
+
+    i = foo(3.0, 7.0)
+    i = foo(x, x)
+
+    //foo(x, x) = 100
+
+    //bar() = 8.0
 
     create DiGraph testGraph
         a -- b
         b -- c
-        c -- a[9]
-        d -- a[foo(3.0,3.0)]
+        c -- a[9.0]
+        //d -- a[foo(3.0,3.0)]
     end
+
+    //testGraph.vertices = 8.0
 
     //create Graph g end
 
@@ -31,6 +35,9 @@ function main()
 
     //create Set<Vertex> vertices = g.vertices end
     real weight = edg(1, 2.2).weight
+end
+
+int function test()
 end
 
 int function foo(real a, real b)
