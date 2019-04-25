@@ -304,6 +304,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ASSIGN node, Object data) {
+        //TODO: få lavet denne
         return defaultVisit(node, data);
     }
 
@@ -313,7 +314,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTASSIGN node, Object data) { //TODO: Få lavet denne
+    public Object visit(ASTASSIGN node, Object data) {
         if(node.jjtGetNumChildren() != 2) {
             throw new WrongAmountOfChildrenException("The assignment node did not have two children");
         }
@@ -326,7 +327,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             typeCheck(expectedType.getClass(), actualType);
         } catch (IncorrectTypeException e) {
             //TODO: få navnet ud af venstre node
-            throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead fo the expected type \'" + expectedType + "\'");
+            throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead of the expected type \'" + expectedType + "\'");
         }
         return defaultVisit(node, data);
     }
