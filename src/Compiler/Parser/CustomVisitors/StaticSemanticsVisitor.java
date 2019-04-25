@@ -154,7 +154,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) { //TODO: Opdater denne til intialization
+    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         if(node.jjtGetNumChildren() == 2) {
             symbolTable.enterSymbol(createSymbolFromDclNode(node, data));
         } else {
@@ -175,7 +175,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             symbolTable.enterSymbol(symbol);
             if(node.jjtGetNumChildren() == 3) {
                 Node initializationNode = node.jjtGetChild(2);
-                return checkGraphDclInitialization(initializationNode, symbol, symbolTable);
+                return checkGraphDclInitialization(initializationNode, symbol);
             } else  {
                 return defaultVisit(node, data);
             }
@@ -185,13 +185,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     }
 
-    private Object checkGraphDclInitialization(Node initializationNode, Symbol symbol, SymbolTable symbolTable) {
+    private Object checkGraphDclInitialization(Node initializationNode, Symbol symbol) {
+        TypeDescriptor graphType = getTypeForIdentifierSymbol(symbol);
         if(initializationNode instanceof ASTGRAPH_DCL_ELEMENTS) {
-            TypeDescriptor graphType = getTypeForIdentifierSymbol(symbol);
             if(graphType instanceof DirectedGraphTypeDescriptor) {
-                return visitDirectedGraphInitialization(initializationNode, symbolTable);
+                return visitDirectedGraphInitialization(initializationNode);
             } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
-                return visitUndirectedGraphInitialization(initializationNode, symbolTable);
+                return visitUndirectedGraphInitialization(initializationNode);
             } else {
                 throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
             }
@@ -202,7 +202,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private Object visitDirectedGraphInitialization(Node initializationNode, SymbolTable symbolTable){
+    private Object visitDirectedGraphInitialization(Node initializationNode){
         Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
@@ -219,7 +219,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return initializationNode.jjtAccept(this, symbolTable);
     }
 
-    private Object visitUndirectedGraphInitialization(Node initializationNode, SymbolTable symbolTable){
+    private Object visitUndirectedGraphInitialization(Node initializationNode){
         Map<String, List<String>> verticesInGraph = new HashMap<>();
 
         for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
@@ -333,7 +333,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             //TODO: få navnet ud af venstre node
             throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead of the expected type \'" + expectedType + "\'");
         }
-        return defaultVisit(node, data);
+        return null;
     }
 
     @Override

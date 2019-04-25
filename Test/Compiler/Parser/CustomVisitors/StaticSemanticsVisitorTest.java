@@ -35,7 +35,7 @@ class StaticSemanticsVisitorTest {
     @Test
     void visitSimpleDeclarationNodeTest1() {
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "i");
-        staticSemanticsVisitor.visit(intDclNode, symbolTable);
+        staticSemanticsVisitor.visit(intDclNode, null);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
@@ -49,7 +49,7 @@ class StaticSemanticsVisitorTest {
         ASTSIMPLE_DCL realDclNode = createSimpleDCLnode("real", "r");
         realDclNode.jjtAddChild(new ASTFNUM_VAL(2), 2);
 
-        staticSemanticsVisitor.visit(realDclNode, symbolTable);
+        staticSemanticsVisitor.visit(realDclNode, null);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
@@ -63,7 +63,7 @@ class StaticSemanticsVisitorTest {
         ASTSIMPLE_DCL realDclNode = createSimpleDCLnode("int", "i");
         realDclNode.jjtAddChild(new ASTFNUM_VAL(2), 2);
 
-        assertThrows(IncorrectTypeException.class, () -> staticSemanticsVisitor.visit(realDclNode, symbolTable));
+        assertThrows(IncorrectTypeException.class, () -> staticSemanticsVisitor.visit(realDclNode, null));
     }
 
     private ASTSIMPLE_DCL createSimpleDCLnode(String type, String id) {
@@ -86,15 +86,15 @@ class StaticSemanticsVisitorTest {
         String identifierName = "x";
         ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
         identifierNode.jjtSetValue(identifierName);
+        leftNode.jjtAddChild(identifierNode, 0);
         symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
 
-        leftNode.jjtAddChild(identifierNode, 0);
 
         ASTINUM_VAL rightNode = new ASTINUM_VAL(2);
         rightNode.jjtSetValue("6");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
+        assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, null));
     }
 
     //We test that we cannot assign the wrong value type to an identifier
@@ -107,12 +107,11 @@ class StaticSemanticsVisitorTest {
         leftNode.jjtAddChild(identifierNode, 0);
         symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
 
-
         ASTFNUM_VAL rightNode = new ASTFNUM_VAL(2);
         rightNode.jjtSetValue("6.5");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
+        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
     }
 
     //We test that if our left node is not entered in the symbol table then the assignment throws an exception
@@ -128,7 +127,7 @@ class StaticSemanticsVisitorTest {
         rightNode.jjtSetValue("6");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, symbolTable));
+        assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
     }
 
 
@@ -145,7 +144,7 @@ class StaticSemanticsVisitorTest {
     void visitGraphElementDeclarationNodeTest1(){
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Edge", "a");
 
-        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+        staticSemanticsVisitor.visit(edgeDclNode, null);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
@@ -158,7 +157,7 @@ class StaticSemanticsVisitorTest {
     void visitGraphElementDeclarationNodeTest2(){
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");
 
-        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+        staticSemanticsVisitor.visit(edgeDclNode, null);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
@@ -171,7 +170,7 @@ class StaticSemanticsVisitorTest {
     void visitGraphElementDeclarationNodeTest3(){
         ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Vertex", "a");
 
-        staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
+        staticSemanticsVisitor.visit(edgeDclNode, null);
 
         SymbolTable expected = new SymbolTable();
         expected.openScope();
@@ -204,12 +203,12 @@ class StaticSemanticsVisitorTest {
 
         ASTGRAPH_DCL graphDclNode = createGraphDclNode("DiGraph", "testDiGraph", graphDclElementsNode);
 
-        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, symbolTable));
+        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, null));
     }
 
     //We test that we cannot add both a to b and b to a in an undirected graph
     @Test
-    void graphDeclarationElementsUndirectedDuplicateEdgeTest(){
+    void UndirectedGraphDuplicateEdgeTest(){
         ASTGRAPH_DCL_ELEMENTS graphDclElementsNode = new ASTGRAPH_DCL_ELEMENTS(0);
         graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 0);
         graphDclElementsNode.jjtAddChild(createVertexDclNode("b", "a", new ASTWEIGHT(0)), 1);
@@ -217,7 +216,7 @@ class StaticSemanticsVisitorTest {
 
         ASTGRAPH_DCL graphDclNode = createGraphDclNode("Graph", "testGraph", graphDclElementsNode);
 
-        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, symbolTable));
+        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, null));
     }
 
     private ASTGRAPH_DCL createGraphDclNode(String graphType, String identifier, ASTGRAPH_DCL_ELEMENTS graphDclElementsNode){
@@ -250,9 +249,16 @@ class StaticSemanticsVisitorTest {
         return vertexDclNode;
     }
 
+    @Test
+    void incorrectWeightType(){
+        ASTWEIGHT weight = new ASTWEIGHT(0);
+        ASTBOOL_VAL boolValNode = new ASTBOOL_VAL(1);
+        boolValNode.jjtSetValue("true");
+        weight.jjtAddChild(boolValNode, 0);
 
 
-
+        assertThrows(IncorrectTypeException.class, ()-> staticSemanticsVisitor.visit(createVertexDclNode("a", "b", weight), null));
+    }
 
     @Test
     void duplicateSymbolExceptionTest() throws Exception{
@@ -260,7 +266,7 @@ class StaticSemanticsVisitorTest {
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
-        assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, symbolTable));
+        assertThrows(DuplicateSymbolError.class, () -> staticSemanticsVisitor.visit(intDclNode, null));
     }
 
     @Test
@@ -272,7 +278,7 @@ class StaticSemanticsVisitorTest {
         block2.jjtAddChild(createSimpleDCLnode("int", "a"), 0);
 
         staticSemanticsVisitor.visit(block1, symbolTable);
-        assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, symbolTable));
+        assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, null));
     }
 
     @Test
