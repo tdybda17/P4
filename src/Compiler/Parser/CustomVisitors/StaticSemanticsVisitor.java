@@ -326,7 +326,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         Node rightNode = node.jjtGetChild(1);
 
         TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, symbolTable));
-        TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, data));
+        TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, symbolTable));
         try {
             typeCheck(expectedType.getClass(), actualType);
         } catch (IncorrectTypeException e) {
