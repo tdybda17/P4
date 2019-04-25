@@ -11,6 +11,9 @@ end
 function main()
     int num = a()
 
+
+    i = foo(x, x)
+
     real weight = edg(1, 2.2).weight
 
     create Graph g

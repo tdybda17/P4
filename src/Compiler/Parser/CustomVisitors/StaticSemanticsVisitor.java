@@ -25,6 +25,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 import java.util.List;
@@ -33,6 +34,13 @@ import java.util.Optional;
 import java.util.*;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
+    private SymbolTable symbolTable;
+    private Method currentMethod;
+
+    public StaticSemanticsVisitor(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
     private TypeDescriptor convertToTypeDescriptor(Object data){
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
@@ -409,7 +417,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
         if (!expectedType.isInstance(actualType))
-            throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.toString());
+            throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.getClass().getSimpleName());
+    }
+
+    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        return !expectedType.getClass().isInstance(actualType);
     }
 
     @Override
@@ -599,7 +611,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         else if (numActualParameters == formalParameters.size()) {
             for (int i = 0; i < numActualParameters; i++) {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
-                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
+                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data); // The data should be SymbolTable
                 if (!formalParameterType.getTypeName().equals(actualParameterType.getTypeName()))
                     throw new UnmatchedParametersException(formalParameterType, actualParameterType);
             }
@@ -611,6 +623,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
+        currentMethod = new Method("main", new VoidTypeDescriptor(), new ArrayList<>());
+
         return defaultVisit(node, data);
     }
 
@@ -666,7 +680,23 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTRETURN_STMT node, Object data) {
-        return defaultVisit(node, data);
+        if (node.jjtGetNumChildren() == 0) {
+            if (currentMethod.getReturnType() instanceof VoidTypeDescriptor)
+                return data;
+            else
+                throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentMethod.getMethodName() +
+                        ". Expected return value of type " + currentMethod.getReturnType().getTypeName());
+        }
+        else {
+            TypeDescriptor actualReturnType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+            TypeDescriptor expectedReturnType = currentMethod.getReturnType();
+            if (isCorrectType(expectedReturnType, actualReturnType))
+                return data;
+            else
+                throw new IncorrectTypeException("Illegal return value in function " + currentMethod.getMethodName() +
+                        ". Expected return value of type " + expectedReturnType.getTypeName() + " but it was of type " +
+                        actualReturnType.getTypeName());
+        }
     }
 
     @Override
@@ -703,12 +733,19 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
+        TypeDescriptor returnType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        String methodName = getValueStringOfChild(node, 1);
+        currentMethod = new Method(methodName, returnType, new ArrayList<>());
+
         return defaultVisit(node, data);
     }
 
     @Override
     public Object visit(ASTRETURN_TYPE node, Object data) {
-        return defaultVisit(node, data);
+        if (node.jjtGetNumChildren() == 0)
+            return new VoidTypeDescriptor();
+        else
+            return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
