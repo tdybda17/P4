@@ -325,7 +325,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         Node leftNode = node.jjtGetChild(0);
         Node rightNode = node.jjtGetChild(1);
 
-        TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, data));
+        TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, symbolTable));
         TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, data));
         try {
             typeCheck(expectedType.getClass(), actualType);
@@ -473,7 +473,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
-        return node.jjtGetChild(0).jjtAccept(this, data);
+        return node.jjtGetChild(0).jjtAccept(this, symbolTable);
     }
 
     @Override
@@ -607,7 +607,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         else if (numActualParameters == formalParameters.size()) {
             for (int i = 0; i < numActualParameters; i++) {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
-                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data); // The data should be SymbolTable
+                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
                 if (!formalParameterType.getTypeName().equals(actualParameterType.getTypeName()))
                     throw new UnmatchedParametersException(formalParameterType, actualParameterType);
             }
