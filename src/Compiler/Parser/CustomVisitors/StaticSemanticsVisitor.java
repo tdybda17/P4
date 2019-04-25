@@ -412,7 +412,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
-        if (!expectedType.isInstance(actualType))
+        if (expectedType.equals(RealTypeDescriptor.class)) {
+            if (!(actualType instanceof NumberTypeDescriptor))
+                throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
+        }
+        else if (!expectedType.isInstance(actualType))
             throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.getClass().getSimpleName());
     }
 
@@ -608,6 +612,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             for (int i = 0; i < numActualParameters; i++) {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
                 TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
+
+                if (formalParameterType instanceof RealTypeDescriptor && actualParameterType instanceof NumberTypeDescriptor)
+                    continue;
                 if (!formalParameterType.getTypeName().equals(actualParameterType.getTypeName()))
                     throw new UnmatchedParametersException(formalParameterType, actualParameterType);
             }
