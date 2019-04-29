@@ -37,6 +37,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     private SymbolTable symbolTable;
     private Method currentMethod;
 
+    //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException og sige det er en compiler error, da det ikke er dem som skriver programmets fejl
+    //TODO: få lavet det sådan vi har IllegalType er errors til os, og IncorrectType er errors til brugeren
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
     }
@@ -289,8 +291,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(node.jjtGetNumChildren() != 3) {
             throw new WrongAmountOfChildrenException("One of your vertex specifications in your graph constructor did not have 3 children but instead had: " + node.jjtGetNumChildren());
         } else {
-            Node weightNode = node.jjtGetChild(2);
-            return weightNode.jjtAccept(this, data);
+            if(node.jjtGetChild(0) instanceof ASTIDENTIFIER && node.jjtGetChild(1) instanceof ASTIDENTIFIER) {
+                Node weightNode = node.jjtGetChild(2);
+                return weightNode.jjtAccept(this, data);
+            } else {
+                throw new VisitorException("One of the first two childs in a vertex specification was not an identifier node");
+            }
         }
     }
 
@@ -341,36 +347,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(SimpleNode node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTSTART node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTPROG node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
@@ -381,7 +357,24 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_TYPE node, Object data) { //TODO: få lavet så man kan lave med initialization
+    public Object visit(ASTCOLLECTION_ADT node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            Symbol symbol = createSymbolFromDclNode(node, data);
+            symbolTable.enterSymbol(symbol);
+
+            if(node.jjtGetNumChildren() == 3) {
+                checkCollectionInitialization(node.jjtGetChild(2), symbol, symbolTable);
+            }
+
+        } else {
+            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
+        }
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTCOLLECTION_TYPE node, Object data) {
         SimpleNode collectionTypeNode = convertToSimpleNode(node);
 
         TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
@@ -394,8 +387,56 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             collectionTypeDescriptor.setElementType(elementType);
             return collectionTypeDescriptor;
         } else {
-            throw new IncorrectTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
+            throw new IllegalTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
         }
+    }
+
+    private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
+        if(initializationNode instanceof ASTELEMENT_LIST) {
+            TypeDescriptor expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
+            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+            try {
+                typeCheck(expectedType.getClass(), actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
+            }
+        } else if(initializationNode instanceof ASTMEMBER_FUNCTION_CALL) {
+            TypeDescriptor expectedType =  getTypeForIdentifierSymbol(symbol);
+            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+            if(!expectedType.equals(actualType)) {
+                throw new IncorrectTypeException("When trying initialize the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but tried to assign \'" + actualType + "\'");
+            }
+        }
+
+    }
+
+    private TypeDescriptor getElementType(TypeDescriptor collectionType){
+        if(collectionType instanceof CollectionTypeDescriptor) {
+            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) collectionType;
+            return collectionTypeDescriptor.getElementType();
+        } else {
+            throw new IllegalTypeException("The type of your collection was not a collection type but instead: " + collectionType);
+        }
+    }
+
+    @Override
+    public Object visit(ASTELEMENT_LIST node, Object data) {
+        int amtChildren = node.jjtGetNumChildren();
+        if(amtChildren < 1) {
+            throw new WrongAmountOfChildrenException("Your element list when trying to declare an collection had less than one child");
+        }
+        TypeDescriptor expectedType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+
+        for(int i = 1; i < amtChildren; i++) {
+            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(i).jjtAccept(this, data));
+            try {
+                typeCheck(expectedType.getClass(), actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("When trying to initialize a collection you had more than one element type, you had both: \'" + actualType +"\' and \'" + expectedType + "\'");
+            }
+        }
+
+        return expectedType;
     }
 
     @Override
@@ -650,16 +691,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af function call
     @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
         return defaultVisit(node, data);
     }
 
+
+    //TODO: få lavet type check af while
     @Override
     public Object visit(ASTWHILE_STATEMENT node, Object data) {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af for
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
         return defaultVisit(node, data);
@@ -670,11 +715,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af for-each
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
         return defaultVisit(node, data);
     }
 
+
+    //TODO: få lavet type check af if statement
     @Override
     public Object visit(ASTIF_STATEMENT node, Object data) {
         return defaultVisit(node, data);
@@ -706,27 +754,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-
-            if(node.jjtGetNumChildren() == 3) {
-                //TODO: make stuff for member function call and element list
-            }
-
-        } else {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
-        }
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTELEMENT_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTFUNCS_DCL node, Object data) {
@@ -764,4 +791,38 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
         return defaultVisit(node, data);
     }
+
+
+    @Override
+    public Object visit(SimpleNode node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTSTART node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTPROG node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+
+
 }
