@@ -1,7 +1,6 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
-import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
@@ -39,7 +38,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     private Method currentMethod;
 
     //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException og sige det er en compiler error, da det ikke er dem som skriver programmets fejl
-    //TODO: få lavet det sådan vi har IllegalType er errors til os, og IncorrectType er errors til brugeren
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
     }
@@ -63,7 +61,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
         } else {
-            throw new IllegalTypeException("The given data object was not a TypeDescriptor but instead was " + data);
+            throw new IllegalArgumentException("The given data object was not a TypeDescriptor but instead was " + data);
         }
     }
 
@@ -71,7 +69,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(data instanceof SymbolTable) {
             return (SymbolTable) data;
         } else {
-            throw new IllegalTypeException("The given data object was not a SymbolTable");
+            throw new IllegalArgumentException("The given data object was not a SymbolTable");
         }
     }
 
@@ -79,7 +77,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(node instanceof SimpleNode) {
             return (SimpleNode) node;
         } else {
-            throw new IllegalTypeException("The given data object was not a SimpleNode");
+            throw new IllegalArgumentException("The given data object was not a SimpleNode");
         }
     }
 
@@ -88,7 +86,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             SimpleNode simpleNode = (SimpleNode) identifierNode;
             return (String) simpleNode.jjtGetValue();
         } else {
-            throw new IllegalTypeException("The given node was not an IdentifierNode");
+            throw new IllegalArgumentException("The given node was not an IdentifierNode");
         }
     }
 
@@ -109,7 +107,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
             return attributes.getType();
         } else {
-            throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+            throw new IllegalArgumentException("The given symbol was not an identifier symbol");
         }
     }
 
@@ -210,7 +208,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
                 return visitUndirectedGraphInitialization(initializationNode);
             } else {
-                throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
+                throw new IllegalArgumentException("Your graph was neither of the type directed graph or undirected graph");
             }
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
             TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, symbolTable));
@@ -221,7 +219,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             }
             return initializationNode.jjtAccept(this, symbolTable);
         } else {
-            throw new IllegalTypeException("The node use for initialization of your graph dcl was not an correct type");
+            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName());
         }
     }
 
@@ -407,7 +405,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) collectionType;
             return collectionTypeDescriptor.getElementType();
         } else {
-            throw new IllegalTypeException("The type of your collection was not a collection type but instead: " + collectionType);
+            throw new IllegalArgumentException("The type of your collection was not a collection type but instead: " + collectionType);
         }
     }
 
@@ -444,7 +442,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             collectionTypeDescriptor.setElementType(elementType);
             return collectionTypeDescriptor;
         } else {
-            throw new IllegalTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
+            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
         }
     }
 
