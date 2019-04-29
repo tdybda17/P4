@@ -23,11 +23,11 @@ import java.io.FileReader;
 public class TestParser {
     public static void main(String[] args) {
         try {
-            //System.out.println(parseTextFile("src/Compiler/Parser/test"));
+            System.out.println(parseTextFile("src/Compiler/Parser/test"));
             //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
-            SymbolTable st = new SymbolTable();
-            st.openScope();
-            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
+//            SymbolTable st = new SymbolTable();
+//            st.openScope();
+//            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -373,7 +373,7 @@ void atomic_expr() #void :
 void value() #void :
 {Token t;}
 {
-    member_function_call() #MEMBER_FUNCTION_CALL | inum_val() | fnum_val() | bool_val() | constant_val()
+    variable_or_function() | inum_val() | fnum_val() | bool_val() | constant_val()
 }
 
 void inum_val() #INUM_VAL :
@@ -400,22 +400,34 @@ void constant_val() #CONSTANT_VAL :
     t = <CONSTANTS> {jjtThis.value = t.image;}
 }
 
-void member_function_call() #void :
-{boolean withParameters = false;}
+void variable_or_function() #void :
+{int varFieldFunc = 0;}
 {
-    ((identifier() withParameters = member_function_call_tail()) #MEMBER(!withParameters)) #FUNC_CALL(withParameters)
+    ((identifier() varFieldFunc = variable_or_function_tail()) #VARIABLE(varFieldFunc == 1)) #FUNCTION_CALL(varFieldFunc == 2)
 }
 
-boolean member_function_call_tail() #void :
+int variable_or_function_tail() #void :
 {}
 {
-    < DOT > member_function_call() {return false;} | < LPAREN > actual_parameters() < RPAREN > continuous() {return true;} | empty() {return false;}
+    field_access() {return 1;} | function_call() {return 2;} | empty() {return 0;}
 }
 
-void continuous() #void :
+void field_access() #void :
+{int varFieldFunc = 0;}
+{
+    ((<DOT> identifier() varFieldFunc = variable_or_function_tail()) #FIELD_ACCESS(varFieldFunc == 0 || varFieldFunc == 1)) #FUNCTION_CALL(varFieldFunc == 2)
+}
+
+void function_call() #void :
 {}
 {
-    < DOT > member_function_call() | empty()
+    <LPAREN> actual_parameters() <RPAREN> function_tail()
+}
+
+void function_tail() #void :
+{}
+{
+    field_access() | empty()
 }
 
 void actual_parameters() #ACTUAL_PARAMETERS :
@@ -487,7 +499,7 @@ void graph_type() #GRAPH_TYPE :
 void graph_dcl() #void :
 {}
 {
-    (< ASSIGN > member_function_call()) #GRAPH_ASSIGN | (newlines_plus() graph_vertex_dcl() newlines_plus() graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
+    (< ASSIGN > variable_or_function()) #GRAPH_ASSIGN | (newlines_plus() graph_vertex_dcl() newlines_plus() graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
 }
 
 void graph_elements() #void :
@@ -535,7 +547,7 @@ void weight() #WEIGHT :
 void stmt() #void :
 {boolean isAssign = false;}
 {
-    ((member_function_call() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNCTION_CALL(!isAssign) | loop() | if_statement() | return_statement()
+    ((variable_or_function() isAssign = assign_or_func()) #ASSIGN(isAssign)) #FUNCTION_CALL_STMT(!isAssign) | loop() | if_statement() | return_statement()
 }
 
 boolean assign_or_func() #void :
@@ -568,16 +580,16 @@ void for_statement() #FOR_STATEMENT :
     < FOR > identifier() < ASSIGN > integer_value() < TO > integer_value() < DO > < NEWLINE > block() #BLOCK < END >
 }
 
-void integer_value() #INTEGER_VALUE :
-{Token t;}
+void integer_value() #void :
+{}
 {
-    member_function_call() #MEMBER_FUNCTION_CALL |  t = < INUM_VAL > {jjtThis.value = t.image;}
+    variable_or_function() | inum_val()
 }
 
 void foreach_statement() #FOREACH_STATEMENT :
 {}
 {
-    < FOREACH > identifier() < IN > member_function_call() #MEMBER_FUNCTION_CALL < DO > < NEWLINE > block() #BLOCK < END >
+    < FOREACH > identifier() < IN > variable_or_function() < DO > < NEWLINE > block() #BLOCK < END >
 }
 
 void if_statement() #IF_STATEMENT :
@@ -613,7 +625,7 @@ void collection_adt() #COLLECTION_ADT :
 void collection_dcl() #void :
 {}
 {
-   < ASSIGN > member_function_call() #MEMBER_FUNCTION_CALL | newlines_plus() element_list() #ELEMENT_LIST | empty()
+   < ASSIGN > variable_or_function() | newlines_plus() element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
