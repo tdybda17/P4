@@ -44,6 +44,21 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         this.symbolTable = symbolTable;
     }
 
+    private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        //This part is added because we want to allow the users to assign both int and real to an real.
+        if(expectedType.equals(new RealTypeDescriptor())) {
+            if(!(actualType instanceof NumberTypeDescriptor)) {
+                throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
+            }
+        }
+        else if (!expectedType.equals(actualType))
+            throw new IncorrectTypeException(expectedType.getClass().getSimpleName(), actualType.getClass().getSimpleName());
+    }
+
+    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        return expectedType.getClass().isInstance(actualType);
+    }
+
     private TypeDescriptor convertToTypeDescriptor(Object data){
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
@@ -431,20 +446,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else {
             throw new IllegalTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
         }
-    }
-
-    private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        if(expectedType.equals(new RealTypeDescriptor())) {
-            if(!(actualType instanceof NumberTypeDescriptor)) {
-                throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
-            }
-        }
-        else if (!expectedType.equals(actualType))
-            throw new IncorrectTypeException(expectedType.getClass().getSimpleName(), actualType.getClass().getSimpleName());
-    }
-
-    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        return expectedType.getClass().isInstance(actualType);
     }
 
     @Override
