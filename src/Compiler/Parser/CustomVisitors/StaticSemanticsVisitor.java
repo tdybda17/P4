@@ -453,9 +453,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof BooleanTypeDescriptor)) {
-            throw new IllegalTypeException("The left value of an OR expression was not a boolean value");
+            throw new IncorrectTypeException("The left value of an OR expression was not a boolean value");
         } else if(!(secondType instanceof  BooleanTypeDescriptor)) {
-            throw new IllegalTypeException("The right value of an OR expression was not a boolean value");
+            throw new IncorrectTypeException("The right value of an OR expression was not a boolean value");
         }
         return new BooleanTypeDescriptor();
     }
@@ -465,9 +465,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof BooleanTypeDescriptor)) {
-            throw new IllegalTypeException("The left value of an AND expression was not a boolean value");
+            throw new IncorrectTypeException("The left value of an AND expression was not a boolean value");
         } else if(!(secondType instanceof  BooleanTypeDescriptor)) {
-            throw new IllegalTypeException("The right value of an AND expression was not a boolean value");
+            throw new IncorrectTypeException("The right value of an AND expression was not a boolean value");
         }
         return new BooleanTypeDescriptor();
     }
@@ -486,9 +486,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The left value of an relation operator was not a number");
+            throw new IncorrectTypeException("The left value of an relation operator was not a number");
         } else if(!(secondType instanceof  NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The right value of an relation operator was not a number");
+            throw new IncorrectTypeException("The right value of an relation operator was not a number");
         }
         return new BooleanTypeDescriptor();
     }
@@ -498,9 +498,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The left value of an ADD or SUB expression was not a number");
+            throw new IncorrectTypeException("The left value of an ADD or SUB expression was not a number");
         } else if(!(secondType instanceof  NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The right value of an ADD or SUB expression was not a number");
+            throw new IncorrectTypeException("The right value of an ADD or SUB expression was not a number");
         }
         return getCorrectNumberTypeDescriptor(firstType, secondType);
     }
@@ -510,9 +510,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The left value of an MUL or DIV expression was not a number");
+            throw new IncorrectTypeException("The left value of an MUL or DIV expression was not a number");
         } else if(!(secondType instanceof  NumberTypeDescriptor)) {
-            throw new IllegalTypeException("The right value of an MUL or DIV expression was not a number");
+            throw new IncorrectTypeException("The right value of an MUL or DIV expression was not a number");
         }
         return getCorrectNumberTypeDescriptor(firstType, secondType);
     }
@@ -551,6 +551,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return new BooleanTypeDescriptor();
     }
 
+    //TODO: gik på denne
     @Override
     public Object visit(ASTCONSTANT_VAL node, Object data) {
         return defaultVisit(node, data);
