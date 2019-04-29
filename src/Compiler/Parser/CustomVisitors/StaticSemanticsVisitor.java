@@ -433,7 +433,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    private <T extends TypeDescriptor> void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
+    private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
         if(expectedType.equals(new RealTypeDescriptor())) {
             if(!(actualType instanceof NumberTypeDescriptor)) {
                 throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
