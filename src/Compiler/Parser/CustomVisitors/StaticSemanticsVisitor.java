@@ -8,6 +8,7 @@ import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Exceptions.Visitor.VisitorException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
+import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
@@ -88,7 +89,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
             return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
         } else {
-            throw new IllegalArgumentException("You could not get a type descriptor for the given node type");
+            throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTSIMPLE_TYPES.class.getSimpleName(), ASTGRAPH_ELEMENT_TYPES.class.getSimpleName(), ASTGRAPH_TYPE.class.getSimpleName());
         }
     }
 
@@ -392,20 +393,24 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
+        TypeDescriptor expectedType, actualType;
         if(initializationNode instanceof ASTELEMENT_LIST) {
-            TypeDescriptor expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
-            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-            try {
-                typeCheck(expectedType.getClass(), actualType);
-            } catch (IncorrectTypeException e) {
-                throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
-            }
+            expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
+            actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
         } else if(initializationNode instanceof ASTMEMBER_FUNCTION_CALL) {
-            TypeDescriptor expectedType =  getTypeForIdentifierSymbol(symbol);
-            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+            expectedType =  getTypeForIdentifierSymbol(symbol);
+            actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
             if(!expectedType.equals(actualType)) {
                 throw new IncorrectTypeException("When trying initialize the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but tried to assign \'" + actualType + "\'");
             }
+        } else {
+            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTELEMENT_LIST.class.getSimpleName(), ASTMEMBER_FUNCTION_CALL.class.getSimpleName());
+        }
+
+        try {
+            typeCheck(expectedType.getClass(), actualType);
+        } catch (IncorrectTypeException e) {
+            throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
         }
 
     }
