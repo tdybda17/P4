@@ -37,7 +37,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     private SymbolTable symbolTable;
     private Method currentMethod;
 
-    //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException og sige det er en compiler error, da det ikke er dem som skriver programmets fejl
+    //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException + IllegalArgumentException. Derefter skal det siges der var en compiler fejl og ikke en fejl i den skrevne kode.
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
     }

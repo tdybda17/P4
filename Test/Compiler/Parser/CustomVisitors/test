@@ -3,7 +3,7 @@ function main()
     int i
 
     i = 6
-
+    x = i
     x = 6.0 + 8.0 * 3
 
     //test() = 7
