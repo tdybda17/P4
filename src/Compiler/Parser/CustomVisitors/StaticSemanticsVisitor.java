@@ -140,7 +140,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
                 TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
                 try {
-                    typeCheck(expectedType.getClass(), actualType);
+                    typeCheck(expectedType, actualType);
                 } catch (IncorrectTypeException e) {
                     throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
                 }
@@ -201,7 +201,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
             TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, symbolTable));
             try {
-                typeCheck(graphType.getClass(), actualType);
+                typeCheck(graphType, actualType);
             } catch (IncorrectTypeException e) {
                 throw new IncorrectTypeException("You had a graph of type \'" + graphType + "\' but tried to declare it with a value of the type \'" + actualType + "\'");
             }
@@ -308,7 +308,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else if (node.jjtGetNumChildren() == 1) {
             TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
             try {
-                typeCheck(RealTypeDescriptor.class, actualType);
+                typeCheck(new RealTypeDescriptor(), actualType);
             } catch (IncorrectTypeException e) {
                 throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
             }
@@ -339,7 +339,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, symbolTable));
         TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, symbolTable));
         try {
-            typeCheck(expectedType.getClass(), actualType);
+            typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
             //TODO: få navnet ud af venstre node
             throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead of the expected type \'" + expectedType + "\'");
@@ -397,6 +397,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(initializationNode instanceof ASTELEMENT_LIST) {
             expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
             actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+            try {
+                typeCheck(expectedType, actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
+            }
         } else if(initializationNode instanceof ASTMEMBER_FUNCTION_CALL) {
             expectedType =  getTypeForIdentifierSymbol(symbol);
             actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
@@ -406,13 +411,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else {
             throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTELEMENT_LIST.class.getSimpleName(), ASTMEMBER_FUNCTION_CALL.class.getSimpleName());
         }
-
-        try {
-            typeCheck(expectedType.getClass(), actualType);
-        } catch (IncorrectTypeException e) {
-            throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
-        }
-
     }
 
     private TypeDescriptor getElementType(TypeDescriptor collectionType){
@@ -435,7 +433,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         for(int i = 1; i < amtChildren; i++) {
             TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(i).jjtAccept(this, data));
             try {
-                typeCheck(expectedType.getClass(), actualType);
+                typeCheck(expectedType, actualType);
             } catch (IncorrectTypeException e) {
                 throw new IncorrectTypeException("When trying to initialize a collection you had more than one element type, you had both: \'" + actualType +"\' and \'" + expectedType + "\'");
             }
@@ -446,28 +444,30 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTOR_EXPR node, Object data) {
-        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
+        typeCheckChildren(new BooleanTypeDescriptor(), node, data);
         return new BooleanTypeDescriptor();
     }
 
-    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, Node parent, Object data) {
+    //TODO: tjek disse med checkChildren
+    private <T extends TypeDescriptor> void typeCheckChildren(TypeDescriptor expectedType, Node parent, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) parent.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) parent.jjtGetChild(1).jjtAccept(this, data);
         typeCheckChildren(expectedType, firstType, secondType);
     }
 
-    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, TypeDescriptor child1, TypeDescriptor child2) {
+    private <T extends TypeDescriptor> void typeCheckChildren(TypeDescriptor expectedType, TypeDescriptor child1, TypeDescriptor child2) {
         typeCheck(expectedType, child1);
         typeCheck(expectedType, child2);
     }
 
-    private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
-        if (expectedType.equals(RealTypeDescriptor.class)) {
-            if (!(actualType instanceof NumberTypeDescriptor))
+    private <T extends TypeDescriptor> void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        if(expectedType.equals(new RealTypeDescriptor())) {
+            if(!(actualType instanceof NumberTypeDescriptor)) {
                 throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
+            }
         }
-        else if (!expectedType.isInstance(actualType))
-            throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.getClass().getSimpleName());
+        else if (!expectedType.equals(actualType))
+            throw new IncorrectTypeException(expectedType.getClass().getSimpleName(), actualType.getClass().getSimpleName());
     }
 
     private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
@@ -476,7 +476,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTAND_EXPR node, Object data) {
-        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
+        typeCheckChildren(new BooleanTypeDescriptor(), node, data);
         return new BooleanTypeDescriptor();
     }
 
@@ -491,7 +491,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTREL_EXPR node, Object data) {
-        typeCheckChildren(NumberTypeDescriptor.class, node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if(!(firstType instanceof NumberTypeDescriptor)) {
+            throw new IllegalTypeException("The left value of an relation operator was not a number");
+        } else if(!(secondType instanceof  NumberTypeDescriptor)) {
+            throw new IllegalTypeException("The right value of an relation operator was not a number");
+        }
         return new BooleanTypeDescriptor();
     }
 
@@ -499,7 +505,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTADD_SUB node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
+        if(!(firstType instanceof NumberTypeDescriptor)) {
+            throw new IllegalTypeException("The left value of an add or sub expression was not a number");
+        } else if(!(secondType instanceof  NumberTypeDescriptor)) {
+            throw new IllegalTypeException("The right value of an add or sub expression was not a number");
+        }
         return getCorrectNumberTypeDescriptor(firstType, secondType);
     }
 
@@ -514,14 +524,15 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTMUL_DIV node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
-        return getCorrectNumberTypeDescriptor(firstType, secondType);
+        TypeDescriptor expectedType = getCorrectNumberTypeDescriptor(firstType, secondType);
+        typeCheckChildren(expectedType, firstType, secondType);
+        return expectedType;
     }
 
     @Override
     public Object visit(ASTNEG_EXPR node, Object data) {
         TypeDescriptor type = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
-        typeCheck(BooleanTypeDescriptor.class, type);
+        typeCheck(new BooleanTypeDescriptor(), type);
         return new BooleanTypeDescriptor();
     }
 
