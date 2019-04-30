@@ -1,66 +1,18 @@
 function main()
-    real x = 7.8
-    int i
-
-    i = 6
-
-    x = 6.0 + 8.0 * 3
-
-    //test() = 7
-
-    //i = foo(3.0, 7.0)
-    //i = foo(x, x)
-
-    //x = 7
-
-
-    //foo(x, x) = 100
-
-    //bar() = 8.0
-
-    create DiGraph testGraph
+    create Graph g
         a -- b
-        b -- c
-        c -- a[9.0]
-        //d -- a[foo(3.0,3.0)]
+    end
+
+    foreach a in g.vertices do
+        int index = 2
+        real b = 1.2 + index
+        Vertex v
+        v = a
+    end
+
+    for a = 1 to 2 do
+        Vertex v
     end
 
 
-    //testGraph.vertices = 8.0
-
-    create Graph g end
-
-    create Set<Vertex> vertices = g.vertices end
-
-
-    create Graph XYZ = g end
-
-    create Stack<Stack<int>> S end
-
-    create Queue<real> Q
-        6.0
-        8.0
-        x
-    end
-
-
-    real weight = edg(1, 2.2).weight
-end
-
-int function test()
-end
-
-int function foo(real a, real b)
-    int x
-    return 1
-end
-
-function bar()
-end
-
-Edge function edg(int a, real b)
-
-end
-
-Graph function createGraph()
 end

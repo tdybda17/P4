@@ -1,8 +1,10 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
+import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
+import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.*;
 import Compiler.Parser.GeneratedFiles.*;
@@ -40,7 +42,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        //This part is added because we want to allow the users to assign both int and real to an real.
+        //This part is added because we want to allow the users to assign both int and real to a real.
         if(expectedType.equals(new RealTypeDescriptor())) {
             if(!(actualType instanceof NumberTypeDescriptor)) {
                 throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
@@ -767,20 +769,53 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
-        // unsure whether to allow use of predefined identifier
-        // in any case, a check is needed
-
+        // check that 2nd and 3rd child are of type int
         TypeDescriptor lowerBoundActualType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
         TypeDescriptor upperBoundActualType = convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable));
         typeCheck(new IntegerTypeDescriptor(), lowerBoundActualType);
         typeCheck(new IntegerTypeDescriptor(), upperBoundActualType);
-        return defaultVisit(node, data);
+
+        // check if id exists.
+        String id = getValueStringOfChild(node, 0);
+        if (symbolTable.containsSymbol(id)) {
+            // if id exists, check that it is of type int
+            Symbol symbol = symbolTable.retrieveSymbol(id);
+            if (!(getTypeForIdentifierSymbol(symbol) instanceof IntegerTypeDescriptor))
+                throw new IllegalTypeException("Error: Tried to use variable '" + id + "' which is of type "
+                        + getTypeForIdentifierSymbol(symbol).getTypeName() + " for for-loop iteration, expected an Integer");
+
+            // if id exists, accept 4th child
+            node.jjtGetChild(3).jjtAccept(this, data);
+            return data;
+        }
+        else {
+            // if id does not exist, open node scope, add id to symbol table, accept children of 4th child, close node scope
+            symbolTable.openScope();
+            symbolTable.enterSymbol(id, new IdentifierAttributes(new IntegerTypeDescriptor()));
+            defaultVisit((SimpleNode) node.jjtGetChild(3), data);
+            symbolTable.closeScope();
+            return data;
+        }
     }
 
-    //TODO: få lavet type check af for-each
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
-        return defaultVisit(node, data);
+        // check that id does not already exist
+        String id = getValueStringOfChild(node, 0);
+        if (symbolTable.containsSymbol(id))
+            throw new IllegalTypeException("Error: Tried to use the already declared variable '" + id + "' as iterator variable in foreach loop");
+
+        // check that second child returns collection type
+        TypeDescriptor type = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        if (!(type instanceof CollectionTypeDescriptor))
+            throw new IllegalTypeException("Error: Tried to iterate through non-collection type '" + type.getTypeName() + "' in foreach loop");
+
+        // open node scope, add id to symbol table, accept all of third child's (block's) children, close node scope
+        symbolTable.openScope();
+        symbolTable.enterSymbol(id, new IdentifierAttributes(((CollectionTypeDescriptor) type).getElementType()));
+        defaultVisit((SimpleNode) node.jjtGetChild(2), data);
+        symbolTable.closeScope();
+        return data;
     }
 
     @Override
@@ -802,7 +837,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 return data;
             else
                 throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentMethod.getMethodName() +
-                        ". Expected return value of type " + currentMethod.getReturnType().getTypeName());
+                        "'. Expected return value of type " + currentMethod.getReturnType().getTypeName());
         }
         else {
             TypeDescriptor actualReturnType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));

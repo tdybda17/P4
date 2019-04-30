@@ -82,6 +82,11 @@ public class SymbolTable implements ISymbolTable {
         else throw new SymbolTableException("The given identifier name: " + name + ", could not be retrieved because no mapping from it exists");
     }
 
+    public boolean containsSymbol(String name) {
+        Symbol symbol = hashMap.get(name);
+        return symbol != null;
+    }
+
     @Override
     public boolean declaredLocally(String name) {
         return false;
