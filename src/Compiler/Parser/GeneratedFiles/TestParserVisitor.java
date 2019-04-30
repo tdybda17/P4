@@ -25,13 +25,13 @@ public interface TestParserVisitor
   public Object visit(ASTADD_SUB node, Object data);
   public Object visit(ASTMUL_DIV node, Object data);
   public Object visit(ASTNEG_EXPR node, Object data);
-  public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data);
   public Object visit(ASTINUM_VAL node, Object data);
   public Object visit(ASTFNUM_VAL node, Object data);
   public Object visit(ASTBOOL_VAL node, Object data);
   public Object visit(ASTCONSTANT_VAL node, Object data);
-  public Object visit(ASTMEMBER node, Object data);
-  public Object visit(ASTFUNC_CALL node, Object data);
+  public Object visit(ASTVARIABLE node, Object data);
+  public Object visit(ASTFUNCTION_CALL node, Object data);
+  public Object visit(ASTFIELD_ACCESS node, Object data);
   public Object visit(ASTACTUAL_PARAMETERS node, Object data);
   public Object visit(ASTMAIN node, Object data);
   public Object visit(ASTBLOCK node, Object data);
@@ -46,10 +46,9 @@ public interface TestParserVisitor
   public Object visit(ASTVERTEX node, Object data);
   public Object visit(ASTWEIGHT node, Object data);
   public Object visit(ASTASSIGN node, Object data);
-  public Object visit(ASTFUNCTION_CALL node, Object data);
+  public Object visit(ASTFUNCTION_CALL_STMT node, Object data);
   public Object visit(ASTWHILE_STATEMENT node, Object data);
   public Object visit(ASTFOR_STATEMENT node, Object data);
-  public Object visit(ASTINTEGER_VALUE node, Object data);
   public Object visit(ASTFOREACH_STATEMENT node, Object data);
   public Object visit(ASTIF_STATEMENT node, Object data);
   public Object visit(ASTELSE_STATEMENT node, Object data);
@@ -61,4 +60,4 @@ public interface TestParserVisitor
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
 }
-/* JavaCC - OriginalChecksum=1e8232755a957df439f2f446059e46c9 (do not edit this line) */
+/* JavaCC - OriginalChecksum=66a75bb6dac70448d1dc42f468ca736b (do not edit this line) */

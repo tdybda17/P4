@@ -48,10 +48,15 @@ public class PrintVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTFUNCTION_CALL node, Object data) {
+    public Object visit(ASTFUNCTION_CALL_STMT node, Object data) {
         node.childrenAccept(this, data);
         System.out.print("\n");
         return data;
+    }
+
+    @Override
+    public Object visit(ASTFUNCTION_CALL node, Object data) {
+        return null; //TODO: Fix
     }
     @Override
     public Object visit(ASTOBJECT_TYPE node, Object data){
@@ -141,10 +146,6 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print(")");
         return data;
     }
-    @Override
-    public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTINUM_VAL node, Object data) {
@@ -171,24 +172,15 @@ public class PrintVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMEMBER node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 1) {
-            System.out.print(".");
-            node.jjtGetChild(1).jjtAccept(this, data);
-        }
-        return data;
+    public Object visit(ASTVARIABLE node, Object data) {
+        return null; //TODO: Fix
     }
+
     @Override
-    public Object visit(ASTFUNC_CALL node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-        node.jjtGetChild(1).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 2) {
-            System.out.print(".");
-            node.jjtGetChild(2).jjtAccept(this, data);
-        }
-        return data;
+    public Object visit(ASTFIELD_ACCESS node, Object data) {
+        return null; //TODO: Fix
     }
+
     @Override
     public Object visit(ASTACTUAL_PARAMETERS node, Object data){
         System.out.print("(");
@@ -326,14 +318,7 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("end\n");
         return data;
     }
-    @Override
-    public Object visit(ASTINTEGER_VALUE node, Object data){
-        if (node.jjtGetNumChildren() == 0)
-            System.out.print(node.jjtGetValue());
-        else
-            return defaultVisit(node, data);
-        return data;
-    }
+
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data){
         System.out.print("foreach ");
