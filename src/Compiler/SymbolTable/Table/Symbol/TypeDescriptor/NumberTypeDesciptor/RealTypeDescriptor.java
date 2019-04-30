@@ -1,4 +1,4 @@
-package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor;
+package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor;
 
 
 public class RealTypeDescriptor extends NumberTypeDescriptor {

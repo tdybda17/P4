@@ -98,11 +98,6 @@ public class FunctionVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTOR_EXPR node, Object data) {
         return defaultVisit(node, data);
     }
@@ -184,11 +179,6 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCREATE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
         return defaultVisit(node, data);
     }
 

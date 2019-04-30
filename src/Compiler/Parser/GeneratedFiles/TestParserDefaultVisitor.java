@@ -48,9 +48,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTCOLLECTION_TYPE node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data){
-    return defaultVisit(node, data);
-  }
   public Object visit(ASTOR_EXPR node, Object data){
     return defaultVisit(node, data);
   }
@@ -100,9 +97,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
   public Object visit(ASTBLOCK node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTCREATE node, Object data){
@@ -178,4 +172,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=783139d5cb9ce20bdc1bb34fefc8ed97 (do not edit this line) */
+/* JavaCC - OriginalChecksum=c051533d9e39fe76c631fff73114ac94 (do not edit this line) */
