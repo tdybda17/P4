@@ -12,7 +12,7 @@ public class DuplicateSymbolError extends ScopeError {
     }
 
     public DuplicateSymbolError(Symbol symbol) {
-        super("symbol name '" + symbol.getName() + "' already added");
+        super("Variable with name '" + symbol.getName() + "' already declared");
     }
 
 }
