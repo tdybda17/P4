@@ -169,10 +169,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2) {
-            symbolTable.enterSymbol(createSymbolFromDclNode(node, data));
-        } else {
-            throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
+        int numChildren = node.jjtGetNumChildren();
+        Symbol elementSymbol = createSymbolFromDclNode(node, data);
+        symbolTable.enterSymbol(elementSymbol);
+
+        if (numChildren == 3){
+            // check if 3rd child is of same type as elementSymbol
+            typeCheck(((IdentifierAttributes)elementSymbol.getAttributes()).getType(),
+                    convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable)));
         }
         return defaultVisit(node, data);
     }
