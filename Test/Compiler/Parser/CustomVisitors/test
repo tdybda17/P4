@@ -4,8 +4,6 @@ function main()
 
     i = 6
     x = i
-    x = 6.0 + 8.0 * 3
-
     //test() = 7
 
     //i = foo(3.0, 7.0)
@@ -28,9 +26,11 @@ function main()
 
     //testGraph.vertices = 8.0
 
-    create Graph g end
+    create Graph g
+        a -- b
+        b -- c
+    end
 
-    create Set<Vertex> vertices = g.vertices end
 
 
     create Graph XYZ = g end
@@ -43,6 +43,7 @@ function main()
         x
     end
 
+    create Set<Vertex> vertices = g.vertices end
 
     real weight = edg(1, 2.2).weight
 end

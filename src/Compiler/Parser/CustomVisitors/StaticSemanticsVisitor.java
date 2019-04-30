@@ -386,27 +386,22 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
     private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
-/*        TypeDescriptor expectedType, actualType;
+        TypeDescriptor expectedType, actualType;
         if(initializationNode instanceof ASTELEMENT_LIST) {
             expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
             actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-        } else if(initializationNode instanceof ASTMEMBER_FUNCTION_CALL) {
-            expectedType =  getTypeForIdentifierSymbol(symbol);
+        } else if(initializationNode instanceof ASTCOLLECTION_ASSIGN) {
+            expectedType = getTypeForIdentifierSymbol(symbol);
             actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
         } else {
-            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTELEMENT_LIST.class.getSimpleName(), ASTMEMBER_FUNCTION_CALL.class.getSimpleName());
+            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTELEMENT_LIST.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName());
         }
         try {
             typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
             throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
-        }*/
+        }
     }
 
     private TypeDescriptor getElementType(TypeDescriptor collectionType){
@@ -416,6 +411,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else {
             throw new IllegalArgumentException("The type of your collection was not a collection type but instead: " + collectionType);
         }
+    }
+
+    @Override
+    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
