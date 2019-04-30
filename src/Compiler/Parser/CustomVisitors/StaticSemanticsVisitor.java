@@ -1,13 +1,13 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
-import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Exceptions.Visitor.VisitorException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
+import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
@@ -37,15 +37,31 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     private SymbolTable symbolTable;
     private Method currentMethod;
 
+    //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException og sige det er en compiler error, da det ikke er dem som skriver programmets fejl
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
+    }
+
+    private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        //This part is added because we want to allow the users to assign both int and real to an real.
+        if(expectedType.equals(new RealTypeDescriptor())) {
+            if(!(actualType instanceof NumberTypeDescriptor)) {
+                throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
+            }
+        }
+        else if (!expectedType.equals(actualType))
+            throw new IncorrectTypeException(expectedType.getClass().getSimpleName(), actualType.getClass().getSimpleName());
+    }
+
+    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        return expectedType.getClass().isInstance(actualType);
     }
 
     private TypeDescriptor convertToTypeDescriptor(Object data){
         if(data instanceof TypeDescriptor) {
             return (TypeDescriptor) data;
         } else {
-            throw new IllegalTypeException("The given data object was not a TypeDescriptor but instead was " + data);
+            throw new IllegalArgumentException("The given data object was not a TypeDescriptor but instead was " + data);
         }
     }
 
@@ -53,7 +69,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(data instanceof SymbolTable) {
             return (SymbolTable) data;
         } else {
-            throw new IllegalTypeException("The given data object was not a SymbolTable");
+            throw new IllegalArgumentException("The given data object was not a SymbolTable");
         }
     }
 
@@ -61,7 +77,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(node instanceof SimpleNode) {
             return (SimpleNode) node;
         } else {
-            throw new IllegalTypeException("The given data object was not a SimpleNode");
+            throw new IllegalArgumentException("The given data object was not a SimpleNode");
         }
     }
 
@@ -70,13 +86,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             SimpleNode simpleNode = (SimpleNode) identifierNode;
             return (String) simpleNode.jjtGetValue();
         } else {
-            throw new IllegalTypeException("The given node was not an IdentifierNode");
+            throw new IllegalArgumentException("The given node was not an IdentifierNode");
         }
-    }
-
-    private Object defaultVisit(SimpleNode node, Object data) {
-        node.childrenAccept(this, data);
-        return data;
     }
 
     //We get the value from the type node and convert it to a type descriptor
@@ -86,7 +97,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
             return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
         } else {
-            throw new IllegalArgumentException("You could not get a type descriptor for the given node type");
+            throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTSIMPLE_TYPES.class.getSimpleName(), ASTGRAPH_ELEMENT_TYPES.class.getSimpleName(), ASTGRAPH_TYPE.class.getSimpleName());
         }
     }
 
@@ -96,7 +107,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             IdentifierAttributes attributes = (IdentifierAttributes) symbol.getAttributes();
             return attributes.getType();
         } else {
-            throw new IllegalTypeException("The attributes you got from your symbol was not identifier attributes");
+            throw new IllegalArgumentException("The given symbol was not an identifier symbol");
         }
     }
 
@@ -115,6 +126,10 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
+    private Object defaultVisit(SimpleNode node, Object data) {
+        node.childrenAccept(this, data);
+        return data;
+    }
 
     //We open a new scope each time we meet a block node and then we close it right after the block is done
     @Override
@@ -137,7 +152,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
                 TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
                 try {
-                    typeCheck(expectedType.getClass(), actualType);
+                    typeCheck(expectedType, actualType);
                 } catch (IncorrectTypeException e) {
                     throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
                 }
@@ -193,18 +208,18 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
                 return visitUndirectedGraphInitialization(initializationNode);
             } else {
-                throw new IllegalTypeException("Your graph was neither of the type directed graph or undirected graph");
+                throw new IllegalArgumentException("Your graph was neither of the type directed graph or undirected graph");
             }
         } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
             TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, symbolTable));
             try {
-                typeCheck(graphType.getClass(), actualType);
+                typeCheck(graphType, actualType);
             } catch (IncorrectTypeException e) {
                 throw new IncorrectTypeException("You had a graph of type \'" + graphType + "\' but tried to declare it with a value of the type \'" + actualType + "\'");
             }
             return initializationNode.jjtAccept(this, symbolTable);
         } else {
-            throw new IllegalTypeException("The node use for initialization of your graph dcl was not an correct type");
+            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName());
         }
     }
 
@@ -289,8 +304,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if(node.jjtGetNumChildren() != 3) {
             throw new WrongAmountOfChildrenException("One of your vertex specifications in your graph constructor did not have 3 children but instead had: " + node.jjtGetNumChildren());
         } else {
-            Node weightNode = node.jjtGetChild(2);
-            return weightNode.jjtAccept(this, data);
+            if(node.jjtGetChild(0) instanceof ASTIDENTIFIER && node.jjtGetChild(1) instanceof ASTIDENTIFIER) {
+                Node weightNode = node.jjtGetChild(2);
+                return weightNode.jjtAccept(this, data);
+            } else {
+                throw new VisitorException("One of the first two childs in a vertex specification was not an identifier node");
+            }
         }
     }
 
@@ -301,7 +320,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } else if (node.jjtGetNumChildren() == 1) {
             TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
             try {
-                typeCheck(RealTypeDescriptor.class, actualType);
+                typeCheck(new RealTypeDescriptor(), actualType);
             } catch (IncorrectTypeException e) {
                 throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
             }
@@ -332,7 +351,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, symbolTable));
         TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, symbolTable));
         try {
-            typeCheck(expectedType.getClass(), actualType);
+            typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
             //TODO: få navnet ud af venstre node
             throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead of the expected type \'" + expectedType + "\'");
@@ -345,48 +364,76 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(SimpleNode node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTSTART node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTPROG node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTOBJECT_TYPE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
+    //TODO: få lavet map
     public Object visit(ASTMAP node, Object data) {
         return defaultVisit(node, data);
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_TYPE node, Object data) { //TODO: få lavet så man kan lave med initialization
+    public Object visit(ASTCOLLECTION_ADT node, Object data) {
+        SymbolTable symbolTable = convertToSymbolTable(data);
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            Symbol symbol = createSymbolFromDclNode(node, data);
+            symbolTable.enterSymbol(symbol);
+
+            if(node.jjtGetNumChildren() == 3) {
+                checkCollectionInitialization(node.jjtGetChild(2), symbol, symbolTable);
+            }
+
+        } else {
+            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
+        }
+        return defaultVisit(node, data);
+    }
+
+    private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
+        TypeDescriptor expectedType, actualType;
+        if(initializationNode instanceof ASTELEMENT_LIST) {
+            expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
+            actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+        } else if(initializationNode instanceof ASTMEMBER_FUNCTION_CALL) {
+            expectedType =  getTypeForIdentifierSymbol(symbol);
+            actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+        } else {
+            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTELEMENT_LIST.class.getSimpleName(), ASTMEMBER_FUNCTION_CALL.class.getSimpleName());
+        }
+        try {
+            typeCheck(expectedType, actualType);
+        } catch (IncorrectTypeException e) {
+            throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
+        }
+    }
+
+    private TypeDescriptor getElementType(TypeDescriptor collectionType){
+        if(collectionType instanceof CollectionTypeDescriptor) {
+            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) collectionType;
+            return collectionTypeDescriptor.getElementType();
+        } else {
+            throw new IllegalArgumentException("The type of your collection was not a collection type but instead: " + collectionType);
+        }
+    }
+
+    @Override
+    public Object visit(ASTELEMENT_LIST node, Object data) {
+        int amtChildren = node.jjtGetNumChildren();
+        if(amtChildren < 1) {
+            throw new WrongAmountOfChildrenException("Your element list when trying to declare an collection had less than one child");
+        }
+        TypeDescriptor expectedType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+
+        for(int i = 1; i < amtChildren; i++) {
+            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(i).jjtAccept(this, data));
+            try {
+                typeCheck(expectedType, actualType);
+            } catch (IncorrectTypeException e) {
+                throw new IncorrectTypeException("When trying to initialize a collection you had more than one element type, you had both: \'" + actualType +"\' and \'" + expectedType + "\'");
+            }
+        }
+        return expectedType;
+    }
+
+    @Override
+    public Object visit(ASTCOLLECTION_TYPE node, Object data) {
         SimpleNode collectionTypeNode = convertToSimpleNode(node);
 
         TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
@@ -399,46 +446,31 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             collectionTypeDescriptor.setElementType(elementType);
             return collectionTypeDescriptor;
         } else {
-            throw new IncorrectTypeException("Somehow you got an none collection type descriptor from your collection type declaration");
+            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
         }
     }
 
     @Override
     public Object visit(ASTOR_EXPR node, Object data) {
-        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
-        return new BooleanTypeDescriptor();
-    }
-
-    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, Node parent, Object data) {
-        TypeDescriptor firstType = (TypeDescriptor) parent.jjtGetChild(0).jjtAccept(this, data);
-        TypeDescriptor secondType = (TypeDescriptor) parent.jjtGetChild(1).jjtAccept(this, data);
-        typeCheckChildren(expectedType, firstType, secondType);
-    }
-
-    private <T extends TypeDescriptor> void typeCheckChildren(Class<T> expectedType, TypeDescriptor child1, TypeDescriptor child2) {
-        typeCheck(expectedType, child1);
-        typeCheck(expectedType, child2);
-    }
-
-    private <T extends TypeDescriptor> void typeCheck(Class<T> expectedType, TypeDescriptor actualType) {
-        if (expectedType.equals(RealTypeDescriptor.class)) {
-            if (!(actualType instanceof NumberTypeDescriptor))
-                throw new IncorrectTypeException(NumberTypeDescriptor.class.getSimpleName(), actualType.getClass().getSimpleName());
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if(!(firstType instanceof BooleanTypeDescriptor)) {
+            throw new IncorrectTypeException("The left value of an OR expression was not a boolean value");
+        } else if(!(secondType instanceof  BooleanTypeDescriptor)) {
+            throw new IncorrectTypeException("The right value of an OR expression was not a boolean value");
         }
-        else if (!expectedType.isInstance(actualType))
-            throw new IncorrectTypeException(expectedType.getSimpleName(), actualType.getClass().getSimpleName());
-    }
-
-    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        if (expectedType.getClass().equals(RealTypeDescriptor.class))
-            return actualType instanceof NumberTypeDescriptor;
-        else
-            return expectedType.getClass().isInstance(actualType);
+        return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTAND_EXPR node, Object data) {
-        typeCheckChildren(BooleanTypeDescriptor.class, node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if(!(firstType instanceof BooleanTypeDescriptor)) {
+            throw new IncorrectTypeException("The left value of an AND expression was not a boolean value");
+        } else if(!(secondType instanceof  BooleanTypeDescriptor)) {
+            throw new IncorrectTypeException("The right value of an AND expression was not a boolean value");
+        }
         return new BooleanTypeDescriptor();
     }
 
@@ -446,14 +478,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTEQUAL_EXPR node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        if (!firstType.getClass().isInstance(secondType))
-            throw new IncorrectTypeException(firstType.getTypeName(), secondType.getTypeName());
+        if (!firstType.equals(secondType))
+            throw new IncorrectTypeException("You tried to assert equality between an object of type \'" + firstType + "\' and an object of type \'" + secondType + "\'");
         return new BooleanTypeDescriptor();
     }
 
     @Override
     public Object visit(ASTREL_EXPR node, Object data) {
-        typeCheckChildren(NumberTypeDescriptor.class, node, data);
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if(!(firstType instanceof NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The left value of an relation operator was not a number");
+        } else if(!(secondType instanceof  NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The right value of an relation operator was not a number");
+        }
         return new BooleanTypeDescriptor();
     }
 
@@ -461,7 +499,23 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTADD_SUB node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
+        if(!(firstType instanceof NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The left value of an ADD or SUB expression was not a number");
+        } else if(!(secondType instanceof  NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The right value of an ADD or SUB expression was not a number");
+        }
+        return getCorrectNumberTypeDescriptor(firstType, secondType);
+    }
+
+    @Override
+    public Object visit(ASTMUL_DIV node, Object data) {
+        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
+        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
+        if(!(firstType instanceof NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The left value of an MUL or DIV expression was not a number");
+        } else if(!(secondType instanceof  NumberTypeDescriptor)) {
+            throw new IncorrectTypeException("The right value of an MUL or DIV expression was not a number");
+        }
         return getCorrectNumberTypeDescriptor(firstType, secondType);
     }
 
@@ -473,17 +527,9 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMUL_DIV node, Object data) {
-        TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
-        TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        typeCheckChildren(NumberTypeDescriptor.class, firstType, secondType);
-        return getCorrectNumberTypeDescriptor(firstType, secondType);
-    }
-
-    @Override
     public Object visit(ASTNEG_EXPR node, Object data) {
         TypeDescriptor type = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
-        typeCheck(BooleanTypeDescriptor.class, type);
+        typeCheck(new BooleanTypeDescriptor(), type);
         return new BooleanTypeDescriptor();
     }
 
@@ -502,6 +548,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return new BooleanTypeDescriptor();
     }
 
+    //TODO: gik på denne
     @Override
     public Object visit(ASTCONSTANT_VAL node, Object data) {
         return defaultVisit(node, data);
@@ -584,6 +631,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         else
             throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
     }
+  
+    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        if (expectedType.getClass().equals(RealTypeDescriptor.class))
+            return actualType instanceof NumberTypeDescriptor;
+        else
+            return expectedType.getClass().isInstance(actualType);
+    }
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
@@ -607,11 +661,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af function call
     @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
         return defaultVisit(node, data);
     }
 
+
+    //TODO: få lavet type check af while
     @Override
     public Object visit(ASTWHILE_STATEMENT node, Object data) {
         TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
@@ -619,6 +676,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af for
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
         // unsure whether to allow use of predefined identifier
@@ -630,11 +688,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet type check af for-each
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
         return defaultVisit(node, data);
     }
 
+
+    //TODO: få lavet type check af if statement
     @Override
     public Object visit(ASTIF_STATEMENT node, Object data) {
         TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
@@ -668,27 +729,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        SymbolTable symbolTable = convertToSymbolTable(data);
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-
-            if(node.jjtGetNumChildren() == 3) {
-                //TODO: make stuff for member function call and element list
-            }
-
-        } else {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
-        }
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTELEMENT_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTFUNCS_DCL node, Object data) {
@@ -724,6 +764,43 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+
+    @Override
+    public Object visit(SimpleNode node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTSTART node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTPROG node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    //This is the object type node used in the vertex/edge attribute declaration so we ignore it in this visitor
+    @Override
+    public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
 }
