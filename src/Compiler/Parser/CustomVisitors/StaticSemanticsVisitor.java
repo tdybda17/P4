@@ -386,6 +386,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
+        return defaultVisit(node, data);
+    }
+
     private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
 /*        TypeDescriptor expectedType, actualType;
         if(initializationNode instanceof ASTELEMENT_LIST) {

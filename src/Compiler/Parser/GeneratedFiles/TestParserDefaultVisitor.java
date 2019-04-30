@@ -159,6 +159,9 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTCOLLECTION_ADT node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTCOLLECTION_ASSIGN node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTELEMENT_LIST node, Object data){
     return defaultVisit(node, data);
   }
@@ -175,4 +178,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=607f66bf573feb52d2c9360bc6c7a5b5 (do not edit this line) */
+/* JavaCC - OriginalChecksum=783139d5cb9ce20bdc1bb34fefc8ed97 (do not edit this line) */
