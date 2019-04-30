@@ -4,12 +4,11 @@ function main()
 
     i = 6
     x = i
-    //test() = 7
 
     //i = foo(3.0, 7.0)
-    //i = foo(x, x)
+    i = foo(x, x)
 
-    //x = 7
+    x = 7
 
     create DiGraph testGraph
         a -- b
@@ -17,10 +16,6 @@ function main()
         c -- a[9.0]
         //d -- a[foo(3.0,3.0)]
     end
-
-
-    Vertex aaa
-    testGraph.getNeighbours(aaa).add(aaa) = 8.0
 
     create Graph g
         a -- b

@@ -605,7 +605,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return new BooleanTypeDescriptor();
     }
 
-    //TODO: gik på denne
+    //TODO: kig på denne
     @Override
     public Object visit(ASTCONSTANT_VAL node, Object data) {
         return defaultVisit(node, data);
