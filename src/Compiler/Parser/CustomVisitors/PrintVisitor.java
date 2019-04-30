@@ -372,6 +372,12 @@ public class PrintVisitor implements TestParserVisitor {
         }
         return data;
     }
+
+    @Override
+    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
+        return null; // todo: fix
+    }
+
     @Override
     public Object visit(ASTELEMENT_LIST node, Object data){
         System.out.print("\n");
