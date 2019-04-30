@@ -10,6 +10,7 @@ function main()
 
     x = 7
 
+    i
     create DiGraph testGraph
         a -- b
         b -- c
@@ -21,8 +22,6 @@ function main()
         a -- b
         b -- c
     end
-
-
 
     create Graph XYZ = g end
 
