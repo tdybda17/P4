@@ -50,6 +50,10 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         return null;
     }
 
+    private Method getVertex() {
+        return null;
+    }
+
     private Method addVertex() {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new VertexTypeDescriptor());

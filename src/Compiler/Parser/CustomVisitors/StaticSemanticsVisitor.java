@@ -4,10 +4,7 @@ import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
-import Compiler.Exceptions.Visitor.IncorrectTypeException;
-import Compiler.Exceptions.Visitor.VisitorException;
-import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
-import Compiler.Exceptions.Visitor.WrongNodeTypeException;
+import Compiler.Exceptions.Visitor.*;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
@@ -348,15 +345,70 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         Node leftNode = node.jjtGetChild(0);
         Node rightNode = node.jjtGetChild(1);
 
+        try {
+            checkIfLeftValueIsAFunctionCall(leftNode);
+        } catch (AssignmentException e) {
+            String leftNodeName = getLeftNodeName(leftNode);
+            throw new AssignmentException("It is not possible to assign values to function calls, which was tried the assignment of: " + leftNodeName + " = ...");
+        }
+
         TypeDescriptor expectedType = convertToTypeDescriptor(leftNode.jjtAccept(this, symbolTable));
         TypeDescriptor actualType = convertToTypeDescriptor(rightNode.jjtAccept(this, symbolTable));
         try {
             typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
-            //TODO: få navnet ud af venstre node
-            throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to ...., instead of the expected type \'" + expectedType + "\'");
+            String leftNodeName = getLeftNodeName(leftNode);
+            throw new AssignmentException("You tried to assign a value of the type \'" + actualType + "\' to \'" + leftNodeName + "\' instead of the expected type \'" + expectedType + "\'");
         }
         return null;
+    }
+
+    private void checkIfLeftValueIsAFunctionCall(Node leftNode){
+        int amtOfChildren = leftNode.jjtGetNumChildren();
+
+        if(leftNode instanceof ASTVARIABLE | leftNode instanceof ASTFIELD_ACCESS) {
+            if(amtOfChildren == 1) {
+                return; //We get here if we end the left node with a variable or field access node
+            } else if (amtOfChildren == 2) {
+                checkIfLeftValueIsAFunctionCall(leftNode.jjtGetChild(1));
+            } else {
+                throw new WrongAmountOfChildrenException("Your variable node had an wrong amount of children which was: " + amtOfChildren);
+            }
+        } else if (leftNode instanceof ASTFUNCTION_CALL) {
+            if(amtOfChildren == 2) {
+                throw new AssignmentException("You cannot assign a value to a function call");
+            } else if (amtOfChildren == 3) {
+                checkIfLeftValueIsAFunctionCall(leftNode.jjtGetChild(2));
+            } else {
+                throw new WrongAmountOfChildrenException("Your function call node had an wrong amount of children which was: " + amtOfChildren);
+            }
+        } else {
+            throw new WrongNodeTypeException(leftNode.getClass().getSimpleName(), ASTVARIABLE.class.getSimpleName(), ASTFIELD_ACCESS.class.getSimpleName(), ASTFUNCTION_CALL.class.getSimpleName());
+        }
+    }
+
+    private String getLeftNodeName(Node leftNode) {
+        int amtOfChildren = leftNode.jjtGetNumChildren();
+
+        if(leftNode instanceof ASTVARIABLE | leftNode instanceof ASTFIELD_ACCESS) {
+            if(amtOfChildren == 1) {
+                return getIdentifierName(leftNode.jjtGetChild(0));
+            } else if (amtOfChildren == 2) {
+                return getIdentifierName(leftNode.jjtGetChild(0)) + "." + getLeftNodeName(leftNode.jjtGetChild(1));
+            } else {
+                throw new WrongAmountOfChildrenException("Your variable node had an wrong amount of children which was: " + amtOfChildren);
+            }
+        } else if (leftNode instanceof ASTFUNCTION_CALL) {
+            if(amtOfChildren == 2) {
+                return getIdentifierName(leftNode.jjtGetChild(0)) + "()";
+            } else if (amtOfChildren == 3) {
+                return getIdentifierName(leftNode.jjtGetChild(0)) + "()." + getLeftNodeName(leftNode.jjtGetChild(2));
+            } else {
+                throw new WrongAmountOfChildrenException("Your function call node had an wrong amount of children which was: " + amtOfChildren);
+            }
+        } else {
+            throw new WrongNodeTypeException(leftNode.getClass().getSimpleName(), ASTVARIABLE.class.getSimpleName(), ASTFIELD_ACCESS.class.getSimpleName(), ASTFUNCTION_CALL.class.getSimpleName());
+        }
     }
 
     @Override

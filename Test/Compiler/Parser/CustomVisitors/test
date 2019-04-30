@@ -11,11 +11,6 @@ function main()
 
     //x = 7
 
-
-    //foo(x, x) = 100
-
-    //bar() = 8.0
-
     create DiGraph testGraph
         a -- b
         b -- c
@@ -24,7 +19,8 @@ function main()
     end
 
 
-    //testGraph.vertices = 8.0
+    Vertex aaa
+    testGraph.getNeighbours(aaa).add(aaa) = 8.0
 
     create Graph g
         a -- b
@@ -44,6 +40,7 @@ function main()
     end
 
     create Set<Vertex> vertices = g.vertices end
+    g.vertices = vertices
 
     real weight = edg(1, 2.2).weight
 end
