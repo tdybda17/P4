@@ -387,7 +387,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private void checkCollectionInitialization(Node initializationNode, Symbol symbol, Object data){
-        TypeDescriptor expectedType, actualType;
+/*        TypeDescriptor expectedType, actualType;
         if(initializationNode instanceof ASTELEMENT_LIST) {
             expectedType = getElementType(getTypeForIdentifierSymbol(symbol));
             actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
@@ -401,7 +401,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
             throw new IncorrectTypeException("When trying to declare the collection \'" + symbol.getName() +"\' you expected type \'" + expectedType + "\' but got \'" + actualType + "\'");
-        }
+        }*/
     }
 
     private TypeDescriptor getElementType(TypeDescriptor collectionType){
@@ -631,13 +631,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         else
             throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
     }
-  
-    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
-        if (expectedType.getClass().equals(RealTypeDescriptor.class))
-            return actualType instanceof NumberTypeDescriptor;
-        else
-            return expectedType.getClass().isInstance(actualType);
-    }
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
@@ -672,7 +665,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTWHILE_STATEMENT node, Object data) {
         TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(BooleanTypeDescriptor.class, actualConditionType);
+        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
         return defaultVisit(node, data);
     }
 
@@ -684,7 +677,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
         TypeDescriptor lowerBoundActualType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
         TypeDescriptor upperBoundActualType = convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable));
-        typeCheckChildren(IntegerTypeDescriptor.class, lowerBoundActualType, upperBoundActualType);
+        typeCheck(new IntegerTypeDescriptor(), lowerBoundActualType);
+        typeCheck(new IntegerTypeDescriptor(), upperBoundActualType);
         return defaultVisit(node, data);
     }
 
@@ -699,7 +693,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTIF_STATEMENT node, Object data) {
         TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(BooleanTypeDescriptor.class, actualConditionType);
+        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
         return defaultVisit(node, data);
     }
 
