@@ -80,7 +80,7 @@ class StaticSemanticsVisitorTest {
     }
 
     //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
-    @Test
+/*    @Test
     void visitAssignNodeTest1(){
         ASTMEMBER leftNode = new ASTMEMBER(0);
         String identifierName = "x";
@@ -95,10 +95,10 @@ class StaticSemanticsVisitorTest {
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
         assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
+    }*/
 
     //We test that we cannot assign the wrong value type to an identifier
-    @Test
+/*    @Test
     void visitAssignNodeTest2(){
         ASTMEMBER leftNode = new ASTMEMBER(0);
         String identifierName = "x";
@@ -112,10 +112,10 @@ class StaticSemanticsVisitorTest {
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
         assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
+    }*/
 
     //We test that if our left node is not entered in the symbol table then the assignment throws an exception
-    @Test
+/*    @Test
     void visitAssignNodeTest3(){
         ASTMEMBER leftNode = new ASTMEMBER(0);
         String identifierName = "x";
@@ -128,7 +128,7 @@ class StaticSemanticsVisitorTest {
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
         assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
+    }*/
 
 
     private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){

@@ -72,9 +72,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTNEG_EXPR node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data){
-    return defaultVisit(node, data);
-  }
   public Object visit(ASTINUM_VAL node, Object data){
     return defaultVisit(node, data);
   }
@@ -87,10 +84,13 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTCONSTANT_VAL node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTMEMBER node, Object data){
+  public Object visit(ASTVARIABLE node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTFUNC_CALL node, Object data){
+  public Object visit(ASTFUNCTION_CALL node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTFIELD_ACCESS node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTACTUAL_PARAMETERS node, Object data){
@@ -135,16 +135,13 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTASSIGN node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTFUNCTION_CALL node, Object data){
+  public Object visit(ASTFUNCTION_CALL_STMT node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTWHILE_STATEMENT node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTFOR_STATEMENT node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTINTEGER_VALUE node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTFOREACH_STATEMENT node, Object data){
@@ -178,4 +175,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=ac0f5ed2c2ba55c6a025c0e570559ac8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=607f66bf573feb52d2c9360bc6c7a5b5 (do not edit this line) */

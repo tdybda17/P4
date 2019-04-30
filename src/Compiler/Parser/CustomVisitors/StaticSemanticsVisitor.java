@@ -359,8 +359,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return null;
     }
 
-    //TODO: få lavet map
     @Override
+    public Object visit(ASTFUNCTION_CALL_STMT node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    //TODO: få lavet map
     public Object visit(ASTMAP node, Object data) {
         return defaultVisit(node, data);
     }
@@ -530,11 +534,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMEMBER_FUNCTION_CALL node, Object data) {
-        return node.jjtGetChild(0).jjtAccept(this, symbolTable);
-    }
-
-    @Override
     public Object visit(ASTINUM_VAL node, Object data) {
         return new IntegerTypeDescriptor();
     }
@@ -556,30 +555,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMEMBER node, Object data) {
-        TypeDescriptor memberType;
-        String identifier = getValueStringOfChild(node, 0);
-        if (data instanceof SymbolTable) {
-            SymbolTable st = (SymbolTable) data;
-            Symbol symbol = st.retrieveSymbol(identifier);
-            memberType = getTypeForIdentifierSymbol(symbol);
-        }
-        else if (data instanceof TypeDescriptor) {
-            Field field = getFieldFromTypeDescriptor((TypeDescriptor) data, identifier);
-            memberType = field.getType();
-        }
-        else if (data instanceof FunctionAttributes) {
-            Field field = getFieldFromTypeDescriptor(((FunctionAttributes) data).getReturnType(), identifier);
-            memberType = field.getType();
-        }
-        else
-            throw new VisitorException("data in ASTMEMBER visitor method is of invalid type: " + data);
+    public Object visit(ASTVARIABLE node, Object data) {
+        return null; //TODO: Fix
+    }
 
-        if (node.jjtGetNumChildren() > 1)
-            return node.jjtGetChild(1).jjtAccept(this, memberType);
-        else {
-            return memberType;
-        }
+    @Override
+    public Object visit(ASTFIELD_ACCESS node, Object data) {
+        return null; //TODO: FIX
     }
 
     private Field getFieldFromTypeDescriptor(TypeDescriptor td, String identifier) {
@@ -603,32 +585,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             if (value == null)
                 throw new VisitorException("Tried to get value of an " + node.jjtGetChild(index).toString() + " node but it has no value");
             return value.toString();
-        }
-    }
-
-    @Override
-    public Object visit(ASTFUNC_CALL node, Object data) {
-        FunctionAttributes attributes;
-        String identifier = getValueStringOfChild(node, 0);
-        if (data instanceof SymbolTable) {
-            SymbolTable st = (SymbolTable) data;
-            Symbol symbol = st.retrieveSymbol(identifier);
-            attributes = getFunctionAttributes(symbol);
-        } else if (data instanceof TypeDescriptor) {
-            Method method = getMethodFromTypeDescriptor((TypeDescriptor) data, identifier);
-            attributes = new FunctionAttributes(method.getReturnType(), method.getParameterTypes());
-        } else if (data instanceof FunctionAttributes) {
-            Method method = getMethodFromTypeDescriptor(((FunctionAttributes) data).getReturnType(), identifier);
-            attributes = new FunctionAttributes(method.getReturnType(), method.getParameterTypes());
-        } else
-            throw new VisitorException("data in FUNC_CALL visitor method is of invalid type: " + data);
-
-        node.jjtGetChild(1).jjtAccept(this, attributes); //type check parameters
-
-        if (node.jjtGetNumChildren() > 2)
-            return node.jjtGetChild(2).jjtAccept(this, attributes);
-        else {
-            return attributes.getReturnType();
         }
     }
 
@@ -667,16 +623,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             for (int i = 0; i < numActualParameters; i++) {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
                 TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
-
-                if (formalParameterType instanceof RealTypeDescriptor && actualParameterType instanceof NumberTypeDescriptor)
-                    continue;
-                if (!formalParameterType.getTypeName().equals(actualParameterType.getTypeName()))
-                    throw new UnmatchedParametersException(formalParameterType, actualParameterType);
+                if (!isCorrectType(formalParameterType, actualParameterType))
+                    throw new UnmatchedParametersException(formalParameterType, actualParameterType, currentMethod.getMethodName());
             }
             return data;
         }
         else
             throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
+    }
+  
+    private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
+        if (expectedType.getClass().equals(RealTypeDescriptor.class))
+            return actualType instanceof NumberTypeDescriptor;
+        else
+            return expectedType.getClass().isInstance(actualType);
     }
 
     @Override
@@ -711,17 +671,20 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     //TODO: få lavet type check af while
     @Override
     public Object visit(ASTWHILE_STATEMENT node, Object data) {
+        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(BooleanTypeDescriptor.class, actualConditionType);
         return defaultVisit(node, data);
     }
 
     //TODO: få lavet type check af for
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
-        return defaultVisit(node, data);
-    }
+        // unsure whether to allow use of predefined identifier
+        // in any case, a check is needed
 
-    @Override
-    public Object visit(ASTINTEGER_VALUE node, Object data) {
+        TypeDescriptor lowerBoundActualType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        TypeDescriptor upperBoundActualType = convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable));
+        typeCheckChildren(IntegerTypeDescriptor.class, lowerBoundActualType, upperBoundActualType);
         return defaultVisit(node, data);
     }
 
@@ -735,6 +698,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     //TODO: få lavet type check af if statement
     @Override
     public Object visit(ASTIF_STATEMENT node, Object data) {
+        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(BooleanTypeDescriptor.class, actualConditionType);
         return defaultVisit(node, data);
     }
 

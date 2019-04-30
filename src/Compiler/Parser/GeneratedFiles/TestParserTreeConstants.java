@@ -25,13 +25,13 @@ public interface TestParserTreeConstants
   public int JJTADD_SUB = 19;
   public int JJTMUL_DIV = 20;
   public int JJTNEG_EXPR = 21;
-  public int JJTMEMBER_FUNCTION_CALL = 22;
-  public int JJTINUM_VAL = 23;
-  public int JJTFNUM_VAL = 24;
-  public int JJTBOOL_VAL = 25;
-  public int JJTCONSTANT_VAL = 26;
-  public int JJTMEMBER = 27;
-  public int JJTFUNC_CALL = 28;
+  public int JJTINUM_VAL = 22;
+  public int JJTFNUM_VAL = 23;
+  public int JJTBOOL_VAL = 24;
+  public int JJTCONSTANT_VAL = 25;
+  public int JJTVARIABLE = 26;
+  public int JJTFUNCTION_CALL = 27;
+  public int JJTFIELD_ACCESS = 28;
   public int JJTACTUAL_PARAMETERS = 29;
   public int JJTMAIN = 30;
   public int JJTBLOCK = 31;
@@ -46,20 +46,19 @@ public interface TestParserTreeConstants
   public int JJTVERTEX = 40;
   public int JJTWEIGHT = 41;
   public int JJTASSIGN = 42;
-  public int JJTFUNCTION_CALL = 43;
+  public int JJTFUNCTION_CALL_STMT = 43;
   public int JJTWHILE_STATEMENT = 44;
   public int JJTFOR_STATEMENT = 45;
-  public int JJTINTEGER_VALUE = 46;
-  public int JJTFOREACH_STATEMENT = 47;
-  public int JJTIF_STATEMENT = 48;
-  public int JJTELSE_STATEMENT = 49;
-  public int JJTRETURN_STMT = 50;
-  public int JJTCOLLECTION_ADT = 51;
-  public int JJTELEMENT_LIST = 52;
-  public int JJTFUNC_DCL = 53;
-  public int JJTRETURN_TYPE = 54;
-  public int JJTFORMAL_PARAMETERS = 55;
-  public int JJTFORMAL_PARAMETER = 56;
+  public int JJTFOREACH_STATEMENT = 46;
+  public int JJTIF_STATEMENT = 47;
+  public int JJTELSE_STATEMENT = 48;
+  public int JJTRETURN_STMT = 49;
+  public int JJTCOLLECTION_ADT = 50;
+  public int JJTELEMENT_LIST = 51;
+  public int JJTFUNC_DCL = 52;
+  public int JJTRETURN_TYPE = 53;
+  public int JJTFORMAL_PARAMETERS = 54;
+  public int JJTFORMAL_PARAMETER = 55;
 
 
   public String[] jjtNodeName = {
@@ -85,13 +84,13 @@ public interface TestParserTreeConstants
     "ADD_SUB",
     "MUL_DIV",
     "NEG_EXPR",
-    "MEMBER_FUNCTION_CALL",
     "INUM_VAL",
     "FNUM_VAL",
     "BOOL_VAL",
     "CONSTANT_VAL",
-    "MEMBER",
-    "FUNC_CALL",
+    "VARIABLE",
+    "FUNCTION_CALL",
+    "FIELD_ACCESS",
     "ACTUAL_PARAMETERS",
     "MAIN",
     "BLOCK",
@@ -106,10 +105,9 @@ public interface TestParserTreeConstants
     "VERTEX",
     "WEIGHT",
     "ASSIGN",
-    "FUNCTION_CALL",
+    "FUNCTION_CALL_STMT",
     "WHILE_STATEMENT",
     "FOR_STATEMENT",
-    "INTEGER_VALUE",
     "FOREACH_STATEMENT",
     "IF_STATEMENT",
     "ELSE_STATEMENT",
@@ -122,4 +120,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=765b117640e4f52b0cbda19946ca1fba (do not edit this line) */
+/* JavaCC - OriginalChecksum=71e56c181762d869e248d60cf8a30fa9 (do not edit this line) */
