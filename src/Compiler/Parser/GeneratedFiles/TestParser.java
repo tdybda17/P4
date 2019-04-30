@@ -1211,7 +1211,7 @@ if (jjtc001) {
        {if (true) throw (Error)jjte001;}
       } finally {
 if (jjtc001) {
-         jjtree.closeNodeScope(jjtn001,  varFieldFunc == 1);
+         jjtree.closeNodeScope(jjtn001,  varFieldFunc == 0 || varFieldFunc == 1);
          jjtn001.jjtSetLastToken(getToken(0));
        }
       }

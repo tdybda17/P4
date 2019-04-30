@@ -20,7 +20,6 @@ package Compiler.Parser.GeneratedFiles;
 import Compiler.Parser.CustomVisitors.FunctionVisitor;import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.TreePrinter;import Compiler.SymbolTable.Table.SymbolTable;import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import Compiler.Parser.VarFieldFunc;
 
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@egen*/ {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();
@@ -1183,7 +1182,7 @@ void variable_or_function()       :
     }
     try {
 /*@egen*/
-    (/*@bgen(jjtree) #VARIABLE( varFieldFunc == 1) */
+    (/*@bgen(jjtree) #VARIABLE( varFieldFunc == 0 || varFieldFunc == 1) */
      {
        ASTVARIABLE jjtn001 = new ASTVARIABLE(JJTVARIABLE);
        boolean jjtc001 = true;
@@ -1208,11 +1207,11 @@ void variable_or_function()       :
        throw (Error)jjte001;
      } finally {
        if (jjtc001) {
-         jjtree.closeNodeScope(jjtn001,  varFieldFunc == 1);
+         jjtree.closeNodeScope(jjtn001,  varFieldFunc == 0 || varFieldFunc == 1);
          jjtn001.jjtSetLastToken(getToken(0));
        }
      }
-/*@egen*/                             )/*@bgen(jjtree)*/
+/*@egen*/                                                  )/*@bgen(jjtree)*/
     } catch (Throwable jjte002) {
       if (jjtc002) {
         jjtree.clearNodeScope(jjtn002);
