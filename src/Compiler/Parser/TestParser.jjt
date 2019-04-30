@@ -403,7 +403,7 @@ void constant_val() #CONSTANT_VAL :
 void variable_or_function() #void :
 {int varFieldFunc = 0;}
 {
-    ((identifier() varFieldFunc = variable_or_function_tail()) #VARIABLE(varFieldFunc == 1)) #FUNCTION_CALL(varFieldFunc == 2)
+    ((identifier() varFieldFunc = variable_or_function_tail()) #VARIABLE(varFieldFunc == 0 || varFieldFunc == 1)) #FUNCTION_CALL(varFieldFunc == 2)
 }
 
 int variable_or_function_tail() #void :
