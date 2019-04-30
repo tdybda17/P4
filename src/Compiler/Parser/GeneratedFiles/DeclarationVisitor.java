@@ -245,6 +245,11 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
+        return defaultVisit(node, data);
+    }
+
     public Object visit(ASTELEMENT_LIST node, Object data) {
         return defaultVisit(node, data);
     }

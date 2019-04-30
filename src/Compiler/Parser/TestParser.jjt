@@ -625,7 +625,7 @@ void collection_adt() #COLLECTION_ADT :
 void collection_dcl() #void :
 {}
 {
-   < ASSIGN > variable_or_function() | newlines_plus() element_list() #ELEMENT_LIST | empty()
+   (< ASSIGN > variable_or_function()) #COLLECTION_ASSIGN | newlines_plus() element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
