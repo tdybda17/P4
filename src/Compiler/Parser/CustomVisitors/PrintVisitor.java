@@ -109,11 +109,7 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print(">");
         return data;
     }
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
-        System.out.print(node.jjtGetValue());
-        return data;
-    }
+
     @Override
     public Object visit(ASTOR_EXPR node, Object data){
         return simpleExpr(node, data, "|");
@@ -212,15 +208,6 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("create ");
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print("end\n");
-        return data;
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" ");
-        node.jjtGetChild(1).jjtAccept(this, data);
-        System.out.print("\n");
         return data;
     }
 

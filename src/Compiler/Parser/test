@@ -6,8 +6,8 @@ function main()
     foreach a in g.vertices do
         int index = 2
         real b = 1.2 + index
-        Vertex v
-        v = a
+        Vertex v = a
+
     end
 
     for a = 1 to 2 do

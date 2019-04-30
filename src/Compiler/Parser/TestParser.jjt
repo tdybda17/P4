@@ -241,7 +241,7 @@ void simple_types_dcl() #SIMPLE_DCL :
 void simple_types() #SIMPLE_TYPES :
 {Token t;}
 {
-    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;}
+    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;} | t = <VERTEX> {jjtThis.value = t.image;} | t = <EDGE> {jjtThis.value = t.image;} | t = <DIEDGE> {jjtThis.value = t.image;}
 }
 
 void identifier() #IDENTIFIER :
@@ -259,7 +259,7 @@ void initialization() #void :
 void object_types() #void :
 {}
 {
-    graph_type() | collection_type() | map() | graph_element_types()
+    graph_type() | collection_type() | map()
 }
 
 void map() #MAP :
@@ -272,12 +272,6 @@ void collection_type() #COLLECTION_TYPE :
 {Token t;}
 {
     t = <COLLECTION_TYPE> <LANGLE> type() <RANGLE> {jjtThis.value = t.image;}
-}
-
-void graph_element_types() #GRAPH_ELEMENT_TYPES :
-{Token t;}
-{
-    t = < VERTEX > {jjtThis.value = t.image;} | t = < EDGE > {jjtThis.value = t.image;} | t = <DIEDGE> {jjtThis.value = t.image;}
 }
 
 void expr() #OR_EXPR(>1) :
@@ -469,13 +463,7 @@ void block_content() #void :
 void dcl() #void :
 {}
 {
-    simple_types_dcl() | graph_element_dcl() | create()
-}
-
-void graph_element_dcl() #GRAPH_ELEMENT_DCL :
-{}
-{
-    graph_element_types() identifier() initialization()
+    simple_types_dcl() | create()
 }
 
 void create() #CREATE :

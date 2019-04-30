@@ -4,7 +4,6 @@ import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
-import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.*;
 import Compiler.Parser.GeneratedFiles.*;
@@ -17,10 +16,10 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Fiel
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.BooleanTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.SimpleDataTypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
@@ -91,12 +90,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     //We get the value from the type node and convert it to a type descriptor
     private TypeDescriptor getTypeDescriptorFromTypeNode(Object node){
-        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_ELEMENT_TYPES | node instanceof ASTGRAPH_TYPE) {
+        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_TYPE) {
             SimpleNode simpleNode = convertToSimpleNode(node);
             TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
             return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
         } else {
-            throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTSIMPLE_TYPES.class.getSimpleName(), ASTGRAPH_ELEMENT_TYPES.class.getSimpleName(), ASTGRAPH_TYPE.class.getSimpleName());
+            throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTSIMPLE_TYPES.class.getSimpleName(), ASTGRAPH_TYPE.class.getSimpleName());
         }
     }
 
@@ -112,7 +111,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     //This is a helping method used to create symbols from our declaration nodes
     private Symbol createSymbolFromDclNode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_ELEMENT_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
+        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
             //The first child of our dcl nodes is always their type, which we can then call the visit method on to get the child.
             Node typeNode = dclNode.jjtGetChild(0);
             TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
@@ -164,33 +163,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        return getTypeDescriptorFromTypeNode(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2 || node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-            if(node.jjtGetNumChildren() == 3) {
-                TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
-                Node initializationNode = node.jjtGetChild(2);
-
-                TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-                try {
-                    typeCheck(expectedType, actualType);
-                } catch (IncorrectTypeException e) {
-                    throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as the graph element type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
-                }
-            }
-        } else {
-            throw new WrongAmountOfChildrenException("The graph element declaration node had: " + node.jjtGetNumChildren());
-        }
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ELEMENT_TYPES node, Object data) {
         return getTypeDescriptorFromTypeNode(node);
     }
 
