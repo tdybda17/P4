@@ -5,7 +5,9 @@ import Compiler.Parser.GeneratedFiles.*;
 public class TreeOptimizerVisitor implements TestParserVisitor {
 
     private Object defaultVisit(SimpleNode node, Object data) {
-        node.childrenAccept(this, data);
+        for(int i = 0; i < node.jjtGetNumChildren(); i++) {
+            node.jjtAccept(this, i);
+        }
         return data;
     }
 

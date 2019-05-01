@@ -64,6 +64,36 @@ class SimpleNode implements Node {
     children[i] = n;
   }
 
+  public void insertChildren(int index, Node ... newChildren) {
+    if(newChildren == null || newChildren.length == 0) {
+      throw new IllegalArgumentException("You did not specify any children to be added");
+    }
+
+    if (children == null) {
+      children = new Node[newChildren.length + index];
+      System.arraycopy(newChildren, 0, children, index, newChildren.length);
+    } else {
+      int neededArraySize = children.length + newChildren.length;
+
+      Node temp[] = new Node[neededArraySize];
+      //We dont want to move the last elements that we are not going to be adding
+      int childrenIndex = 0;
+      for(int i = 0; i < neededArraySize; i++) {
+        if(i == index) {
+          for(int j = 0; j < newChildren.length; j++) {
+            temp[i] = newChildren[j];
+            i++;
+          }
+          i--; //we need to count back one time because both the inner and outer loop have counted i up
+        } else {
+          temp[i] = children[childrenIndex];
+          childrenIndex++;
+        }
+      }
+      children = temp;
+    }
+  }
+
   public Node jjtGetChild(int i) {
     return children[i];
   }
