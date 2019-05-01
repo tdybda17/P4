@@ -133,6 +133,16 @@ public class FunctionVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTCOLOR_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTLABEL_VAL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
     public Object visit(ASTINUM_VAL node, Object data) {
         return defaultVisit(node, data);
     }
@@ -279,6 +289,26 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTELEMENT_LIST node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAP_ADT node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAP_ASSIGN node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTKEY_VALUE_PAIR node, Object data) {
         return defaultVisit(node, data);
     }
 

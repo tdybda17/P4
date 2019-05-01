@@ -81,6 +81,12 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTCONSTANT_VAL node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTCOLOR_VAL node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTLABEL_VAL node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTVARIABLE node, Object data){
     return defaultVisit(node, data);
   }
@@ -159,6 +165,18 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTELEMENT_LIST node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTMAP_ADT node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTMAP_ASSIGN node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTMAP_ELEMENT_LIST node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTKEY_VALUE_PAIR node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTFUNC_DCL node, Object data){
     return defaultVisit(node, data);
   }
@@ -172,4 +190,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=c051533d9e39fe76c631fff73114ac94 (do not edit this line) */
+/* JavaCC - OriginalChecksum=cab551ef097f029b32d709b75af42a29 (do not edit this line) */

@@ -11,130 +11,140 @@ public interface TestParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int CREATE = 5;
+  int CREATE = 8;
   /** RegularExpression Id. */
-  int END = 6;
+  int END = 9;
   /** RegularExpression Id. */
-  int BLANK = 7;
+  int BLANK = 10;
   /** RegularExpression Id. */
-  int NEWLINE = 8;
+  int NEWLINE = 11;
   /** RegularExpression Id. */
-  int COMMA = 9;
+  int COMMA = 12;
   /** RegularExpression Id. */
-  int DOT = 10;
+  int DOT = 13;
   /** RegularExpression Id. */
-  int MAIN = 11;
+  int MAIN = 14;
   /** RegularExpression Id. */
-  int ENDOFFILE = 12;
+  int ENDOFFILE = 15;
   /** RegularExpression Id. */
-  int ASSIGN = 13;
+  int ASSIGN = 16;
   /** RegularExpression Id. */
-  int AND = 14;
+  int AND = 17;
   /** RegularExpression Id. */
-  int OR = 15;
+  int OR = 18;
   /** RegularExpression Id. */
-  int NEG = 16;
+  int NEG = 19;
   /** RegularExpression Id. */
-  int FUNCTION = 17;
+  int FUNCTION = 20;
   /** RegularExpression Id. */
-  int WHILE = 18;
+  int WHILE = 21;
   /** RegularExpression Id. */
-  int FOR = 19;
+  int FOR = 22;
   /** RegularExpression Id. */
-  int FOREACH = 20;
+  int FOREACH = 23;
   /** RegularExpression Id. */
-  int IN = 21;
+  int IN = 24;
   /** RegularExpression Id. */
-  int IF = 22;
+  int IF = 25;
   /** RegularExpression Id. */
-  int THEN = 23;
+  int THEN = 26;
   /** RegularExpression Id. */
-  int ELSE = 24;
+  int ELSE = 27;
   /** RegularExpression Id. */
-  int LCURLY = 25;
+  int LCURLY = 28;
   /** RegularExpression Id. */
-  int RCURLY = 26;
+  int RCURLY = 29;
   /** RegularExpression Id. */
-  int LHARD = 27;
+  int LHARD = 30;
   /** RegularExpression Id. */
-  int RHARD = 28;
+  int RHARD = 31;
   /** RegularExpression Id. */
-  int LPAREN = 29;
+  int LPAREN = 32;
   /** RegularExpression Id. */
-  int RPAREN = 30;
+  int RPAREN = 33;
   /** RegularExpression Id. */
-  int CONNECTION = 31;
+  int CONNECTION = 34;
   /** RegularExpression Id. */
-  int VERTEX = 32;
+  int VERTEX = 35;
   /** RegularExpression Id. */
-  int EDGE = 33;
+  int EDGE = 36;
   /** RegularExpression Id. */
-  int DIEDGE = 34;
+  int DIEDGE = 37;
   /** RegularExpression Id. */
-  int INT = 35;
+  int INT = 38;
   /** RegularExpression Id. */
-  int REAL = 36;
+  int REAL = 39;
   /** RegularExpression Id. */
-  int BOOLEAN = 37;
+  int BOOLEAN = 40;
   /** RegularExpression Id. */
-  int BOOL_VAL = 38;
+  int BOOL_VAL = 41;
   /** RegularExpression Id. */
-  int DO = 39;
+  int DO = 42;
   /** RegularExpression Id. */
-  int TO = 40;
+  int TO = 43;
   /** RegularExpression Id. */
-  int RETURN = 41;
+  int RETURN = 44;
   /** RegularExpression Id. */
-  int DCL = 42;
+  int DCL = 45;
   /** RegularExpression Id. */
-  int MAP = 43;
+  int MAP = 46;
   /** RegularExpression Id. */
-  int GRAPH_TYPE = 44;
+  int COLOR = 47;
   /** RegularExpression Id. */
-  int GRAPH = 45;
+  int LABEL = 48;
   /** RegularExpression Id. */
-  int CONSTANTS = 46;
+  int GRAPH_TYPE = 49;
   /** RegularExpression Id. */
-  int CONSTANT = 47;
+  int GRAPH = 50;
   /** RegularExpression Id. */
-  int ADD_SUB = 48;
+  int CONSTANTS = 51;
   /** RegularExpression Id. */
-  int addsub = 49;
+  int CONSTANT = 52;
   /** RegularExpression Id. */
-  int MUL_DIV = 50;
+  int ADD_SUB = 53;
   /** RegularExpression Id. */
-  int muldiv = 51;
+  int addsub = 54;
   /** RegularExpression Id. */
-  int EQUALITY_OP = 52;
+  int MUL_DIV = 55;
   /** RegularExpression Id. */
-  int equality_ope = 53;
+  int muldiv = 56;
   /** RegularExpression Id. */
-  int RELATIONAL_OP = 54;
+  int EQUALITY_OP = 57;
   /** RegularExpression Id. */
-  int relational_ope = 55;
+  int equality_ope = 58;
   /** RegularExpression Id. */
-  int LANGLE = 56;
+  int RELATIONAL_OP = 59;
   /** RegularExpression Id. */
-  int RANGLE = 57;
+  int relational_ope = 60;
   /** RegularExpression Id. */
-  int COLLECTION_TYPE = 58;
+  int LANGLE = 61;
   /** RegularExpression Id. */
-  int collection = 59;
+  int RANGLE = 62;
   /** RegularExpression Id. */
-  int INUM_VAL = 60;
+  int COLLECTION_TYPE = 63;
   /** RegularExpression Id. */
-  int DIGIT = 61;
+  int collection = 64;
   /** RegularExpression Id. */
-  int FNUM_VAL = 62;
+  int INUM_VAL = 65;
   /** RegularExpression Id. */
-  int DIGITF = 63;
+  int DIGIT = 66;
   /** RegularExpression Id. */
-  int IDENTIFIER = 64;
+  int FNUM_VAL = 67;
   /** RegularExpression Id. */
-  int ID = 65;
+  int DIGITF = 68;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 69;
+  /** RegularExpression Id. */
+  int ID = 70;
+  /** RegularExpression Id. */
+  int COLOR_VAL = 71;
+  /** RegularExpression Id. */
+  int LABEL_VAL = 72;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int ML_COMMENT_STATE = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -143,6 +153,9 @@ public interface TestParserConstants {
     "\"\\r\"",
     "\"\\t\"",
     "<token of kind 4>",
+    "\"/*\"",
+    "\"*/\"",
+    "<token of kind 7>",
     "\"create\"",
     "\"end\"",
     "<BLANK>",
@@ -182,6 +195,8 @@ public interface TestParserConstants {
     "\"return\"",
     "\"dcl\"",
     "\"Map\"",
+    "\"color\"",
+    "\"label\"",
     "<GRAPH_TYPE>",
     "<GRAPH>",
     "<CONSTANTS>",
@@ -204,6 +219,8 @@ public interface TestParserConstants {
     "<DIGITF>",
     "<IDENTIFIER>",
     "<ID>",
+    "<COLOR_VAL>",
+    "<LABEL_VAL>",
   };
 
 }
