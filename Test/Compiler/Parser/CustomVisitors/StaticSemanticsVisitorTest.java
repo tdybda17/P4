@@ -13,6 +13,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.Inte
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -280,7 +281,7 @@ class StaticSemanticsVisitorTest {
         System.out.println(TestParser.parseTextFile(path));
     }
 
-
+    @Disabled
     @Test
     void visit3() throws Exception {
         String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
