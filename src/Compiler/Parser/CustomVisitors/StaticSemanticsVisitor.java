@@ -890,7 +890,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
-        return null;
+        return defaultVisit(node, data);
     }
 
     @Override
