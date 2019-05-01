@@ -25,6 +25,7 @@ public class TypeDescriptorFactory {
             case "Real": case "real": return new RealTypeDescriptor();
             case "Color": case "color": return new ColorTypeDescriptor();
             case "Boolean": case "boolean": return new BooleanTypeDescriptor();
+            case "Label": case "label": return new LabelTypeDescriptor();
             case "Vertex": return new VertexTypeDescriptor();
             case "DiEdge": return new DirectedEdgeTypeDescriptor();
             case "Edge": return new UndirectedEdgeTypeDescriptor();

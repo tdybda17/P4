@@ -1,8 +1,8 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
 
-public class ColorTypeDescriptor extends TypeDescriptor {
+public class LabelTypeDescriptor extends TypeDescriptor {
     @Override
     public String getTypeName() {
-        return "Color";
+        return "Label";
     }
 }
