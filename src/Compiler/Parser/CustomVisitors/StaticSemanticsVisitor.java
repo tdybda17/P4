@@ -166,6 +166,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return getTypeDescriptorFromTypeNode(node);
     }
 
+    //TODO: this needs to be rewritten, or we need to rewrite the AST.
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
@@ -397,6 +398,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         }
     }
 
+    //TODO: få lavet så denne tjekker du faktisk har et funktion call
     @Override
     public Object visit(ASTFUNCTION_CALL_STMT node, Object data) {
         return node.jjtGetChild(0).jjtAccept(this, symbolTable);
@@ -735,6 +737,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: denne er ikke en nødvendighed længere
     @Override
     public Object visit(ASTVERTEX_LIST node, Object data) {
         return defaultVisit(node, data);
@@ -884,6 +887,10 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
+        if(node.jjtGetNumChildren() != 4) {
+            throw new WrongAmountOfChildrenException("A function declaration node did not have 4 children but instead had: " + node.jjtGetNumChildren());
+        }
+
         String functionName = getValueStringOfChild(node, 1);
         try {
             Symbol symbol = symbolTable.retrieveSymbol(functionName);
@@ -894,7 +901,15 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         } catch (SymbolTableException e) {
             throw new VisitorException("The function declarations have not yet been entered in the symbol table. (Remember to run function visitor on the tree)");
         }
-        return defaultVisit(node, data);
+
+        //We need to do this because we want our formal parameters to be in the scope of the function block
+        symbolTable.openScope();
+        Node formalParametersNode = node.jjtGetChild(2);
+        formalParametersNode.jjtAccept(this, data);
+        Node blockNode = node.jjtGetChild(3);
+        blockNode.jjtAccept(this, data);
+        symbolTable.closeScope();
+        return null;
     }
 
     @Override
