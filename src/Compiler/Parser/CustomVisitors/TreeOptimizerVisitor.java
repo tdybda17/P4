@@ -3,7 +3,6 @@ package Compiler.Parser.CustomVisitors;
 import Compiler.Parser.GeneratedFiles.*;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
-
     private Object defaultVisit(SimpleNode node, Object data) {
         for(int i = 0; i < node.jjtGetNumChildren(); i++) {
             node.jjtAccept(this, i);

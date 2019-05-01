@@ -17,8 +17,22 @@ class SimpleNodeTest {
     }
 
     @Test
-    void insertChildren() {
-        node.insertChildren(0, new ASTIDENTIFIER(2), new ASTIDENTIFIER(2));
-        assertEquals(new ASTIDENTIFIER(2), node.jjtGetChild(0));
+    void insertChildren1() {
+        node.insertChildren(0, new ASTIDENTIFIER(2), new ASTSIMPLE_TYPES(2));
+        assertTrue(node.jjtGetChild(0) instanceof ASTIDENTIFIER);
+        assertTrue(node.jjtGetChild(1) instanceof ASTSIMPLE_TYPES);
+        assertTrue(node.jjtGetChild(2) instanceof ASTSTART);
+        assertTrue(node.jjtGetChild(3) instanceof ASTSTART);
+        assertTrue(node.jjtGetChild(4) instanceof ASTSTART);
+    }
+
+    @Test
+    void insertChildren2() {
+        node.insertChildren(1, new ASTIDENTIFIER(2), new ASTSIMPLE_TYPES(2));
+        assertTrue(node.jjtGetChild(0) instanceof ASTSTART);
+        assertTrue(node.jjtGetChild(1) instanceof ASTIDENTIFIER);
+        assertTrue(node.jjtGetChild(2) instanceof ASTSIMPLE_TYPES);
+        assertTrue(node.jjtGetChild(3) instanceof ASTSTART);
+        assertTrue(node.jjtGetChild(4) instanceof ASTSTART);
     }
 }
