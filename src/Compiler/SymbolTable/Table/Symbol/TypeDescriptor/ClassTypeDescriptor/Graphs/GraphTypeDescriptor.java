@@ -39,7 +39,8 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
 
     private Method addEdge(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(edgeType);
+        parameters.add(new VertexTypeDescriptor());
+        parameters.add(new VertexTypeDescriptor());
         return new Method("addEdge", new BooleanTypeDescriptor(), parameters);
     }
 
