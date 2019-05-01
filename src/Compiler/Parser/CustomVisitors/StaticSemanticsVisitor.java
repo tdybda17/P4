@@ -836,16 +836,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTFUNCS_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
-        return null;
-    }
-
-    @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
         TypeDescriptor returnType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         String methodName = getValueStringOfChild(node, 1);
@@ -867,9 +857,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    //TODO: få lavet denne så man enter dem ind i symbol table
     @Override
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
+        TypeDescriptor type = getTypeDescriptorFromTypeNode(node.jjtGetChild(0));
+        String symbolName = getIdentifierName(node.jjtGetChild(1));
+
+        Symbol symbol = new Symbol(symbolName, new IdentifierAttributes(type));
+        symbolTable.enterSymbol(symbol);
         return defaultVisit(node, data);
     }
 
@@ -887,6 +881,16 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTPROG node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTFUNCS_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
+        return null;
     }
 
     @Override
