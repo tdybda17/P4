@@ -2,6 +2,7 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.Visitor.AssignmentException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
@@ -78,9 +79,9 @@ class StaticSemanticsVisitorTest {
     }
 
     //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
-/*    @Test
+    @Test
     void visitAssignNodeTest1(){
-        ASTMEMBER leftNode = new ASTMEMBER(0);
+        ASTVARIABLE leftNode = new ASTVARIABLE(0);
         String identifierName = "x";
         ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
         identifierNode.jjtSetValue(identifierName);
@@ -93,12 +94,12 @@ class StaticSemanticsVisitorTest {
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
         assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }*/
+    }
 
     //We test that we cannot assign the wrong value type to an identifier
-/*    @Test
+    @Test
     void visitAssignNodeTest2(){
-        ASTMEMBER leftNode = new ASTMEMBER(0);
+        ASTVARIABLE leftNode = new ASTVARIABLE(0);
         String identifierName = "x";
         ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
         identifierNode.jjtSetValue(identifierName);
@@ -109,8 +110,8 @@ class StaticSemanticsVisitorTest {
         rightNode.jjtSetValue("6.5");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }*/
+        assertThrows(AssignmentException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
+    }
 
     //We test that if our left node is not entered in the symbol table then the assignment throws an exception
 /*    @Test
