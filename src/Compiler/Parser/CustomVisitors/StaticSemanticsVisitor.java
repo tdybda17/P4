@@ -4,6 +4,7 @@ import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
+import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.*;
 import Compiler.Parser.GeneratedFiles.*;
@@ -33,7 +34,8 @@ import java.util.*;
 
 public class StaticSemanticsVisitor implements TestParserVisitor {
     private SymbolTable symbolTable;
-    private Method currentMethod;
+    private String currentFunctionName;
+    private TypeDescriptor currentFunctionReturnType;
 
     //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException + IllegalArgumentException. Derefter skal det siges der var en compiler fejl og ikke en fejl i den skrevne kode.
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
@@ -134,7 +136,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTBLOCK node, Object data) {
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        //System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
+        System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
         symbolTable.closeScope();
         return null;
     }
@@ -668,7 +670,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
                 TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
                 if (!isCorrectType(formalParameterType, actualParameterType))
-                    throw new UnmatchedParametersException(formalParameterType, actualParameterType, currentMethod.getMethodName());
+                    throw new UnmatchedParametersException(formalParameterType, actualParameterType, currentFunctionName);
             }
             return data;
         }
@@ -678,8 +680,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
-        currentMethod = new Method("main", new VoidTypeDescriptor(), new ArrayList<>());
-
+        currentFunctionName = "main";
+        currentFunctionReturnType = new VoidTypeDescriptor();
         return defaultVisit(node, data);
     }
 
@@ -817,19 +819,19 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTRETURN_STMT node, Object data) {
         if (node.jjtGetNumChildren() == 0) {
-            if (currentMethod.getReturnType() instanceof VoidTypeDescriptor)
+            if (currentFunctionReturnType instanceof VoidTypeDescriptor)
                 return data;
             else
-                throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentMethod.getMethodName() +
-                        "'. Expected return value of type " + currentMethod.getReturnType().getTypeName());
+                throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentFunctionName +
+                        "'. Expected return value of type " + currentFunctionReturnType.getTypeName());
         }
         else {
             TypeDescriptor actualReturnType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
-            TypeDescriptor expectedReturnType = currentMethod.getReturnType();
+            TypeDescriptor expectedReturnType = currentFunctionReturnType;
             if (isCorrectType(expectedReturnType, actualReturnType))
                 return data;
             else
-                throw new IncorrectTypeException("Illegal return value in function " + currentMethod.getMethodName() +
+                throw new IncorrectTypeException("Illegal return value in function " + currentFunctionName +
                         ". Expected return value of type " + expectedReturnType.getTypeName() + " but it was of type " +
                         actualReturnType.getTypeName());
         }
@@ -837,20 +839,29 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
-        TypeDescriptor returnType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
-        String methodName = getValueStringOfChild(node, 1);
-        currentMethod = new Method(methodName, returnType, new ArrayList<>());
-
+        String functionName = getValueStringOfChild(node, 1);
+        try {
+            Symbol symbol = symbolTable.retrieveSymbol(functionName);
+            if (symbol.getAttributes() instanceof FunctionAttributes) {
+                currentFunctionReturnType = ((FunctionAttributes) symbol.getAttributes()).getReturnType();
+            }
+            currentFunctionName = functionName;
+        } catch (SymbolTableException e) {
+            throw new VisitorException("The function declarations have not yet been entered in the symbol table. (Remember to run function visitor on the tree)");
+        }
         return defaultVisit(node, data);
     }
 
     @Override
     public Object visit(ASTRETURN_TYPE node, Object data) {
-        if (node.jjtGetNumChildren() == 0)
-            return new VoidTypeDescriptor();
-        else
-            return node.jjtGetChild(0).jjtAccept(this, data);
+        return defaultVisit(node, data);
     }
+
+    @Override
+    public Object visit(ASTFUNCS_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
 
     @Override
     public Object visit(ASTFORMAL_PARAMETERS node, Object data) {
@@ -880,11 +891,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTPROG node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTFUNCS_DCL node, Object data) {
         return defaultVisit(node, data);
     }
 

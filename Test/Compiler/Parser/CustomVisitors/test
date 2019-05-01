@@ -36,7 +36,8 @@ function main()
 
     create Set<Vertex> vertices = g.vertices end
     g.vertices = vertices
-
+    Vertex AAA
+    boolean b = createGraph().vertices.contains(AAA)
     real weight = edg(1, 2.2).weight
 end
 
