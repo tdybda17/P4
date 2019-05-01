@@ -867,6 +867,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO: få lavet denne så man enter dem ind i symbol table
     @Override
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
         return defaultVisit(node, data);

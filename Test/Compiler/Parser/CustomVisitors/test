@@ -1,6 +1,7 @@
 function main()
     real x = 7.8
     int i
+    Vertex a
 
     i = 6
     x = i

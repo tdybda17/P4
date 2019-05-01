@@ -138,9 +138,9 @@ class StaticSemanticsVisitorTest {
     }
 
     //We try creating an Edge object and tests that it gets entered into the symbol table
-    /*@Test
+    @Test
     void visitGraphElementDeclarationNodeTest1(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Edge", "a");
+        ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("Edge", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, null);
 
@@ -153,7 +153,7 @@ class StaticSemanticsVisitorTest {
     //Testing that we can also create DiEdge objects
     @Test
     void visitGraphElementDeclarationNodeTest2(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");
+        ASTSIMPLE_DCL  edgeDclNode = createSimpleDCLnode("DiEdge", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, null);
 
@@ -166,7 +166,7 @@ class StaticSemanticsVisitorTest {
     //Testing that we can also create Vertex objects.
     @Test
     void visitGraphElementDeclarationNodeTest3(){
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("Vertex", "a");
+        ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("Vertex", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, null);
 
@@ -174,21 +174,6 @@ class StaticSemanticsVisitorTest {
         expected.openScope();
         expected.enterSymbol("a", new IdentifierAttributes(new VertexTypeDescriptor()));
         assertEquals(expected, symbolTable);
-    }
-
-    private ASTGRAPH_ELEMENT_DCL createGraphElementDclNode(String type, String id) {
-        ASTGRAPH_ELEMENT_DCL dclNode = new ASTGRAPH_ELEMENT_DCL(1);
-        ASTGRAPH_ELEMENT_TYPES graph_element_types = new ASTGRAPH_ELEMENT_TYPES(2);
-
-        graph_element_types.jjtSetValue(type);
-
-        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(3);
-        identifierNode.jjtSetValue(id);
-
-        //We set the type to be the first child of our graph element dcl node, and the id to be the second child
-        dclNode.jjtAddChild(graph_element_types, 0);
-        dclNode.jjtAddChild(identifierNode, 1);
-        return dclNode;
     }
 
     //We test that we cannot add an edge from a to b twice in the same graph.
@@ -258,11 +243,9 @@ class StaticSemanticsVisitorTest {
         assertThrows(IncorrectTypeException.class, ()-> staticSemanticsVisitor.visit(createVertexDclNode("a", "b", weight), null));
     }
 
-    //TODO: mangler test med GraphAssign
-
     @Test
     void duplicateSymbolExceptionTest() throws Exception{
-        ASTGRAPH_ELEMENT_DCL edgeDclNode = createGraphElementDclNode("DiEdge", "a");
+        ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("DiEdge", "a");
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "a");
 
         staticSemanticsVisitor.visit(edgeDclNode, symbolTable);
@@ -295,5 +278,5 @@ class StaticSemanticsVisitorTest {
         String path = "Test/Compiler/Parser/CustomVisitors/test";
         System.out.println(TestParser.parseTextFile(path));
     }
-*/
+
 }
