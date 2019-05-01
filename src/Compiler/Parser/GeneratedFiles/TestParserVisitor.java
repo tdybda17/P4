@@ -36,7 +36,6 @@ public interface TestParserVisitor
   public Object visit(ASTACTUAL_PARAMETERS node, Object data);
   public Object visit(ASTMAIN node, Object data);
   public Object visit(ASTBLOCK node, Object data);
-  public Object visit(ASTCREATE node, Object data);
   public Object visit(ASTGRAPH_DCL node, Object data);
   public Object visit(ASTGRAPH_TYPE node, Object data);
   public Object visit(ASTGRAPH_ASSIGN node, Object data);
@@ -65,4 +64,4 @@ public interface TestParserVisitor
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
 }
-/* JavaCC - OriginalChecksum=da69397c5f17e9306bc10e2b1e768dfd (do not edit this line) */
+/* JavaCC - OriginalChecksum=27be75d8a3eba57ab89fd5fd168ff69d (do not edit this line) */

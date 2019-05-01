@@ -213,13 +213,6 @@ public class PrintVisitor implements TestParserVisitor {
     public Object visit(ASTBLOCK node, Object data){
         return defaultVisit(node, data);
     }
-    @Override
-    public Object visit(ASTCREATE node, Object data){
-        System.out.print("create ");
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print("end\n");
-        return data;
-    }
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data){

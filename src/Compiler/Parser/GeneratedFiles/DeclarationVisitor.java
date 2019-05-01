@@ -166,11 +166,6 @@ public class DeclarationVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    public Object visit(ASTCREATE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-
     public Object visit(ASTGRAPH_DCL node, Object data) {
         return defaultVisit(node, data);
     }
