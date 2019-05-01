@@ -102,6 +102,27 @@ class SimpleNode implements Node {
     return (children == null) ? 0 : children.length;
   }
 
+  public Node removeChild(int index) {
+    if(index >= jjtGetNumChildren() || index < 0) {
+      throw new IndexOutOfBoundsException("The index: " + index +", was out of bounds");
+    }
+
+    Node[] temp = new Node[children.length - 1];
+    Node removedNode = null;
+    int tempIndex = 0;
+    for(int i = 0; i < children.length; i++) {
+      if(i != index) {
+        temp[tempIndex] = children[i];
+        tempIndex++;
+      } else {
+          removedNode = children[i];
+      }
+    }
+
+    children = temp;
+    return removedNode;
+  }
+
   public void jjtSetValue(Object value) { this.value = value; }
   public Object jjtGetValue() { return value; }
 
