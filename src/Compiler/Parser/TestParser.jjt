@@ -490,7 +490,7 @@ void dcl() #void :
     simple_types_dcl() | create()
 }
 
-void create() #CREATE :
+void create() #void :
 {}
 {
     < CREATE > adt() < END >

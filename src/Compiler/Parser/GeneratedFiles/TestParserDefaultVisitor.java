@@ -105,9 +105,6 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTBLOCK node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTCREATE node, Object data){
-    return defaultVisit(node, data);
-  }
   public Object visit(ASTGRAPH_DCL node, Object data){
     return defaultVisit(node, data);
   }
@@ -190,4 +187,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=cab551ef097f029b32d709b75af42a29 (do not edit this line) */
+/* JavaCC - OriginalChecksum=3e8bcebc1eb78c2b88f84828c4ef670b (do not edit this line) */
