@@ -12,7 +12,7 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor keyType;
     private TypeDescriptor elementType;
 
-    MapTypeDescriptor(TypeDescriptor keyType, TypeDescriptor elementType) {
+    public MapTypeDescriptor(TypeDescriptor keyType, TypeDescriptor elementType) {
         super();
         this.keyType = keyType;
         this.elementType = elementType;
@@ -35,6 +35,10 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
     @Override
     public TypeDescriptor getElementType() {
         return elementType;
+    }
+
+    public TypeDescriptor getKeyType() {
+        return keyType;
     }
 
     public void setKeyType(TypeDescriptor keyType) {
@@ -90,5 +94,13 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), keyType, elementType);
+    }
+
+    @Override
+    public String toString() {
+        return "MapTypeDescriptor<" +
+                keyType +
+                ", " + elementType +
+                '>';
     }
 }

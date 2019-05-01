@@ -1,6 +1,23 @@
 function main()
+    label name = "Anton"
+
+/*
     create Graph g
         a -- b
+    end
+
+    create Map<int, boolean> map
+        1 -- true
+        0 -- false
+    end
+
+    create Map<int, real> map2 = map end
+
+    create Set<int> set
+        1
+        2
+        3
+        4
     end
 
     foreach a in g.vertices do
@@ -13,6 +30,6 @@ function main()
     for a = 1 to 2 do
         Vertex v
     end
-
+*/
 
 end

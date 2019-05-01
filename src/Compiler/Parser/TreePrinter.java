@@ -79,6 +79,8 @@ public class TreePrinter {
     private static String addValue(String value) {
         if (value.contains("."))
             return value.replace(".", "_");
+        else if (value.contains("\""))
+            return value.replaceAll("\"", "");
         switch (value) {
             case "<":
                 return "LESS";

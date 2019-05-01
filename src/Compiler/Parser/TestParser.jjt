@@ -28,6 +28,7 @@ public class TestParser {
 //            SymbolTable st = new SymbolTable();
 //            st.openScope();
 //            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
+//            useVisitorMethod(new StaticSemanticsVisitor(st), "src/Compiler/Parser/test", st);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,7 +61,14 @@ SKIP :
   " "
 | "\r"
 | "\t"
-| < "//" (~["\n"])* > //This is for skipping a comment
+| < "//" (~["\n"])* > //This is for skipping single-line comment
+| < "/*" > : ML_COMMENT_STATE //This is for skipping multi-line comment
+}
+
+<ML_COMMENT_STATE> SKIP :
+{
+  < "*/" > : DEFAULT
+| < ~[] >
 }
 
 TOKEN : /* OPERATORS */
@@ -104,6 +112,8 @@ TOKEN : /* OPERATORS */
 | < RETURN : "return" >
 | < DCL : "dcl" >
 | < MAP : "Map" >
+| < COLOR : "color" >
+| < LABEL : "label" >
 }
 
 TOKEN :
@@ -130,6 +140,8 @@ TOKEN :
 | < #DIGITF : ("0" | ["1"-"9"](["0"-"9"])*)"."(["0"-"9"])+ >
 | < IDENTIFIER : (< ID >) >
 | < #ID : ["a"-"z", "A"-"Z"](["a"-"z", "A"-"Z"] | ["0"-"9"])* >
+| < COLOR_VAL : "GRAY" | "BLACK" | "WHITE" | "RED" | "GREEN" | "BLUE" | "YELLOW" >
+| < LABEL_VAL : "\"" <ID> "\"" >
 
 
 }
@@ -241,7 +253,7 @@ void simple_types_dcl() #SIMPLE_DCL :
 void simple_types() #SIMPLE_TYPES :
 {Token t;}
 {
-    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;} | t = <VERTEX> {jjtThis.value = t.image;} | t = <EDGE> {jjtThis.value = t.image;} | t = <DIEDGE> {jjtThis.value = t.image;}
+    t = < INT > {jjtThis.value = t.image;} | t = < REAL > {jjtThis.value = t.image;} | t = < BOOLEAN > {jjtThis.value = t.image;} | t = <LABEL> {jjtThis.value = t.image;} | t = <COLOR> {jjtThis.value = t.image;} | t = <VERTEX> {jjtThis.value = t.image;} | t = <EDGE> {jjtThis.value = t.image;} | t = <DIEDGE> {jjtThis.value = t.image;}
 }
 
 void identifier() #IDENTIFIER :
@@ -367,7 +379,7 @@ void atomic_expr() #void :
 void value() #void :
 {Token t;}
 {
-    variable_or_function() | inum_val() | fnum_val() | bool_val() | constant_val()
+    variable_or_function() | inum_val() | fnum_val() | bool_val() | constant_val() | color_val() | label_val()
 }
 
 void inum_val() #INUM_VAL :
@@ -392,6 +404,18 @@ void constant_val() #CONSTANT_VAL :
 {Token t;}
 {
     t = <CONSTANTS> {jjtThis.value = t.image;}
+}
+
+void color_val() #COLOR_VAL :
+{Token t;}
+{
+    t = <COLOR_VAL> {jjtThis.value = t.image;}
+}
+
+void label_val() #LABEL_VAL :
+{Token t;}
+{
+    t = <LABEL_VAL> {jjtThis.value = t.image;}
 }
 
 void variable_or_function() #void :
@@ -475,7 +499,7 @@ void create() #CREATE :
 void adt() #void :
 {}
 {
-    graph_adt() | collection_adt()
+    graph_adt() | collection_adt() | map_adt()
 }
 
 void graph_adt() #GRAPH_DCL :
@@ -619,7 +643,7 @@ void collection_adt() #COLLECTION_ADT :
 void collection_dcl() #void :
 {}
 {
-   (< ASSIGN > variable_or_function()) #COLLECTION_ASSIGN | newlines_plus() element_list() #ELEMENT_LIST | empty()
+   < ASSIGN > variable_or_function() #COLLECTION_ASSIGN | newlines_plus() element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
@@ -632,6 +656,30 @@ void element_list_continuous() #void :
 {}
 {
     element_list() | empty()
+}
+
+void map_adt() #MAP_ADT :
+{}
+{
+    <MAP> <LANGLE> type() <COMMA> type() <RANGLE> identifier() map_dcl()
+}
+
+void map_dcl() #void :
+{}
+{
+    <ASSIGN> variable_or_function() #MAP_ASSIGN | newlines_plus() map_element_list() #MAP_ELEMENT_LIST | empty()
+}
+
+void map_element_list() #void :
+{}
+{
+    (value() <CONNECTION> value()) #KEY_VALUE_PAIR newlines_plus() map_element_list_continuous()
+}
+
+void map_element_list_continuous() #void :
+{}
+{
+    map_element_list() | empty()
 }
 
 void funcs_dcl() #void :

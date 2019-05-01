@@ -12,19 +12,17 @@ import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.IdentifierAttributes;
 import Compiler.SymbolTable.Table.Symbol.Symbol;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.*;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.MapTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.NumberTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.CollectionTypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 import Compiler.SymbolTable.Table.SymbolTable;
 
 import java.util.List;
@@ -50,7 +48,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             }
         }
         else if (!expectedType.equals(actualType))
-            throw new IncorrectTypeException(expectedType.getClass().getSimpleName(), actualType.getClass().getSimpleName());
+            throw new IncorrectTypeException(expectedType.toString(), actualType.toString());
     }
 
     private boolean isCorrectType(TypeDescriptor expectedType, TypeDescriptor actualType) {
@@ -478,6 +476,48 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTMAP_ADT node, Object data) {
+        // get key-value type and create MapTypeDescriptor
+        TypeDescriptor keyType = getTypeDescriptorFromTypeNode(node.jjtGetChild(0));
+        TypeDescriptor valueType = getTypeDescriptorFromTypeNode(node.jjtGetChild(1));
+        MapTypeDescriptor mapType = new MapTypeDescriptor(keyType, valueType);
+
+        // add id to symbol table
+        String id = getValueStringOfChild(node, 2);
+        symbolTable.enterSymbol(id, new IdentifierAttributes(mapType));
+
+        // accept 4th child with parameter MapTypeDescriptor
+        node.jjtGetChild(3).jjtAccept(this, mapType);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTMAP_ASSIGN node, Object data) {
+        MapTypeDescriptor expectedType = (MapTypeDescriptor) data;
+        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(expectedType, actualType);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTKEY_VALUE_PAIR node, Object data) {
+        MapTypeDescriptor mapType = (MapTypeDescriptor) data;
+
+        TypeDescriptor keyType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(mapType.getKeyType(), keyType);
+
+        TypeDescriptor valueType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        typeCheck(mapType.getElementType(), valueType);
+
+        return data;
+    }
+
+    @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
         SimpleNode collectionTypeNode = convertToSimpleNode(node);
 
@@ -576,6 +616,16 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         TypeDescriptor type = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         typeCheck(new BooleanTypeDescriptor(), type);
         return new BooleanTypeDescriptor();
+    }
+
+    @Override
+    public Object visit(ASTCOLOR_VAL node, Object data) {
+        return new ColorTypeDescriptor();
+    }
+
+    @Override
+    public Object visit(ASTLABEL_VAL node, Object data) {
+        return new LabelTypeDescriptor();
     }
 
     @Override
