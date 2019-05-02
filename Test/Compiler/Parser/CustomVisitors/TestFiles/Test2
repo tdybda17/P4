@@ -12,16 +12,20 @@ function main()
      end
 
      //OMSKRIVES TIL:
-     /*create DiGraph testGraph end
+     create DiGraph testGraph end
      Vertex a
-     testGraph.addVertex(a)
      Vertex b
+     Vertex c
+     Vertex d
+     testGraph.addVertex(a)
      testGraph.addVertex(b)
+     testGraph.addVertex(c)
+     testGraph.addVertex(d)
      testGraph.addEdge(a,b)
      testGraph.getEdge(a,b).weight = 0.3
      Vertex d
-     testGraph.addVertex(d)
-     testGraph.addEdge(b,d)*/
+
+     testGraph.addEdge(b,d)
 
 
       /*create Queue<real> Q

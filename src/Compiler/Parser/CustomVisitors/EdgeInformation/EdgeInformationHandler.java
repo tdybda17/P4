@@ -1,5 +1,6 @@
 package Compiler.Parser.CustomVisitors.EdgeInformation;
 
+import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.CustomVisitors.TreeOptimizerVisitor;
@@ -8,13 +9,18 @@ import Compiler.Parser.GeneratedFiles.ASTWEIGHT;
 import Compiler.Parser.GeneratedFiles.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EdgeInformationHandler {
     private TreeOptimizerVisitor treeOptimizerVisitor;
     private String graphType;
 
     public EdgeInformationHandler(String graphType) {
+        if(!graphType.equals("Graph") && !graphType.equals("DiGraph")){
+            throw new IllegalArgumentException();
+        }
         this.graphType = graphType;
         this.treeOptimizerVisitor = new TreeOptimizerVisitor();
     }
@@ -30,6 +36,7 @@ public class EdgeInformationHandler {
             }
         }
 
+        checkEdgeInformation(edgeInformationList);
         return edgeInformationList;
     }
 
@@ -66,4 +73,34 @@ public class EdgeInformationHandler {
         return edgeInformations;
     }
 
+
+    private void checkEdgeInformation(List<EdgeInformation> edgeInformationList) {
+        Map<String, List<String>> edgesGraph = new HashMap<>();
+        if(graphType.equals("DiGraph")) {
+            for(EdgeInformation edgeInformation : edgeInformationList) {
+                addEdgeToGraphInfo(edgesGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
+            }
+        } else if(graphType.equals("Graph")) {
+            for(EdgeInformation edgeInformation : edgeInformationList) {
+                addEdgeToGraphInfo(edgesGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
+                addEdgeToGraphInfo(edgesGraph, edgeInformation.getSecondVertex(), edgeInformation.getFirstVertex());
+            }
+        }
+    }
+
+    private void addEdgeToGraphInfo(Map<String, List<String>> edgesInGraph, String key, String value) {
+        if(edgesInGraph.containsKey(key)) {
+            List<String> neighbours = edgesInGraph.get(key);
+            if(neighbours.contains(value)) {
+                throw new DuplicateEdgeException("You tried to add more than one edge from " + key+ " to " + value);
+            }
+            neighbours.add(value);
+            edgesInGraph.put(key, neighbours);
+        } else {
+            List<String> neighbours = new ArrayList<>();
+            neighbours.add(value);
+            edgesInGraph.put(key, neighbours);
+        }
+
+    }
 }

@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
     private String currentGraphName = "";
+    private String currentGraphType = "";
 
     private Object defaultVisit(SimpleNode node, Object data) {
         for(int i = 0; i < node.jjtGetNumChildren(); i++) {
@@ -114,6 +115,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             return defaultVisit(node, data);
         } else if(node.jjtGetNumChildren() == 3) {
             int childIndex = 2;
+            currentGraphType = (String) ((ASTGRAPH_TYPE) node.jjtGetChild(0)).jjtGetValue();
             currentGraphName = getIdentifierName(node.jjtGetChild(1));
             Node childNode = node.jjtGetChild(childIndex);
             List<Node> newNodesForASTList = new ArrayList<>();
@@ -163,7 +165,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
         blockNodeChildren.addAll(createAddingVertexToGraphFunctionCalls(knownVertexNames));
 
-        EdgeInformationHandler edgeInformationHandler = new EdgeInformationHandler("GRAPH");
+        EdgeInformationHandler edgeInformationHandler = new EdgeInformationHandler(currentGraphType);
         List<EdgeInformation> edgeInformationList = edgeInformationHandler.getAllEdgeInformations(node);
 
 
@@ -206,7 +208,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     private List<ASTFUNCTION_CALL_STMT> createAddingVertexToGraphFunctionCalls(Set<String> vertexNames) {
         List<ASTFUNCTION_CALL_STMT> functionCallNodes = new ArrayList<>();
         for(String vertexName : vertexNames) {
-            functionCallNodes.add(createAddVertexFunctionCall(vertexName));
+            functionCallNodes.add(createFunctionCallStmtNode(currentGraphName, "addVertex", createVariableFromId(vertexName)));
         }
         return functionCallNodes;
     }
