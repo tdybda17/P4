@@ -110,7 +110,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             Node childNode = node.jjtGetChild(childIndex);
             List<Node> newNodesForASTList = new ArrayList<>();
             if(childNode instanceof ASTGRAPH_ASSIGN) {
-                Node assignNodeForParent = createAssignNodeFromInitialization(node.jjtGetChild(1), childNode.jjtGetChild(0));
+                Node assignNodeForParent = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), childNode);
                 newNodesForASTList.add(assignNodeForParent);
             } else if (childNode instanceof ASTGRAPH_DCL_ELEMENTS) {
                 newNodesForASTList = convertResultToNodeList(node.jjtGetChild(childIndex).jjtAccept(this, childIndex));
@@ -131,19 +131,21 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    private ASTASSIGN createAssignNodeFromInitialization(Node leftValue, Node rightNode){
-        if(!(leftValue instanceof ASTIDENTIFIER)) {
-            throw new IllegalArgumentException("Your left value node was not an identifier node");
+    private ASTASSIGN createAssignNodeFromInitialization(String leftId, Node rightNode){
+        if(rightNode instanceof ASTGRAPH_ASSIGN | rightNode instanceof ASTCOLLECTION_ASSIGN) {
+            ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+
+            ASTVARIABLE leftNode = createVariableFromId(leftId);
+            assignNode.jjtAddChild(leftNode, 0);
+
+            //We get the child because we want to skip the GraphAssign or CollectionAssign nodes themselves
+            assignNode.jjtAddChild(rightNode.jjtGetChild(0), 1);
+            return assignNode;
+        } else {
+            throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName());
         }
-        ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
 
-        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
-        ASTIDENTIFIER leftIdentifier = copyIdentifierNode((ASTIDENTIFIER) leftValue);
-        leftNode.jjtAddChild(leftIdentifier, 0);
-        assignNode.jjtAddChild(leftNode, 0);
 
-        assignNode.jjtAddChild(rightNode, 1);
-        return assignNode;
     }
 
     @Override
@@ -181,6 +183,21 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             }
         }
         return vertexNames;
+    }
+
+    private List<EdgeInformation> getAllEdgeInformations(Node root) {
+
+        return null;
+    }
+
+    private EdgeInformation getEdgeInformation(ASTGRAPH_VERTEX_DCL node) {
+        if(node.jjtGetNumChildren() == 2) {
+            return null; //TODO: få lavet for VERTEX LIST
+        } else if (node.jjtGetNumChildren() == 3) {
+            return null; //TODO: få lavet 
+        } else {
+            throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 2 or 3 children");
+        }
     }
 
     private List<ASTSIMPLE_DCL> createAllVertexDclNodes(Set<String> vertexNames) {

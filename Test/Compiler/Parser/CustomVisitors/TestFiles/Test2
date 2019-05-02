@@ -1,15 +1,12 @@
 function main()
-     /*int i
-     int x = 7
-
      create DiGraph XYZ = testGraph end
 
      //Omskrives til
      create DiGraph XYZ end
      XYZ = testGraph
-     */
 
-     create DiGraph testGraph
+
+     /*create DiGraph testGraph
          a -- {b[0.3],c}
          b -- d
      end
@@ -24,7 +21,7 @@ function main()
      testGraph.getEdge(a,b).weight = 0.3
      Vertex d
      testGraph.addVertex(d)
-     testGraph.addEdge(b,d)
+     testGraph.addEdge(b,d)*/
 
 
       /*create Queue<real> Q
