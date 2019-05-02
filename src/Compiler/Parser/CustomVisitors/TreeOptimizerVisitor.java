@@ -1,5 +1,6 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.Visitor.OptimizationException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.GeneratedFiles.*;
@@ -100,12 +101,9 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
         ASTIDENTIFIER leftIdentifier = copyIdentifierNode((ASTIDENTIFIER) leftValue);
         leftNode.jjtAddChild(leftIdentifier, 0);
-        leftIdentifier.jjtSetParent(leftNode);
         assignNode.jjtAddChild(leftNode, 0);
-        leftNode.jjtSetParent(assignNode);
 
         assignNode.jjtAddChild(rightNode, 1);
-        rightNode.jjtSetParent(assignNode);
         return assignNode;
     }
 
@@ -113,6 +111,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
         ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
         Set<String> knownVertexNames = new HashSet<>();
+
 
         int amtBlockChildren = 0;
         for(int i = 0; i < node.jjtGetNumChildren(); i++) {
@@ -125,23 +124,30 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return nodesToAdd;
     }
 
+    private List<Node> createAllVertex() {
+        return null;
+    }
+
     private String getVertexName(ASTSIMPLE_DCL vertexDcl) {
         return getIdentifierName(vertexDcl);
     }
 
     private int checkNewNodes(ASTBLOCK blockNode, int amtBlockChildren, List<Node> newNodes, Set<String> knownVertexNames) {
-        for(Node n : newNodes) {
+        for(int i = 0; i < newNodes.size(); i++) {
+            Node n = newNodes.get(i);
             if(n instanceof ASTSIMPLE_DCL) {
                 String vertexName = getVertexName((ASTSIMPLE_DCL) n);
                 if(!knownVertexNames.contains(vertexName)) {
                     knownVertexNames.add(vertexName);
                     blockNode.jjtAddChild(n, amtBlockChildren);
                     amtBlockChildren++;
-
-                    //if()
-
-
-
+                    if(newNodes.get(i+1) instanceof ASTFUNCTION_CALL_STMT) {
+                        blockNode.jjtAddChild(n, amtBlockChildren);
+                        amtBlockChildren++;
+                        i++;
+                    } else {
+                        throw new OptimizationException("The created vertex declaration in the optimization was not followed up with adding it to the graph");
+                    }
                 }
             }
         }

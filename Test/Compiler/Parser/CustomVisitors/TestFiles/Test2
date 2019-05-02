@@ -22,9 +22,9 @@ function main()
      testGraph.addVertex(b)
      testGraph.addEdge(a,b)
      testGraph.getEdge(a,b).weight = 0.3
-     Vertex c
-     testGraph.addVertex(c)
-     testGraph.addEdge(a,c)
+     Vertex d
+     testGraph.addVertex(d)
+     testGraph.addEdge(b,d)
 
 
       /*create Queue<real> Q
