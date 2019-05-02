@@ -163,22 +163,17 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         Set<String> knownVertexNames = getAllVertexNames(node);
 
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
-        blockNodeChildren.addAll(createAddingVertexToGraphFunctionCalls(knownVertexNames));
+        blockNodeChildren.addAll(createAddVertexFunctionCalls(knownVertexNames));
 
         EdgeInformationHandler edgeInformationHandler = new EdgeInformationHandler(currentGraphType);
         List<EdgeInformation> edgeInformationList = edgeInformationHandler.getAllEdgeInformations(node);
 
+        blockNodeChildren.addAll(createAddEdgeFunctionCalls(edgeInformationList));
+        blockNodeChildren.addAll(createWeightAssignment(edgeInformationList));
 
         for(int i = 0; i < blockNodeChildren.size(); i++) {
             blockNode.jjtAddChild(blockNodeChildren.get(i), i);
         }
-        //TODO: få lavet så alle vertex bliver tilføjet til graphen, samt vi får fat i alle edges samt deres vægt
-        int amtBlockChildren = 0;
-        //for(int i = 0; i < node.jjtGetNumChildren(); i++) {
-        //    List<Node> newNodes = convertResultToNodeList(node.jjtGetChild(i).jjtAccept(this, i));
-        //    amtBlockChildren += checkNewNodes(blockNode, amtBlockChildren, newNodes, knownVertexNames);
-        //}
-
         List<Node> nodesToAdd = new ArrayList<>();
         nodesToAdd.add(blockNode);
         return nodesToAdd;
@@ -205,7 +200,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return dclNodes;
     }
 
-    private List<ASTFUNCTION_CALL_STMT> createAddingVertexToGraphFunctionCalls(Set<String> vertexNames) {
+    private List<ASTFUNCTION_CALL_STMT> createAddVertexFunctionCalls(Set<String> vertexNames) {
         List<ASTFUNCTION_CALL_STMT> functionCallNodes = new ArrayList<>();
         for(String vertexName : vertexNames) {
             functionCallNodes.add(createFunctionCallStmtNode(currentGraphName, "addVertex", createVariableFromId(vertexName)));
@@ -213,27 +208,53 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return functionCallNodes;
     }
 
-    private ASTFUNCTION_CALL_STMT createAddVertexFunctionCall(String vertexName) {
-        ASTFUNCTION_CALL_STMT functionCallNode = new ASTFUNCTION_CALL_STMT(TestParserTreeConstants.JJTFUNCTION_CALL_STMT);
+    private List<ASTFUNCTION_CALL_STMT> createAddEdgeFunctionCalls(List<EdgeInformation> edgeInformationList) {
+        List<ASTFUNCTION_CALL_STMT> functionCallNodes = new ArrayList<>();
+        for(EdgeInformation edgeInformation : edgeInformationList) {
+            ASTVARIABLE firstActualParameter = createVariableFromId(edgeInformation.getFirstVertex());
+            ASTVARIABLE secondActualParameter = createVariableFromId(edgeInformation.getSecondVertex());
 
-        ASTVARIABLE graphNode = createVariableFromId(currentGraphName);
-        functionCallNode.jjtAddChild(graphNode, 0);
-
-        ASTFUNCTION_CALL callNodeForAddVertex = new ASTFUNCTION_CALL(TestParserTreeConstants.JJTFUNCTION_CALL);
-        graphNode.jjtAddChild(callNodeForAddVertex, 1);
-
-        ASTIDENTIFIER addVertexIdNode = createIdentifierNodeForId("addVertex");
-        callNodeForAddVertex.jjtAddChild(addVertexIdNode, 0);
-        ASTACTUAL_PARAMETERS actualParametersNode = new ASTACTUAL_PARAMETERS(TestParserTreeConstants.JJTACTUAL_PARAMETERS);
-        callNodeForAddVertex.jjtAddChild(actualParametersNode, 1);
-
-        ASTVARIABLE vertexNode = createVariableFromId(vertexName);
-        actualParametersNode.jjtAddChild(vertexNode, 0);
-
-        return functionCallNode;
+            functionCallNodes.add(createFunctionCallStmtNode(currentGraphName, "addEdge", firstActualParameter, secondActualParameter));
+        }
+        return functionCallNodes;
     }
 
+    private List<ASTASSIGN> createWeightAssignment(List<EdgeInformation> edgeInformationList) {
+        List<ASTASSIGN> assignNodes = new ArrayList<>();
 
+        for(EdgeInformation edgeInformation : edgeInformationList) {
+            assignNodes.add(createAssignNodeFromEdgeInformation(edgeInformation));
+        }
+        return assignNodes;
+    }
+
+    private ASTASSIGN createAssignNodeFromEdgeInformation(EdgeInformation edgeInformation){
+        ASTASSIGN assingNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+
+
+        ASTVARIABLE firstActualParameter = createVariableFromId(edgeInformation.getFirstVertex());
+        ASTVARIABLE secondActualParameter = createVariableFromId(edgeInformation.getSecondVertex());
+
+        ASTFUNCTION_CALL_STMT functionCall = createFunctionCallStmtNode(currentGraphName, "getEdge", firstActualParameter, secondActualParameter);
+
+        //Left value:
+        Node leftValue = functionCall.jjtGetChild(0);
+
+        Node leftChild = leftValue.jjtGetChild(1);
+        leftChild.jjtAddChild(createFieldAccessId("weight"), 2);
+
+        assingNode.jjtAddChild(leftValue, 0);
+        //Right value:
+        assingNode.jjtAddChild(edgeInformation.getWeight().jjtGetChild(0), 1);
+        return assingNode;
+    }
+
+    private ASTFIELD_ACCESS createFieldAccessId(String id) {
+        ASTFIELD_ACCESS fieldAcessNode = new ASTFIELD_ACCESS(TestParserTreeConstants.JJTFIELD_ACCESS);
+        ASTIDENTIFIER idNode = createIdentifierNodeForId(id);
+        fieldAcessNode.jjtAddChild(idNode, 0);
+        return fieldAcessNode;
+    }
     @Override
     public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
         return defaultVisit(node, data);
