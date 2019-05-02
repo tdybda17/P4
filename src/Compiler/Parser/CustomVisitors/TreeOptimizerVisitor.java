@@ -1,7 +1,11 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
+import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.GeneratedFiles.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
     private Object defaultVisit(SimpleNode node, Object data) {
@@ -19,6 +23,12 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         }
     }
 
+    private ASTIDENTIFIER copyIdentifierNode(ASTIDENTIFIER idNode) {
+        ASTIDENTIFIER newNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
+        newNode.jjtSetValue(idNode.jjtGetValue());
+        return newNode;
+    }
+
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
         int index = convertDataToInt(data);
@@ -26,12 +36,86 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         if(node.jjtGetNumChildren() == 2) {
             return defaultVisit(node, data);
         } else if(node.jjtGetNumChildren() == 3) {
-            node.jjtGetChild(2);
-            System.out.println(index);
-            return defaultVisit(node, data);
+            int childIndex = 2;
+            Node childNode = node.jjtGetChild(childIndex);
+            List<Node> newNodesForASTList = new ArrayList<>();
+            if(childNode instanceof ASTGRAPH_ASSIGN) {
+                Node assignNodeForParent = createAssignNodeFromInitialization(node.jjtGetChild(1), childNode.jjtGetChild(0));
+                newNodesForASTList.add(assignNodeForParent);
+            } else if (childNode instanceof ASTGRAPH_DCL_ELEMENTS) {
+                newNodesForASTList = convertResultToNodeList(node.jjtGetChild(childIndex).jjtAccept(this, childIndex));
+            } else {
+                throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
+            }
+            node.removeChild(childIndex);
+            SimpleNode parent = (SimpleNode) node.jjtGetParent();
+            parent.insertChildren(index + 1, newNodesForASTList);
+            return index;
         } else {
             throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
         }
+    }
+
+    public List<Node> convertResultToNodeList(Object result){
+        if(result instanceof List) {
+            if(((List) result).isEmpty()) {
+                return new ArrayList<>();
+            } else {
+                List<Node> symbolList = new ArrayList<>();
+                for(Object element : (List) result) {
+                    if (element instanceof Node) {
+                        symbolList.add((Node) element);
+                    } else {
+                        throw new IllegalArgumentException("The result of an optimization visit was not a node list");
+                    }
+                }
+                return symbolList;
+            }
+        }
+        throw new IllegalArgumentException("The result of an optimization visit was not a node list");
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    private ASTASSIGN createAssignNodeFromInitialization(Node leftValue, Node rightNode){
+        ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+
+        leftNode.jjtAddChild(leftValue, 0);
+        assignNode.jjtAddChild(leftNode, 0);
+        leftNode.jjtSetParent(assignNode);
+
+        assignNode.jjtAddChild(rightNode, 1);
+        rightNode.jjtSetParent(assignNode);
+        return assignNode;
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX_LIST node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTVERTEX node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTWEIGHT node, Object data) {
+        return defaultVisit(node, data);
     }
 
 
@@ -202,36 +286,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
         return defaultVisit(node, data);
     }
 

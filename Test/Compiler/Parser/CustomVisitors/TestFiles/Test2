@@ -2,17 +2,14 @@ function main()
      int i
      int x = 7
 
-     /*create DiGraph testGraph
-            a -- b
-            b -- c
-            c -- a[9.0]
-            d -- {e,f}
-            d -- a
-     end*/
-
      create DiGraph XYZ = testGraph end
 
-     create DiGraph testGraph
+     //Omskrives til
+     create DiGraph XYZ end
+     XYZ = testGraph
+
+
+     /*create DiGraph testGraph
          a -- {b[0.3],c}
      end
 
@@ -26,7 +23,7 @@ function main()
      testGraph.getEdge(a,b).weight = 0.3
      Vertex c
      testGraph.addVertex(c)
-     testGraph.addEdge(a,c)
+     testGraph.addEdge(a,c)*/
 
 
       /*create Queue<real> Q
@@ -38,17 +35,10 @@ function main()
       create Queue<real> Q end
       Q.enqueue(7.8)
       Q.enqueue(3.2)
+      */
 
+      //create Stack<int> s = stackOfStackCreate().pop().x end
 
-      create DiGraph testGraph
-          a -- b
-          a -- c
-      end
-
-      create Queue<real> Q
-             6.0
-             8.0
-             x
-      end*/
+      //s = stackOfStackCreate().pop().x
 end
 

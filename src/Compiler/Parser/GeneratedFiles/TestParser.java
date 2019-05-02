@@ -23,11 +23,12 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, Test
     public static String parseTextFile(String filePath) throws Exception {
         Node root = createParseTree(filePath);
         return TreePrinter.createDotOutput(root);
-  }
+    }
 
-    public static void useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
+    public static Node useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
         Node root = createParseTree(filePath);
         root.jjtAccept(visitor, data);
+        return root;
     }
 
     private static Node createParseTree(String filePath) throws Exception {
