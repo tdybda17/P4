@@ -1,7 +1,19 @@
 function main()
+
+    for i = 1 to 10 do
+        return
+    end
+
+    int i = 1
+    while (i <= 10) do
+        return
+        i = i + 1
+    end
+
+/*
     label name = "Anton"
     a.b()
-/*
+
     create Graph g
         a -- b
     end
