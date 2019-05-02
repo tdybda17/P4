@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
+    private String currentGraphName = "";
+
     private Object defaultVisit(SimpleNode node, Object data) {
         for(int i = 0; i < node.jjtGetNumChildren(); i++) {
             node.jjtGetChild(i).jjtAccept(this, i);
@@ -71,33 +73,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return createSimpleDclNode(simpleTypeValue, idNode, null);
     }
 
-    @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        int index = convertDataToInt(data);
-
-        if(node.jjtGetNumChildren() == 2) {
-            return defaultVisit(node, data);
-        } else if(node.jjtGetNumChildren() == 3) {
-            int childIndex = 2;
-            Node childNode = node.jjtGetChild(childIndex);
-            List<Node> newNodesForASTList = new ArrayList<>();
-            if(childNode instanceof ASTGRAPH_ASSIGN) {
-                Node assignNodeForParent = createAssignNodeFromInitialization(node.jjtGetChild(1), childNode.jjtGetChild(0));
-                newNodesForASTList.add(assignNodeForParent);
-            } else if (childNode instanceof ASTGRAPH_DCL_ELEMENTS) {
-                newNodesForASTList = convertResultToNodeList(node.jjtGetChild(childIndex).jjtAccept(this, childIndex));
-            } else {
-                throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
-            }
-            node.removeChild(childIndex);
-            SimpleNode parent = (SimpleNode) node.jjtGetParent();
-            parent.insertChildren(index + 1, newNodesForASTList);
-            return index;
-        } else {
-            throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
-        }
-    }
-
     public List<Node> convertResultToNodeList(Object result){
         if(result instanceof List) {
             if(((List) result).isEmpty()) {
@@ -115,6 +90,40 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             }
         }
         throw new IllegalArgumentException("The result of an optimization visit was not a node list");
+    }
+
+    public ASTIDENTIFIER createIdentifierNodeForId(String id) {
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
+        identifierNode.jjtSetValue(id);
+        return identifierNode;
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL node, Object data) {
+        int index = convertDataToInt(data);
+
+        if(node.jjtGetNumChildren() == 2) {
+            return defaultVisit(node, data);
+        } else if(node.jjtGetNumChildren() == 3) {
+            int childIndex = 2;
+            currentGraphName = getIdentifierName(node.jjtGetChild(1));
+            Node childNode = node.jjtGetChild(childIndex);
+            List<Node> newNodesForASTList = new ArrayList<>();
+            if(childNode instanceof ASTGRAPH_ASSIGN) {
+                Node assignNodeForParent = createAssignNodeFromInitialization(node.jjtGetChild(1), childNode.jjtGetChild(0));
+                newNodesForASTList.add(assignNodeForParent);
+            } else if (childNode instanceof ASTGRAPH_DCL_ELEMENTS) {
+                newNodesForASTList = convertResultToNodeList(node.jjtGetChild(childIndex).jjtAccept(this, childIndex));
+            } else {
+                throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
+            }
+            node.removeChild(childIndex);
+            SimpleNode parent = (SimpleNode) node.jjtGetParent();
+            parent.insertChildren(index + 1, newNodesForASTList);
+            return index;
+        } else {
+            throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
+        }
     }
 
     @Override
@@ -140,50 +149,84 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
         ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
-        Set<String> knownVertexNames = new HashSet<>();
+        List<Node> blockNodeChildren = new ArrayList<>();
+        Set<String> knownVertexNames = getAllVertexNames(node);
 
+        blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
+        blockNodeChildren.addAll(createAddingVertexToGraphFunctionCalls(knownVertexNames));
 
-        int amtBlockChildren = 0;
-        for(int i = 0; i < node.jjtGetNumChildren(); i++) {
-            List<Node> newNodes = convertResultToNodeList(node.jjtGetChild(i).jjtAccept(this, i));
-            amtBlockChildren += checkNewNodes(blockNode, amtBlockChildren, newNodes, knownVertexNames);
+        for(int i = 0; i < blockNodeChildren.size(); i++) {
+            blockNode.jjtAddChild(blockNodeChildren.get(i), i);
         }
+        //TODO: få lavet så alle vertex bliver tilføjet til graphen, samt vi får fat i alle edges samt deres vægt
+        int amtBlockChildren = 0;
+        //for(int i = 0; i < node.jjtGetNumChildren(); i++) {
+        //    List<Node> newNodes = convertResultToNodeList(node.jjtGetChild(i).jjtAccept(this, i));
+        //    amtBlockChildren += checkNewNodes(blockNode, amtBlockChildren, newNodes, knownVertexNames);
+        //}
 
         List<Node> nodesToAdd = new ArrayList<>();
         nodesToAdd.add(blockNode);
         return nodesToAdd;
     }
 
-    private List<Node> createAllVertex() {
-        return null;
-    }
-
-    private String getVertexName(ASTSIMPLE_DCL vertexDcl) {
-        return getIdentifierName(vertexDcl);
-    }
-
-    private int checkNewNodes(ASTBLOCK blockNode, int amtBlockChildren, List<Node> newNodes, Set<String> knownVertexNames) {
-        for(int i = 0; i < newNodes.size(); i++) {
-            Node n = newNodes.get(i);
-            if(n instanceof ASTSIMPLE_DCL) {
-                String vertexName = getVertexName((ASTSIMPLE_DCL) n);
-                if(!knownVertexNames.contains(vertexName)) {
-                    knownVertexNames.add(vertexName);
-                    blockNode.jjtAddChild(n, amtBlockChildren);
-                    amtBlockChildren++;
-                    if(newNodes.get(i+1) instanceof ASTFUNCTION_CALL_STMT) {
-                        blockNode.jjtAddChild(n, amtBlockChildren);
-                        amtBlockChildren++;
-                        i++;
-                    } else {
-                        throw new OptimizationException("The created vertex declaration in the optimization was not followed up with adding it to the graph");
-                    }
-                }
+    private Set<String> getAllVertexNames(Node root) {
+        Set<String> vertexNames = new HashSet<>();
+        for(int i = 0; i < root.jjtGetNumChildren(); i++) {
+            Node child = root.jjtGetChild(i);
+            if(child instanceof ASTIDENTIFIER) {
+                vertexNames.add(getIdentifierName(child));
+            } else {
+                vertexNames.addAll(getAllVertexNames(child));
             }
         }
-
-        return amtBlockChildren;
+        return vertexNames;
     }
+
+    private List<ASTSIMPLE_DCL> createAllVertexDclNodes(Set<String> vertexNames) {
+        List<ASTSIMPLE_DCL> dclNodes = new ArrayList<>();
+        for(String vertexName : vertexNames) {
+            dclNodes.add(createSimpleDclNode("Vertex", vertexName));
+        }
+        return dclNodes;
+    }
+
+    private List<ASTFUNCTION_CALL_STMT> createAddingVertexToGraphFunctionCalls(Set<String> vertexNames) {
+        List<ASTFUNCTION_CALL_STMT> functionCallNodes = new ArrayList<>();
+        for(String vertexName : vertexNames) {
+            functionCallNodes.add(createAddVertexFunctionCall(vertexName));
+        }
+        return functionCallNodes;
+    }
+
+    private ASTFUNCTION_CALL_STMT createAddVertexFunctionCall(String vertexName) {
+        ASTFUNCTION_CALL_STMT functionCallNode = new ASTFUNCTION_CALL_STMT(TestParserTreeConstants.JJTFUNCTION_CALL_STMT);
+
+        ASTVARIABLE graphNode = createVariableFromId(currentGraphName);
+        functionCallNode.jjtAddChild(graphNode, 0);
+
+        ASTFUNCTION_CALL callNodeForAddVertex = new ASTFUNCTION_CALL(TestParserTreeConstants.JJTFUNCTION_CALL);
+        graphNode.jjtAddChild(callNodeForAddVertex, 1);
+
+        ASTIDENTIFIER addVertexIdNode = createIdentifierNodeForId("addVertex");
+        callNodeForAddVertex.jjtAddChild(addVertexIdNode, 0);
+        ASTACTUAL_PARAMETERS actualParametersNode = new ASTACTUAL_PARAMETERS(TestParserTreeConstants.JJTACTUAL_PARAMETERS);
+        callNodeForAddVertex.jjtAddChild(actualParametersNode, 1);
+
+        ASTVARIABLE vertexNode = createVariableFromId(vertexName);
+        actualParametersNode.jjtAddChild(vertexNode, 0);
+
+        return functionCallNode;
+    }
+
+    private ASTVARIABLE createVariableFromId(String id) {
+        ASTVARIABLE variableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        ASTIDENTIFIER idNode = createIdentifierNodeForId(id);
+        variableNode.jjtAddChild(idNode, 0);
+        return variableNode;
+    }
+
+
 
 
     @Override
