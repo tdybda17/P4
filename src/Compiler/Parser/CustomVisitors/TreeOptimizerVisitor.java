@@ -144,8 +144,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         } else {
             throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName());
         }
-
-
     }
 
     @Override
@@ -194,11 +192,23 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         if(node.jjtGetNumChildren() == 2) {
             return null; //TODO: få lavet for VERTEX LIST
         } else if (node.jjtGetNumChildren() == 3) {
-            return null; //TODO: få lavet 
+            String firstVertex = getIdentifierName(node.jjtGetChild(0));
+            String secondVertex = getIdentifierName(node.jjtGetChild(1));
+            if(node.jjtGetChild(2) instanceof ASTWEIGHT) {
+                ASTWEIGHT weightNode = (ASTWEIGHT) node.jjtGetChild(2);
+                if(weightNode.jjtGetNumChildren() == 0){
+
+                }
+            }
+
+
+            return null; //TODO: få lavet
         } else {
             throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 2 or 3 children");
         }
     }
+
+
 
     private List<ASTSIMPLE_DCL> createAllVertexDclNodes(Set<String> vertexNames) {
         List<ASTSIMPLE_DCL> dclNodes = new ArrayList<>();

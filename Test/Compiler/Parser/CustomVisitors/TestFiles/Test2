@@ -1,18 +1,18 @@
 function main()
-     create DiGraph XYZ = testGraph end
+     /*create DiGraph XYZ = testGraph end
 
      //Omskrives til
      create DiGraph XYZ end
      XYZ = testGraph
+     */
 
-
-     /*create DiGraph testGraph
+     create DiGraph testGraph
          a -- {b[0.3],c}
          b -- d
      end
 
      //OMSKRIVES TIL:
-     create DiGraph testGraph end
+     /*create DiGraph testGraph end
      Vertex a
      testGraph.addVertex(a)
      Vertex b
