@@ -139,112 +139,6 @@ class StaticSemanticsVisitorTest {
         return assignmentNode;
     }
 
-    //We try creating an Edge object and tests that it gets entered into the symbol table
-    @Test
-    void visitGraphElementDeclarationNodeTest1(){
-        ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("Edge", "a");
-
-        staticSemanticsVisitor.visit(edgeDclNode, null);
-
-        SymbolTable expected = new SymbolTable();
-        expected.openScope();
-        expected.enterSymbol("a", new IdentifierAttributes(new UndirectedEdgeTypeDescriptor()));
-        assertEquals(expected, symbolTable);
-    }
-
-    //Testing that we can also create DiEdge objects
-    @Test
-    void visitGraphElementDeclarationNodeTest2(){
-        ASTSIMPLE_DCL  edgeDclNode = createSimpleDCLnode("DiEdge", "a");
-
-        staticSemanticsVisitor.visit(edgeDclNode, null);
-
-        SymbolTable expected = new SymbolTable();
-        expected.openScope();
-        expected.enterSymbol("a", new IdentifierAttributes(new DirectedEdgeTypeDescriptor()));
-        assertEquals(expected, symbolTable);
-    }
-
-    //Testing that we can also create Vertex objects.
-    @Test
-    void visitGraphElementDeclarationNodeTest3(){
-        ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("Vertex", "a");
-
-        staticSemanticsVisitor.visit(edgeDclNode, null);
-
-        SymbolTable expected = new SymbolTable();
-        expected.openScope();
-        expected.enterSymbol("a", new IdentifierAttributes(new VertexTypeDescriptor()));
-        assertEquals(expected, symbolTable);
-    }
-
-    //We test that we cannot add an edge from a to b twice in the same graph.
-    @Test
-    void DirectedGraphDuplicateEdgeTest(){
-        ASTGRAPH_DCL_ELEMENTS graphDclElementsNode = new ASTGRAPH_DCL_ELEMENTS(0);
-        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 0);
-        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 1);
-
-
-        ASTGRAPH_DCL graphDclNode = createGraphDclNode("DiGraph", "testDiGraph", graphDclElementsNode);
-
-        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, null));
-    }
-
-    //We test that we cannot add both a to b and b to a in an undirected graph
-    @Test
-    void UndirectedGraphDuplicateEdgeTest(){
-        ASTGRAPH_DCL_ELEMENTS graphDclElementsNode = new ASTGRAPH_DCL_ELEMENTS(0);
-        graphDclElementsNode.jjtAddChild(createVertexDclNode("a", "b", new ASTWEIGHT(0)), 0);
-        graphDclElementsNode.jjtAddChild(createVertexDclNode("b", "a", new ASTWEIGHT(0)), 1);
-
-
-        ASTGRAPH_DCL graphDclNode = createGraphDclNode("Graph", "testGraph", graphDclElementsNode);
-
-        assertThrows(DuplicateEdgeException.class, ()-> staticSemanticsVisitor.visit(graphDclNode, null));
-    }
-
-    private ASTGRAPH_DCL createGraphDclNode(String graphType, String identifier, ASTGRAPH_DCL_ELEMENTS graphDclElementsNode){
-        ASTGRAPH_DCL graphDclNode = new ASTGRAPH_DCL(0);
-
-        ASTGRAPH_TYPE graphTypeNode = new ASTGRAPH_TYPE(1);
-        graphTypeNode.jjtSetValue(graphType);
-        graphDclNode.jjtAddChild(graphTypeNode, 0);
-
-        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(2);
-        identifierNode.jjtSetValue(identifier);
-        graphDclNode.jjtAddChild(identifierNode, 1);
-
-        graphDclNode.jjtAddChild(graphDclElementsNode, 2);
-        return graphDclNode;
-    }
-
-    private ASTGRAPH_VERTEX_DCL createVertexDclNode(String firstVertex, String secondVertex, ASTWEIGHT weightNode) {
-        ASTGRAPH_VERTEX_DCL vertexDclNode = new ASTGRAPH_VERTEX_DCL(0);
-
-        ASTIDENTIFIER firstVertexIdentifierNode = new ASTIDENTIFIER(1);
-        firstVertexIdentifierNode.jjtSetValue(firstVertex);
-        vertexDclNode.jjtAddChild(firstVertexIdentifierNode, 0);
-
-        ASTIDENTIFIER secondVertexIdentifierNode = new ASTIDENTIFIER(2);
-        secondVertexIdentifierNode.jjtSetValue(secondVertex);
-        vertexDclNode.jjtAddChild(secondVertexIdentifierNode, 1);
-
-        vertexDclNode.jjtAddChild(weightNode, 2);
-        return vertexDclNode;
-    }
-
-    @Test
-    void incorrectWeightType(){
-        ASTWEIGHT weight = new ASTWEIGHT(0);
-        ASTBOOL_VAL boolValNode = new ASTBOOL_VAL(1);
-        boolValNode.jjtSetValue("true");
-        weight.jjtAddChild(boolValNode, 0);
-
-
-        assertThrows(IncorrectTypeException.class, ()-> staticSemanticsVisitor.visit(createVertexDclNode("a", "b", weight), null));
-    }
-
     @Test
     void duplicateSymbolExceptionTest() throws Exception{
         ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("DiEdge", "a");
@@ -270,9 +164,9 @@ class StaticSemanticsVisitorTest {
     void visit1() throws Exception{
         String path = "Test/Compiler/Parser/CustomVisitors/test";
         //We use the function visitor to fill up our symbol table with functions
-        TestParser.useVisitorMethod(new FunctionVisitor(), path, symbolTable);
-
-        TestParser.useVisitorMethod(staticSemanticsVisitor, path, symbolTable);
+        Node root = TestParser.useVisitorMethod(new TreeOptimizerVisitor(), path, symbolTable);
+        root.jjtAccept(new FunctionVisitor(), symbolTable);
+        root.jjtAccept(staticSemanticsVisitor, symbolTable);
     }
 
     @Test

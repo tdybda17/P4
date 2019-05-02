@@ -1,12 +1,11 @@
 function main()
     real x = 7.8
     int i
-    Vertex a
 
     i = 6
     x = i
 
-    //i = foo(3.0, 7.0)
+    i = foo(3.0, 7.0)
     i = foo(x, x)
 
     x = 7
@@ -27,17 +26,11 @@ function main()
 
     create Stack<Stack<int>> S end
 
-    create Queue<real> Q
+    /*create Queue<real> Q
         6.0
         8.0
         x
-    end
-
-    create Set<Vertex> vertices = g.vertices end
-    g.vertices = vertices
-    Vertex AAA
-    boolean b = createGraph().vertices.contains(AAA)
-    real weight = edg(1, 2.2).weight
+    end*/
 end
 
 int function test()

@@ -175,154 +175,21 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     //TODO: this needs to be rewritten, or we need to rewrite the AST.
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+        if(node.jjtGetNumChildren() == 2) {
             Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
-            if(node.jjtGetNumChildren() == 3) {
-                Node initializationNode = node.jjtGetChild(2);
-                return checkGraphDclInitialization(initializationNode, symbol);
-            } else  {
-                return defaultVisit(node, data);
-            }
-        } else {
+            return defaultVisit(node, data);
+        } else if (node.jjtGetNumChildren() == 3) {
+            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
+        }
+        else {
             throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
         }
-
-    }
-
-    private Object checkGraphDclInitialization(Node initializationNode, Symbol symbol) {
-        TypeDescriptor graphType = getTypeForIdentifierSymbol(symbol);
-        if(initializationNode instanceof ASTGRAPH_DCL_ELEMENTS) {
-            if(graphType instanceof DirectedGraphTypeDescriptor) {
-                return visitDirectedGraphInitialization(initializationNode);
-            } else if (graphType instanceof UndirectedGraphTypeDescriptor) {
-                return visitUndirectedGraphInitialization(initializationNode);
-            } else {
-                throw new IllegalArgumentException("Your graph was neither of the type directed graph or undirected graph");
-            }
-        } else if (initializationNode instanceof ASTGRAPH_ASSIGN) {
-            TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, symbolTable));
-            try {
-                typeCheck(graphType, actualType);
-            } catch (IncorrectTypeException e) {
-                throw new IncorrectTypeException("You had a graph of type \'" + graphType + "\' but tried to declare it with a value of the type \'" + actualType + "\'");
-            }
-            return initializationNode.jjtAccept(this, symbolTable);
-        } else {
-            throw new WrongNodeTypeException(initializationNode.getClass().getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName());
-        }
-    }
-
-    private Object visitDirectedGraphInitialization(Node initializationNode){
-        Map<String, List<String>> verticesInGraph = new HashMap<>();
-
-        for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
-            Node child = initializationNode.jjtGetChild(i);
-
-            List<String> vertexPair = getVertexPair(child);
-
-            String firstVertex = vertexPair.get(0);
-            String secondVertex = vertexPair.get(1);
-            addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
-        }
-
-        //We run through all the children to check the weights
-        return initializationNode.jjtAccept(this, symbolTable);
-    }
-
-    private Object visitUndirectedGraphInitialization(Node initializationNode){
-        Map<String, List<String>> verticesInGraph = new HashMap<>();
-
-        for (int i = 0; i < initializationNode.jjtGetNumChildren(); i++) {
-            Node child = initializationNode.jjtGetChild(i);
-
-            List<String> vertexPair = getVertexPair(child);
-            String firstVertex = vertexPair.get(0);
-            String secondVertex = vertexPair.get(1);
-            addVertexPairToGraph(verticesInGraph, firstVertex, secondVertex);
-            addVertexPairToGraph(verticesInGraph, secondVertex, firstVertex);
-        }
-
-        //We run through all the children to check the weights
-        return initializationNode.jjtAccept(this, symbolTable);
-    }
-
-    private void addVertexPairToGraph(Map<String, List<String>> verticesInGraph, String key, String value) {
-        if(verticesInGraph.containsKey(key)) {
-            List<String> neighbours = verticesInGraph.get(key);
-            if(neighbours.contains(value)) {
-                throw new DuplicateEdgeException("You tried to add more than one edge from " + key + " to " + value);
-            }
-            neighbours.add(value);
-            verticesInGraph.put(key, neighbours);
-        } else {
-            List<String> neighbours = new ArrayList<>();
-            neighbours.add(value);
-            verticesInGraph.put(key, neighbours);
-        }
-    }
-
-    private List<String> getVertexPair(Node node) {
-        ASTGRAPH_VERTEX_DCL vertexDclNode;
-        if(node instanceof ASTGRAPH_VERTEX_DCL) {
-            vertexDclNode = (ASTGRAPH_VERTEX_DCL) node;
-        } else {
-            throw new IllegalArgumentException("Your graph declaration had a child node that was not an graph vertex dcl node");
-        }
-        List<String> vertexPair = new ArrayList<>();
-
-        String firstVertex = getIdentifierName(vertexDclNode.jjtGetChild(0));
-        String secondVertex = getIdentifierName(vertexDclNode.jjtGetChild(1));
-        vertexPair.add(firstVertex);
-        vertexPair.add(secondVertex);
-        return vertexPair;
     }
 
     @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
         return getTypeDescriptorFromTypeNode(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        //We just visit all the children of the graph dcl
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
-        if(node.jjtGetNumChildren() != 3) {
-            throw new WrongAmountOfChildrenException("One of your vertex specifications in your graph constructor did not have 3 children but instead had: " + node.jjtGetNumChildren());
-        } else {
-            if(node.jjtGetChild(0) instanceof ASTIDENTIFIER && node.jjtGetChild(1) instanceof ASTIDENTIFIER) {
-                Node weightNode = node.jjtGetChild(2);
-                return weightNode.jjtAccept(this, data);
-            } else {
-                throw new VisitorException("One of the first two childs in a vertex specification was not an identifier node");
-            }
-        }
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
-        if(node.jjtGetNumChildren() == 0) {
-            return defaultVisit(node, data);
-        } else if (node.jjtGetNumChildren() == 1) {
-            TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
-            try {
-                typeCheck(new RealTypeDescriptor(), actualType);
-            } catch (IncorrectTypeException e) {
-                throw new IncorrectTypeException("The type of a weight in your graph was not real but: " + actualType);
-            }
-            return defaultVisit(node, data);
-        } else {
-            throw new WrongAmountOfChildrenException("The weight node had a wrong amount of children, which was: " + node.jjtGetNumChildren());
-        }
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
@@ -744,11 +611,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTVERTEX node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
         FunctionAttributes attributes;
         String identifier = getValueStringOfChild(node, 0);
@@ -801,36 +663,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTFOR_STATEMENT node, Object data) {
-        // check that 2nd and 3rd child are of type int
-        TypeDescriptor lowerBoundActualType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
-        TypeDescriptor upperBoundActualType = convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable));
-        typeCheck(new IntegerTypeDescriptor(), lowerBoundActualType);
-        typeCheck(new IntegerTypeDescriptor(), upperBoundActualType);
-
-        // check if id exists.
-        String id = getValueStringOfChild(node, 0);
-        if (symbolTable.containsSymbol(id)) {
-            // if id exists, check that it is of type int
-            Symbol symbol = symbolTable.retrieveSymbol(id);
-            if (!(getTypeForIdentifierSymbol(symbol) instanceof IntegerTypeDescriptor))
-                throw new IllegalTypeException("Error: Tried to use variable '" + id + "' which is of type "
-                        + getTypeForIdentifierSymbol(symbol).getTypeName() + " for for-loop iteration, expected an Integer");
-
-            // if id exists, accept 4th child
-            node.jjtGetChild(3).jjtAccept(this, data);
-            return data;
-        }
-        else {
-            // if id does not exist, open node scope, add id to symbol table, accept children of 4th child, close node scope
-            symbolTable.openScope();
-            symbolTable.enterSymbol(id, new IdentifierAttributes(new IntegerTypeDescriptor()));
-            defaultVisit((SimpleNode) node.jjtGetChild(3), data);
-            symbolTable.closeScope();
-            return data;
-        }
-    }
 
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
@@ -985,8 +817,65 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
                 ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
     =======================================================================================*/
     @Override
+    public Object visit(ASTFOR_STATEMENT node, Object data) {
+        // check that 2nd and 3rd child are of type int
+        TypeDescriptor lowerBoundActualType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        TypeDescriptor upperBoundActualType = convertToTypeDescriptor(node.jjtGetChild(2).jjtAccept(this, symbolTable));
+        typeCheck(new IntegerTypeDescriptor(), lowerBoundActualType);
+        typeCheck(new IntegerTypeDescriptor(), upperBoundActualType);
+
+        // check if id exists.
+        String id = getValueStringOfChild(node, 0);
+        if (symbolTable.containsSymbol(id)) {
+            // if id exists, check that it is of type int
+            Symbol symbol = symbolTable.retrieveSymbol(id);
+            if (!(getTypeForIdentifierSymbol(symbol) instanceof IntegerTypeDescriptor))
+                throw new IllegalTypeException("Error: Tried to use variable '" + id + "' which is of type "
+                        + getTypeForIdentifierSymbol(symbol).getTypeName() + " for for-loop iteration, expected an Integer");
+
+            // if id exists, accept 4th child
+            node.jjtGetChild(3).jjtAccept(this, data);
+            return data;
+        }
+        else {
+            // if id does not exist, open node scope, add id to symbol table, accept children of 4th child, close node scope
+            symbolTable.openScope();
+            symbolTable.enterSymbol(id, new IdentifierAttributes(new IntegerTypeDescriptor()));
+            defaultVisit((SimpleNode) node.jjtGetChild(3), data);
+            symbolTable.closeScope();
+            return data;
+        }
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
     public Object visit(ASTVERTEX_LIST node, Object data) {
         return illegalVisit(node);
     }
+
+    @Override
+    public Object visit(ASTVERTEX node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTWEIGHT node, Object data) {
+        return illegalVisit(node);
+    }
+
 
 }
