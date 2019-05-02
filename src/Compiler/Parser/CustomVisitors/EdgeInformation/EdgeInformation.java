@@ -1,4 +1,4 @@
-package Compiler.Parser.CustomVisitors;
+package Compiler.Parser.CustomVisitors.EdgeInformation;
 
 import Compiler.Parser.GeneratedFiles.ASTFNUM_VAL;
 import Compiler.Parser.GeneratedFiles.ASTWEIGHT;
@@ -8,22 +8,20 @@ public class EdgeInformation {
     private String firstVertex;
     private String secondVertex;
     private ASTWEIGHT weight;
-    private double standardWeight = 1.0;
 
 
-    EdgeInformation(String firstVertex, String secondVertex, ASTWEIGHT weight) {
+    public EdgeInformation(String firstVertex, String secondVertex, ASTWEIGHT weightNode) {
         this.firstVertex = firstVertex;
         this.secondVertex = secondVertex;
-        this.weight = weight;
+        if(weightNode.jjtGetNumChildren() == 0){
+            this.weight = createStandardWeightNode();
+        } else {
+            this.weight = weightNode;
+        }
     }
 
-    EdgeInformation(String firstVertex, String secondVertex) {
-        this.firstVertex = firstVertex;
-        this.secondVertex = secondVertex;
-        this.weight = createStandardWeight();
-    }
-
-    private ASTWEIGHT createStandardWeight(){
+    private ASTWEIGHT createStandardWeightNode(){
+        String standardWeight = "1.0";
         ASTFNUM_VAL weightValue = new ASTFNUM_VAL(TestParserTreeConstants.JJTFNUM_VAL);
         weightValue.jjtSetValue(standardWeight);
 

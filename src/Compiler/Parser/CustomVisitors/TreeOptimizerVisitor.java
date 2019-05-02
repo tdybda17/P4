@@ -1,8 +1,9 @@
 package Compiler.Parser.CustomVisitors;
 
-import Compiler.Exceptions.Visitor.OptimizationException;
 import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Exceptions.Visitor.WrongNodeTypeException;
+import Compiler.Parser.CustomVisitors.EdgeInformation.EdgeInformation;
+import Compiler.Parser.CustomVisitors.EdgeInformation.EdgeInformationHandler;
 import Compiler.Parser.GeneratedFiles.*;
 
 import java.util.ArrayList;
@@ -34,13 +35,20 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return newNode;
     }
 
-    private String getIdentifierName(Node identifierNode) {
+    public String getIdentifierName(Node identifierNode) {
         if(identifierNode instanceof ASTIDENTIFIER) {
             SimpleNode simpleNode = (SimpleNode) identifierNode;
             return (String) simpleNode.jjtGetValue();
         } else {
             throw new IllegalArgumentException("The given node was not an IdentifierNode");
         }
+    }
+
+    private ASTVARIABLE createVariableFromId(String id) {
+        ASTVARIABLE variableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        ASTIDENTIFIER idNode = createIdentifierNodeForId(id);
+        variableNode.jjtAddChild(idNode, 0);
+        return variableNode;
     }
 
     private ASTVARIABLE copyVariableNode(ASTVARIABLE variableNode) {
@@ -151,11 +159,13 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
         List<Node> blockNodeChildren = new ArrayList<>();
         Set<String> knownVertexNames = getAllVertexNames(node);
-        List<EdgeInformation> edgeInformationList = getAllEdgeInformations(node);
-
 
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
         blockNodeChildren.addAll(createAddingVertexToGraphFunctionCalls(knownVertexNames));
+
+        EdgeInformationHandler edgeInformationHandler = new EdgeInformationHandler("GRAPH");
+        List<EdgeInformation> edgeInformationList = edgeInformationHandler.getAllEdgeInformations(node);
+
 
         for(int i = 0; i < blockNodeChildren.size(); i++) {
             blockNode.jjtAddChild(blockNodeChildren.get(i), i);
@@ -184,43 +194,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         }
         return vertexNames;
     }
-
-    private List<EdgeInformation> getAllEdgeInformations(Node root) {
-        List<EdgeInformation> edgeInformationList = new ArrayList<>();
-        for(int i = 0; i < root.jjtGetNumChildren(); i++) {
-            Node child = root.jjtGetChild(i);
-            if(child instanceof ASTGRAPH_VERTEX_DCL) {
-                edgeInformationList.add(getEdgeInformation((ASTGRAPH_VERTEX_DCL) root.jjtGetChild(i)));
-            } else {
-                throw new WrongNodeTypeException(child.getClass().getSimpleName(), ASTGRAPH_VERTEX_DCL.class.getSimpleName());
-            }
-        }
-
-        return edgeInformationList;
-    }
-
-    private EdgeInformation getEdgeInformation(ASTGRAPH_VERTEX_DCL node) {
-        if(node.jjtGetNumChildren() == 2) {
-            return null; //TODO: få lavet for VERTEX LIST
-        } else if (node.jjtGetNumChildren() == 3) {
-            String firstVertex = getIdentifierName(node.jjtGetChild(0));
-            String secondVertex = getIdentifierName(node.jjtGetChild(1));
-            if(node.jjtGetChild(2) instanceof ASTWEIGHT) {
-                ASTWEIGHT weightNode = (ASTWEIGHT) node.jjtGetChild(2);
-                if(weightNode.jjtGetNumChildren() == 0){
-                    return new EdgeInformation(firstVertex, secondVertex);
-                } else {
-                    return new EdgeInformation(firstVertex, secondVertex, weightNode);
-                }
-            } else {
-                throw new WrongNodeTypeException("The third child of an " + node.getClass().getSimpleName() + " node was not an weight node");
-            }
-        } else {
-            throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 2 or 3 children");
-        }
-    }
-
-
 
     private List<ASTSIMPLE_DCL> createAllVertexDclNodes(Set<String> vertexNames) {
         List<ASTSIMPLE_DCL> dclNodes = new ArrayList<>();
@@ -257,15 +230,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
         return functionCallNode;
     }
-
-    private ASTVARIABLE createVariableFromId(String id) {
-        ASTVARIABLE variableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
-        ASTIDENTIFIER idNode = createIdentifierNodeForId(id);
-        variableNode.jjtAddChild(idNode, 0);
-        return variableNode;
-    }
-
-
 
 
     @Override
