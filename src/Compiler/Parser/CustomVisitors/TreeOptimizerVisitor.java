@@ -5,7 +5,9 @@ import Compiler.Exceptions.Visitor.WrongNodeTypeException;
 import Compiler.Parser.GeneratedFiles.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
     private Object defaultVisit(SimpleNode node, Object data) {
@@ -27,6 +29,15 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         ASTIDENTIFIER newNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
         newNode.jjtSetValue(idNode.jjtGetValue());
         return newNode;
+    }
+
+    private String getIdentifierName(Node identifierNode) {
+        if(identifierNode instanceof ASTIDENTIFIER) {
+            SimpleNode simpleNode = (SimpleNode) identifierNode;
+            return (String) simpleNode.jjtGetValue();
+        } else {
+            throw new IllegalArgumentException("The given node was not an IdentifierNode");
+        }
     }
 
     @Override
@@ -100,8 +111,44 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return defaultVisit(node, data);
+        ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
+        Set<String> knownVertexNames = new HashSet<>();
+
+        int amtBlockChildren = 0;
+        for(int i = 0; i < node.jjtGetNumChildren(); i++) {
+            List<Node> newNodes = convertResultToNodeList(node.jjtGetChild(i).jjtAccept(this, i));
+            amtBlockChildren += checkNewNodes(blockNode, amtBlockChildren, newNodes, knownVertexNames);
+        }
+
+        List<Node> nodesToAdd = new ArrayList<>();
+        nodesToAdd.add(blockNode);
+        return nodesToAdd;
     }
+
+    private String getVertexName(ASTSIMPLE_DCL vertexDcl) {
+        return getIdentifierName(vertexDcl);
+    }
+
+    private int checkNewNodes(ASTBLOCK blockNode, int amtBlockChildren, List<Node> newNodes, Set<String> knownVertexNames) {
+        for(Node n : newNodes) {
+            if(n instanceof ASTSIMPLE_DCL) {
+                String vertexName = getVertexName((ASTSIMPLE_DCL) n);
+                if(!knownVertexNames.contains(vertexName)) {
+                    knownVertexNames.add(vertexName);
+                    blockNode.jjtAddChild(n, amtBlockChildren);
+                    amtBlockChildren++;
+
+                    //if()
+
+
+
+                }
+            }
+        }
+
+        return amtBlockChildren;
+    }
+
 
     @Override
     public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {

@@ -24,9 +24,7 @@ class TreeOptimizerVisitorTest {
     @Test
     void visit1() throws Exception{
         String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
-        //We use the function visitor to fill up our symbol table with functions
-
-        TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
+        System.out.println(TestParser.parseTextFile(path));
     }
 
     @Test

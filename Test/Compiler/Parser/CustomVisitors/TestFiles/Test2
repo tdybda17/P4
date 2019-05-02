@@ -1,5 +1,5 @@
 function main()
-     int i
+     /*int i
      int x = 7
 
      create DiGraph XYZ = testGraph end
@@ -7,23 +7,24 @@ function main()
      //Omskrives til
      create DiGraph XYZ end
      XYZ = testGraph
+     */
 
-
-     /*create DiGraph testGraph
+     create DiGraph testGraph
          a -- {b[0.3],c}
+         b -- d
      end
 
      //OMSKRIVES TIL:
      create DiGraph testGraph end
      Vertex a
-     Vertex b
      testGraph.addVertex(a)
+     Vertex b
      testGraph.addVertex(b)
      testGraph.addEdge(a,b)
      testGraph.getEdge(a,b).weight = 0.3
      Vertex c
      testGraph.addVertex(c)
-     testGraph.addEdge(a,c)*/
+     testGraph.addEdge(a,c)
 
 
       /*create Queue<real> Q
