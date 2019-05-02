@@ -69,15 +69,14 @@ class SimpleNode implements Node {
   }
 
 
-  public void insertChildren(int index, Node ... newChildren) {
-      insertChildren(index, Arrays.asList(newChildren));
+  public void insertChildren(int index, List<Node> newChildren) {
+      insertChildren(index, newChildren.toArray(Node[]::new));
   }
 
-  public void insertChildren(int index, List<Node> newChildrenList) {
-    if(newChildrenList == null || newChildrenList.size() == 0) {
+  public void insertChildren(int index, Node ... newChildren) {
+    if(newChildren== null || newChildren.length == 0) {
       throw new IllegalArgumentException("You did not specify any children to be added");
     }
-    Node[] newChildren = (Node[]) newChildrenList.toArray();
 
     if (children == null) {
       children = new Node[newChildren.length + index];

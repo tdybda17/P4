@@ -3,6 +3,9 @@ package Compiler.Parser.GeneratedFiles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleNodeTest {
@@ -24,7 +27,6 @@ class SimpleNodeTest {
         assertTrue(node.jjtGetChild(2) instanceof ASTSTART);
         assertTrue(node.jjtGetChild(3) instanceof ASTPROG);
         assertTrue(node.jjtGetChild(4) instanceof ASTBLOCK);
-
     }
 
     @Test
@@ -36,6 +38,20 @@ class SimpleNodeTest {
         assertTrue(node.jjtGetChild(3) instanceof ASTPROG);
         assertTrue(node.jjtGetChild(4) instanceof ASTBLOCK);
 
+    }
+
+    @Test
+    void insertChildren3(){
+        List<Node> nodeList = new ArrayList<>();
+        nodeList.add(new ASTIDENTIFIER(4));
+        nodeList.add(new ASTSIMPLE_TYPES(5));
+
+        node.insertChildren(0, nodeList);
+        assertTrue(node.jjtGetChild(0) instanceof ASTIDENTIFIER);
+        assertTrue(node.jjtGetChild(1) instanceof ASTSIMPLE_TYPES);
+        assertTrue(node.jjtGetChild(2) instanceof ASTSTART);
+        assertTrue(node.jjtGetChild(3) instanceof ASTPROG);
+        assertTrue(node.jjtGetChild(4) instanceof ASTBLOCK);
     }
 
     @Test
