@@ -1,25 +1,37 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
 import Compiler.Parser.GeneratedFiles.*;
 
 public class TreeOptimizerVisitor implements TestParserVisitor {
     private Object defaultVisit(SimpleNode node, Object data) {
         for(int i = 0; i < node.jjtGetNumChildren(); i++) {
-            node.jjtAccept(this, i);
+            node.jjtGetChild(i).jjtAccept(this, i);
         }
         return data;
     }
 
+    private int convertDataToInt(Object data) {
+        if(data instanceof Integer) {
+            return (int) data;
+        } else {
+            throw new IllegalArgumentException("The given data object was not a integer but instead was " + data);
+        }
+    }
+
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
+        int index = convertDataToInt(data);
+
         if(node.jjtGetNumChildren() == 2) {
             return defaultVisit(node, data);
         } else if(node.jjtGetNumChildren() == 3) {
-
-
+            node.jjtGetChild(2);
+            System.out.println(index);
+            return defaultVisit(node, data);
+        } else {
+            throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
         }
-
-        return defaultVisit(node, data);
     }
 
 
