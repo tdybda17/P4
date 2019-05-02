@@ -65,8 +65,10 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return simpleDclNode;
     }
 
-    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, Node identifierNode) {
-        return createSimpleDclNode(simpleTypeValue, identifierNode, null);
+    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, String identifier) {
+        ASTIDENTIFIER idNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
+        idNode.jjtSetValue(identifier);
+        return createSimpleDclNode(simpleTypeValue, idNode, null);
     }
 
     @Override
