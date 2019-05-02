@@ -448,7 +448,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         // create assign node
         ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
 
-        // create addSubNode and set value to + or - depending on 'isIncrementing'
+        // create addSubNode and set value to + or - depending on value of isIncrementing
         ASTADD_SUB addSubNode = new ASTADD_SUB(TestParserTreeConstants.JJTADD_SUB);
         addSubNode.jjtSetValue(isIncrementing ? "+" : "-");
 
