@@ -41,6 +41,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         this.symbolTable = symbolTable;
     }
 
+    //TODO: få denne kaldt ved alle de nodes som vi ikke længere skal kunne visite
     private Object illegalVisit(Node node) {
         throw new IllegalVisitException("There is not visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
@@ -742,12 +743,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    //TODO: denne er ikke en nødvendighed længere
-    @Override
-    public Object visit(ASTVERTEX_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
-
     @Override
     public Object visit(ASTVERTEX node, Object data) {
         return defaultVisit(node, data);
@@ -984,4 +979,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTOBJECT_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
+
+
+    /*=====================================================================================
+                ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
+    =======================================================================================*/
+    @Override
+    public Object visit(ASTVERTEX_LIST node, Object data) {
+        return illegalVisit(node);
+    }
+
 }
