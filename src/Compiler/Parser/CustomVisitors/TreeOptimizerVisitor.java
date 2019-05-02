@@ -151,6 +151,8 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
         List<Node> blockNodeChildren = new ArrayList<>();
         Set<String> knownVertexNames = getAllVertexNames(node);
+        List<EdgeInformation> edgeInformationList = getAllEdgeInformations(node);
+
 
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
         blockNodeChildren.addAll(createAddingVertexToGraphFunctionCalls(knownVertexNames));
@@ -184,8 +186,17 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     }
 
     private List<EdgeInformation> getAllEdgeInformations(Node root) {
+        List<EdgeInformation> edgeInformationList = new ArrayList<>();
+        for(int i = 0; i < root.jjtGetNumChildren(); i++) {
+            Node child = root.jjtGetChild(i);
+            if(child instanceof ASTGRAPH_VERTEX_DCL) {
+                edgeInformationList.add(getEdgeInformation((ASTGRAPH_VERTEX_DCL) root.jjtGetChild(i)));
+            } else {
+                throw new WrongNodeTypeException(child.getClass().getSimpleName(), ASTGRAPH_VERTEX_DCL.class.getSimpleName());
+            }
+        }
 
-        return null;
+        return edgeInformationList;
     }
 
     private EdgeInformation getEdgeInformation(ASTGRAPH_VERTEX_DCL node) {
@@ -197,12 +208,13 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             if(node.jjtGetChild(2) instanceof ASTWEIGHT) {
                 ASTWEIGHT weightNode = (ASTWEIGHT) node.jjtGetChild(2);
                 if(weightNode.jjtGetNumChildren() == 0){
-
+                    return new EdgeInformation(firstVertex, secondVertex);
+                } else {
+                    return new EdgeInformation(firstVertex, secondVertex, weightNode);
                 }
+            } else {
+                throw new WrongNodeTypeException("The third child of an " + node.getClass().getSimpleName() + " node was not an weight node");
             }
-
-
-            return null; //TODO: få lavet
         } else {
             throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 2 or 3 children");
         }
