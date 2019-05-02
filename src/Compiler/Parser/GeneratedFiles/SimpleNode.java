@@ -66,6 +66,8 @@ class SimpleNode implements Node {
       children = c;
     }
     children[i] = n;
+
+    n.jjtSetParent(this);
   }
 
 

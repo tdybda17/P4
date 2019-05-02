@@ -1,7 +1,11 @@
 function main()
+
+
+
+/*
     label name = "Anton"
     a.b()
-/*
+
     create Graph g
         a -- b
     end

@@ -22,7 +22,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         if(data instanceof Integer) {
             return (int) data;
         } else {
-            throw new IllegalArgumentException("The given data object was not a integer but instead was " + data);
+            throw new IllegalArgumentException("The given data object was not an integer but instead was " + data);
         }
     }
 
@@ -39,6 +39,34 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         } else {
             throw new IllegalArgumentException("The given node was not an IdentifierNode");
         }
+    }
+
+    private ASTVARIABLE copyVariableNode(ASTVARIABLE variableNode) {
+        ASTIDENTIFIER idNode = (ASTIDENTIFIER) variableNode.jjtGetChild(0);
+        ASTVARIABLE newVariableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        newVariableNode.jjtAddChild(copyIdentifierNode(idNode), 0);
+        return newVariableNode;
+    }
+
+    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, Node idNode, Node valueNode) {
+        if (!(idNode instanceof ASTIDENTIFIER))
+            throw new IllegalArgumentException("idNode was of illegal type: " + idNode.getClass().getSimpleName());
+
+        ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
+
+        ASTSIMPLE_TYPES simpleTypesNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
+        simpleTypesNode.jjtSetValue(simpleTypeValue);
+
+        if (valueNode == null)
+            simpleDclNode.insertChildren(0, simpleTypesNode, copyIdentifierNode((ASTIDENTIFIER) idNode));
+        else
+            simpleDclNode.insertChildren(0, simpleTypesNode, copyIdentifierNode((ASTIDENTIFIER) idNode), valueNode);
+
+        return simpleDclNode;
+    }
+
+    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, Node identifierNode) {
+        return createSimpleDclNode(simpleTypeValue, identifierNode, null);
     }
 
     @Override
@@ -364,7 +392,83 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
-        return defaultVisit(node, data);
+        SimpleNode parent = (SimpleNode) node.jjtGetParent();
+
+        // create simple_dcl node
+        ASTSIMPLE_DCL simpleDclNode = createSimpleDclNode("int", node.jjtGetChild(0), node.jjtGetChild(1));
+
+        // create while node
+        ASTWHILE_STATEMENT whileNode = createWhileNodeFromForLoop(node);
+
+        // create encapsulating block for declaration and while loop
+        ASTBLOCK newBlockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
+        newBlockNode.insertChildren(0, simpleDclNode, whileNode);
+
+        // replace the for-statement node with the new block node in the tree
+        int index = convertDataToInt(data);
+        parent.jjtAddChild(newBlockNode, index);
+
+        return data;
+    }
+
+    private ASTWHILE_STATEMENT createWhileNodeFromForLoop(ASTFOR_STATEMENT forNode) {
+        ASTIDENTIFIER idNode = (ASTIDENTIFIER) forNode.jjtGetChild(0);
+        ASTINUM_VAL firstIntNode = (ASTINUM_VAL) forNode.jjtGetChild(1);
+        ASTINUM_VAL secondIntNode = (ASTINUM_VAL) forNode.jjtGetChild(2);
+        ASTBLOCK blockNode = (ASTBLOCK) forNode.jjtGetChild(3);
+
+        ASTWHILE_STATEMENT whileNode = new ASTWHILE_STATEMENT(TestParserTreeConstants.JJTWHILE_STATEMENT);
+
+        // create condition expression node
+        ASTREL_EXPR relExprNode = new ASTREL_EXPR(TestParserTreeConstants.JJTREL_EXPR);
+
+        // check for-loop direction, e.g. "for 1 to 10" or "for 10 to 1"
+        boolean isIncrementing = forLoopIsIncrementing(firstIntNode, secondIntNode);
+        relExprNode.jjtSetValue(isIncrementing ? "<=" : ">=");
+
+        // create variable node - relExpr node's first child
+        ASTVARIABLE variableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        variableNode.jjtAddChild(copyIdentifierNode(idNode), 0);
+        relExprNode.insertChildren(0, variableNode, secondIntNode);
+
+        // add assign node to end of block (increment statement)
+        blockNode.jjtAddChild(createAssignNodeForWhileLoop(isIncrementing, variableNode), blockNode.jjtGetNumChildren());
+
+        // add condition and block to while node's children
+        whileNode.insertChildren(0, relExprNode, blockNode);
+
+        return whileNode;
+    }
+
+    private boolean forLoopIsIncrementing(Node firstValue, Node secondValue) {
+        String firstValueString = (String) ((SimpleNode)firstValue).jjtGetValue();
+        String secondValueString = (String) ((SimpleNode)secondValue).jjtGetValue();
+
+        int firstInt = Integer.valueOf(firstValueString);
+        int secondInt = Integer.valueOf(secondValueString);
+
+        return firstInt <= secondInt;
+    }
+
+    private ASTASSIGN createAssignNodeForWhileLoop(boolean isIncrementing, ASTVARIABLE variableNode) {
+        // create assign node
+        ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+
+        // create addSubNode and set value to + or - depending on value of isIncrementing
+        ASTADD_SUB addSubNode = new ASTADD_SUB(TestParserTreeConstants.JJTADD_SUB);
+        addSubNode.jjtSetValue(isIncrementing ? "+" : "-");
+
+        // create integer node with value 1 (increment value)
+        ASTINUM_VAL intNode = new ASTINUM_VAL(TestParserTreeConstants.JJTINUM_VAL);
+        intNode.jjtSetValue("1");
+
+        // add children to addSubNode
+        addSubNode.insertChildren(0, copyVariableNode(variableNode), intNode);
+
+        // finally, add children to assign
+        assignNode.insertChildren(0, copyVariableNode(variableNode), addSubNode);
+
+        return assignNode;
     }
 
     @Override
