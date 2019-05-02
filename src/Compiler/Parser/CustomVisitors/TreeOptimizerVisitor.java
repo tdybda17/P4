@@ -81,10 +81,15 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     }
 
     private ASTASSIGN createAssignNodeFromInitialization(Node leftValue, Node rightNode){
+        if(!(leftValue instanceof ASTIDENTIFIER)) {
+            throw new IllegalArgumentException("Your left value node was not an identifier node");
+        }
         ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
-        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
 
-        leftNode.jjtAddChild(leftValue, 0);
+        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        ASTIDENTIFIER leftIdentifier = copyIdentifierNode((ASTIDENTIFIER) leftValue);
+        leftNode.jjtAddChild(leftIdentifier, 0);
+        leftIdentifier.jjtSetParent(leftNode);
         assignNode.jjtAddChild(leftNode, 0);
         leftNode.jjtSetParent(assignNode);
 

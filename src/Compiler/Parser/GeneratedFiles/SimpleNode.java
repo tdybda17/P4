@@ -100,6 +100,11 @@ class SimpleNode implements Node {
         }
       }
       children = temp;
+
+      for(int i = 0; i < children.length; i++) {
+        Node n = children[i];
+        n.jjtSetParent(this);
+      }
     }
   }
 
