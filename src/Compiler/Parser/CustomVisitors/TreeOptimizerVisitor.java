@@ -255,6 +255,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         fieldAcessNode.jjtAddChild(idNode, 0);
         return fieldAcessNode;
     }
+
     @Override
     public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
         return defaultVisit(node, data);
@@ -274,7 +275,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     public Object visit(ASTWEIGHT node, Object data) {
         return defaultVisit(node, data);
     }
-
 
     @Override
     public Object visit(SimpleNode node, Object data) {
