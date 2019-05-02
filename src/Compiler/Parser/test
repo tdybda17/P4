@@ -1,5 +1,17 @@
 function main()
 
+    create Set<int> set
+        1
+        2
+        3
+        4
+    end
+
+    create Queue<Vertex> q
+        a
+        b
+        v
+    end
 
 
 /*
