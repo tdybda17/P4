@@ -27,4 +27,9 @@ class TreeOptimizerVisitorTest {
         TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
     }
 
+    @Test
+    void visit2() throws Exception {
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
+        System.out.println(TestParser.parseTextFile(path));
+    }
 }

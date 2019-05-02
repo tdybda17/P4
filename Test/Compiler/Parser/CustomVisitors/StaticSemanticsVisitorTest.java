@@ -280,12 +280,4 @@ class StaticSemanticsVisitorTest {
         String path = "Test/Compiler/Parser/CustomVisitors/test";
         System.out.println(TestParser.parseTextFile(path));
     }
-
-    @Disabled
-    @Test
-    void visit3() throws Exception {
-        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
-        System.out.println(TestParser.parseTextFile(path));
-    }
-
 }
