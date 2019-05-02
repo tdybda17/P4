@@ -1,4 +1,6 @@
 function main()
+/*
+    create Set<real> s end
 
     create Set<int> set
         1
@@ -6,13 +8,21 @@ function main()
         3
         4
     end
-
+*/
     create Queue<Vertex> q
-        a
-        b
-        v
+        7.8
+        3.2
     end
 
+    create Set<int>
+
+/*
+    create Queue<Vertex> queue = q end
+
+    create Queue<Vertex> q end
+    q.enqueue(7.8)
+    q.enqueue(3.2)
+*/
 
 /*
     label name = "Anton"

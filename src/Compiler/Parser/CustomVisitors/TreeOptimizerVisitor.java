@@ -456,6 +456,8 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         int index = convertDataToInt(data);
         parent.jjtAddChild(newBlockNode, index);
 
+        // accept block child and then return
+        newBlockNode.jjtAccept(this, data);
         return data;
     }
 
@@ -541,7 +543,75 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        return defaultVisit(node, data);
+        if (node.jjtGetNumChildren() == 2)
+            return data;
+        else if (node.jjtGetNumChildren() != 3)
+            throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() +" children. Should have 2 or 3");
+
+        List<Node> newChildren = new ArrayList<>(); // list of new children to replace the original COLLECTION_ADT node
+
+        Node thirdChild = node.jjtGetChild(2);
+        if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
+            // esbenados
+            return data;
+        } else if (thirdChild instanceof ASTELEMENT_LIST) {
+            // remove element_list from collection_adt and then add collection_adt to list of new children
+            node.removeChild(2);
+            newChildren.add(node);
+
+            // create function_call_stmt node for each child of element_list and add to list of new children
+            ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) node.jjtGetChild(0);
+            ASTIDENTIFIER idNode = (ASTIDENTIFIER) node.jjtGetChild(1);
+            for (int i = 0; i < thirdChild.jjtGetNumChildren(); i++) {
+                newChildren.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
+            }
+
+            // create encapsulating block for the new children
+            ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
+            blockNode.insertChildren(0, newChildren);
+
+            // replace old collection_adt node with new block node in the tree
+            int index = convertDataToInt(data);
+            Node parent = node.jjtGetParent();
+            parent.jjtAddChild(blockNode, index);
+
+            return data;
+
+        } else
+            throw new IllegalArgumentException("COLLECTION_ADT node's third child is of illegal type: " + thirdChild.getClass().getSimpleName());
+    }
+
+    private ASTFUNCTION_CALL_STMT createFunctionCallStmtNode(String collectionOrGraphId, String functionName, Node... actualParameters) {
+        ASTFUNCTION_CALL_STMT functionCallStmtNode = new ASTFUNCTION_CALL_STMT(TestParserTreeConstants.JJTFUNCTION_CALL_STMT);
+
+        ASTVARIABLE variableNode = createVariableFromId(collectionOrGraphId);
+        functionCallStmtNode.jjtAddChild(variableNode, 0);
+
+        ASTFUNCTION_CALL funcCallNode = new ASTFUNCTION_CALL(TestParserTreeConstants.JJTFUNCTION_CALL);
+        variableNode.jjtAddChild(funcCallNode, 1);
+
+        ASTIDENTIFIER addVertexIdNode = createIdentifierNodeForId(functionName);
+        funcCallNode.jjtAddChild(addVertexIdNode, 0);
+        ASTACTUAL_PARAMETERS actualParametersNode = new ASTACTUAL_PARAMETERS(TestParserTreeConstants.JJTACTUAL_PARAMETERS);
+        funcCallNode.jjtAddChild(actualParametersNode, 1);
+        if (actualParameters != null) {
+            for (int i = 0; i < actualParameters.length; i++) {
+                actualParametersNode.jjtAddChild(actualParameters[i], i);
+            }
+        }
+
+        return functionCallStmtNode;
+    }
+
+    private String getFunctionNameFromCollectionType(Node collectionType) {
+        String type = (String) ((SimpleNode)collectionType).jjtGetValue();
+        switch (type) {
+            case "Queue": return "enqueue";
+            case "MinQueue": case "MaxQueue": return "insert";
+            case "Set": return "add";
+            case "Stack": return "push";
+            default: throw new IllegalArgumentException(collectionType.getClass().getSimpleName() + " was not a collection type");
+        }
     }
 
     @Override
