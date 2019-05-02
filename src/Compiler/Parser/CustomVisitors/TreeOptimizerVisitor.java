@@ -12,6 +12,13 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data) {
+        if(node.jjtGetNumChildren() == 2) {
+            return defaultVisit(node, data);
+        } else if(node.jjtGetNumChildren() == 3) {
+
+
+        }
+
         return defaultVisit(node, data);
     }
 

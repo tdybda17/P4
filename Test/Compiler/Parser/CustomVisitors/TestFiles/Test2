@@ -1,6 +1,5 @@
 function main()
      int i
-     create DiGraph XYZ = testGraph end
      int x = 7
 
      /*create DiGraph testGraph
@@ -11,22 +10,23 @@ function main()
             d -- a
      end*/
 
+     create DiGraph XYZ = testGraph end
 
-      create DiGraph testGraph
-          a -- {b[0.3],c}
-      end
+     create DiGraph testGraph
+         a -- {b[0.3],c}
+     end
 
-      //OMSKRIVES TIL:
-      create DiGraph testGraph end
-      Vertex a
-      Vertex b
-      testGraph.addVertex(a)
-      testGraph.addVertex(b)
-      testGraph.addEdge(a,b)
-      testGraph.getEdge(a,b).weight = 0.3
-      Vertex c
-      testGraph.addVertex(c)
-      testGraph.addEdge(a,c)
+     //OMSKRIVES TIL:
+     create DiGraph testGraph end
+     Vertex a
+     Vertex b
+     testGraph.addVertex(a)
+     testGraph.addVertex(b)
+     testGraph.addEdge(a,b)
+     testGraph.getEdge(a,b).weight = 0.3
+     Vertex c
+     testGraph.addVertex(c)
+     testGraph.addEdge(a,c)
 
 
       /*create Queue<real> Q

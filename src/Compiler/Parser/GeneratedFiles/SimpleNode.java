@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=false,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package Compiler.Parser.GeneratedFiles;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public
 class SimpleNode implements Node {
   private String name;
@@ -64,10 +68,16 @@ class SimpleNode implements Node {
     children[i] = n;
   }
 
+
   public void insertChildren(int index, Node ... newChildren) {
-    if(newChildren == null || newChildren.length == 0) {
+      insertChildren(index, Arrays.asList(newChildren));
+  }
+
+  public void insertChildren(int index, List<Node> newChildrenList) {
+    if(newChildrenList == null || newChildrenList.size() == 0) {
       throw new IllegalArgumentException("You did not specify any children to be added");
     }
+    Node[] newChildren = (Node[]) newChildrenList.toArray();
 
     if (children == null) {
       children = new Node[newChildren.length + index];
