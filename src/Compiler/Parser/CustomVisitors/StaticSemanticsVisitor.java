@@ -1,6 +1,7 @@
 package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
+import Compiler.Exceptions.NotImplementedException;
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
@@ -38,6 +39,10 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     //TODO: lav det sådan at når man kalder denne skal man fange WrongAmountOfChildrenException + IllegalArgumentException. Derefter skal det siges der var en compiler fejl og ikke en fejl i den skrevne kode.
     public StaticSemanticsVisitor(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
+    }
+
+    private Object illegalVisit(Node node) {
+        throw new IllegalVisitException("There is not visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
 
     private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
