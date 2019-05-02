@@ -11,13 +11,13 @@ public class EdgeInformation {
     private double standardWeight = 1.0;
 
 
-    public EdgeInformation(String firstVertex, String secondVertex, ASTWEIGHT weight) {
+    EdgeInformation(String firstVertex, String secondVertex, ASTWEIGHT weight) {
         this.firstVertex = firstVertex;
         this.secondVertex = secondVertex;
         this.weight = weight;
     }
 
-    public EdgeInformation(String firstVertex, String secondVertex) {
+    EdgeInformation(String firstVertex, String secondVertex) {
         this.firstVertex = firstVertex;
         this.secondVertex = secondVertex;
         this.weight = createStandardWeight();
