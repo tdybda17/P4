@@ -10,11 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptor {
-    private TypeDescriptor elementType;
-
     PriorityQueueTypeDescriptor(TypeDescriptor elementType) {
-        super();
-        this.elementType = elementType;
+        super(elementType);
         this.addMethods();
     }
 
@@ -24,18 +21,14 @@ abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptor {
 
     private Method insert(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("insert", new BooleanTypeDescriptor(), parameters);
     }
 
     @Override
-    public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
-    }
-
-    @Override
-    public TypeDescriptor getElementType() {
-        return elementType;
+    public void resetMethods(){
+        super.resetMethods();
+        this.addMethods();
     }
 
     @Override
@@ -44,11 +37,11 @@ abstract class PriorityQueueTypeDescriptor extends CollectionTypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PriorityQueueTypeDescriptor that = (PriorityQueueTypeDescriptor) o;
-        return elementType.equals(that.elementType);
+        return getElementType().equals(that.getElementType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), elementType);
+        return Objects.hash(super.hashCode(), getElementType());
     }
 }

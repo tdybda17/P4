@@ -8,14 +8,27 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import java.util.ArrayList;
 
 public abstract class CollectionTypeDescriptor extends ClassTypeDescriptor {
-    public CollectionTypeDescriptor() {
+    private TypeDescriptor elementType;
+
+    public CollectionTypeDescriptor(TypeDescriptor elementType) {
         super();
+        this.elementType = elementType;
+        this.addMethods();
+    }
+
+    private void addMethods(){
         this.addMethod(isEmpty());
     }
 
-    public abstract void setElementType(TypeDescriptor elementType);
+    public void setElementType(TypeDescriptor elementType) {
+        this.elementType = elementType;
+        this.resetMethods();
+        this.addMethods();
+    }
 
-    public abstract TypeDescriptor getElementType();
+    public TypeDescriptor getElementType() {
+        return elementType;
+    }
 
     private Method isEmpty(){
         return new Method("isEmpty", new BooleanTypeDescriptor(), new ArrayList<>());
@@ -25,7 +38,7 @@ public abstract class CollectionTypeDescriptor extends ClassTypeDescriptor {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.getTypeName()).append('<').append(getElementType()).append('>');
+        stringBuilder.append(this.getTypeName()).append('<').append(getElementType().toString()).append('>');
         return stringBuilder.toString();
     }
 }

@@ -20,6 +20,12 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
         addMethod(decreaseKey());
     }
 
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        super.setElementType(elementType);
+        this.addMethods();
+    }
+
     private Method minimum(){
         return new Method("minimum", getElementType(), new ArrayList<>());
     }

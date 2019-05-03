@@ -1,6 +1,6 @@
 function main()
     real x = 7.8
-    int i
+    /*int i
 
     i = 6
     x = i
@@ -25,12 +25,12 @@ function main()
     create Graph XYZ = g end
 
     create Stack<Stack<int>> S end
-
-    /*create Queue<real> Q
+    */
+    create Queue<real> Q
         6.0
         8.0
         x
-    end*/
+    end
 end
 
 int function test()

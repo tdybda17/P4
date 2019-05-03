@@ -7,22 +7,15 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 import java.util.*;
 
 public class StackTypeDescriptor extends CollectionTypeDescriptor {
-    private TypeDescriptor elementType;
-
     public StackTypeDescriptor(TypeDescriptor elementType) {
-        super();
-        this.elementType = elementType;
+        super(elementType);
         this.addMethods();
     }
 
     @Override
     public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
-    }
-
-    @Override
-    public TypeDescriptor getElementType() {
-        return elementType;
+        super.setElementType(elementType);
+        this.addMethods();
     }
 
     private void addMethods(){
@@ -37,13 +30,13 @@ public class StackTypeDescriptor extends CollectionTypeDescriptor {
 
     private Method push(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
 
         return new Method("push", new BooleanTypeDescriptor(), parameters);
     }
 
     private Method pop(){
-        return new Method("pop", elementType, new ArrayList<>());
+        return new Method("pop", getElementType(), new ArrayList<>());
     }
 
     @Override
@@ -52,11 +45,11 @@ public class StackTypeDescriptor extends CollectionTypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         StackTypeDescriptor that = (StackTypeDescriptor) o;
-        return Objects.equals(elementType, that.elementType);
+        return Objects.equals(getElementType(), that.getElementType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), elementType);
+        return Objects.hash(super.hashCode(), getElementType());
     }
 }

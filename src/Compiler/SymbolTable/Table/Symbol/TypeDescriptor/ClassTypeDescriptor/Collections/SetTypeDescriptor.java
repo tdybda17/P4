@@ -9,22 +9,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class SetTypeDescriptor extends CollectionTypeDescriptor {
-    private TypeDescriptor elementType;
-
     public SetTypeDescriptor(TypeDescriptor elementType) {
-        super();
-        this.elementType = elementType;
+        super(elementType);
         this.addMethods();
     }
 
     @Override
     public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
-    }
-
-    @Override
-    public TypeDescriptor getElementType() {
-        return elementType;
+        super.setElementType(elementType);
+        this.addMethods();
     }
 
     private void addMethods(){
@@ -35,19 +28,19 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
 
     private Method add(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("add", new BooleanTypeDescriptor(), parameters);
     }
 
     private Method remove(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("remove", new BooleanTypeDescriptor(), parameters);
     }
 
     private Method contains(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("contains", new BooleanTypeDescriptor(), parameters);
     }
 
@@ -62,16 +55,16 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false; //Checking their names up against each other
         SetTypeDescriptor that = (SetTypeDescriptor) o;
-        return elementType.equals(that.elementType);
+        return getElementType().equals(that.getElementType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), elementType);
+        return Objects.hash(super.hashCode(), getElementType());
     }
 
     @Override
     public String toString() {
-        return "Set<" + elementType + '>';
+        return "Set<" + getElementType() + '>';
     }
 }

@@ -10,12 +10,10 @@ import java.util.Objects;
 
 public class MapTypeDescriptor extends CollectionTypeDescriptor {
     private TypeDescriptor keyType;
-    private TypeDescriptor elementType;
 
     public MapTypeDescriptor(TypeDescriptor keyType, TypeDescriptor elementType) {
-        super();
+        super(elementType);
         this.keyType = keyType;
-        this.elementType = elementType;
         this.addMethods();
     }
 
@@ -29,12 +27,8 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
 
     @Override
     public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
-    }
-
-    @Override
-    public TypeDescriptor getElementType() {
-        return elementType;
+        super.setElementType(elementType);
+        this.addMethods();
     }
 
     public TypeDescriptor getKeyType() {
@@ -53,14 +47,14 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
 
     private Method containsValue(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("containsValue", new BooleanTypeDescriptor(), parameters);
     }
 
     private Method add() {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(keyType);
-        parameters.add(elementType);
+        parameters.add(getElementType());
         return new Method("add", new BooleanTypeDescriptor(), parameters);
     }
 
@@ -73,7 +67,7 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
     private Method get() {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(keyType);
-        return new Method("get", elementType , parameters);
+        return new Method("get", getElementType() , parameters);
     }
 
 
@@ -88,19 +82,19 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         MapTypeDescriptor that = (MapTypeDescriptor) o;
-        return Objects.equals(keyType, that.keyType) && Objects.equals(elementType, that.elementType);
+        return Objects.equals(keyType, that.keyType) && Objects.equals(getElementType(), that.getElementType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), keyType, elementType);
+        return Objects.hash(super.hashCode(), keyType, getElementType());
     }
 
     @Override
     public String toString() {
         return "MapTypeDescriptor<" +
                 keyType +
-                ", " + elementType +
+                ", " + getElementType() +
                 '>';
     }
 }

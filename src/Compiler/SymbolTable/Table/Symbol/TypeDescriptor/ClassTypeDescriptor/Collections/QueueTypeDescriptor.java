@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class QueueTypeDescriptor extends CollectionTypeDescriptor {
-    private TypeDescriptor elementType;
-
     public QueueTypeDescriptor(TypeDescriptor elementType) {
-        super();
-        this.elementType = elementType;
+        super(elementType);
         this.addMethods();
     }
 
@@ -24,12 +21,8 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
 
     @Override
     public void setElementType(TypeDescriptor elementType) {
-        this.elementType = elementType;
-    }
-
-    @Override
-    public TypeDescriptor getElementType() {
-        return elementType;
+        super.setElementType(elementType);
+        this.addMethods();
     }
 
     @Override
@@ -39,13 +32,13 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
 
     private Method enqueue(){
         List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(elementType);
+        parameters.add(getElementType());
 
         return new Method("enqueue", new BooleanTypeDescriptor(), parameters);
     }
 
     private Method dequeue(){
-        return new Method("dequeue", elementType, new ArrayList<>());
+        return new Method("dequeue", getElementType(), new ArrayList<>());
     }
 
     @Override
@@ -54,11 +47,11 @@ public class QueueTypeDescriptor extends CollectionTypeDescriptor {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         QueueTypeDescriptor that = (QueueTypeDescriptor) o;
-        return Objects.equals(elementType, that.elementType);
+        return Objects.equals(getElementType(), that.getElementType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), elementType);
+        return Objects.hash(super.hashCode(), getElementType());
     }
 }

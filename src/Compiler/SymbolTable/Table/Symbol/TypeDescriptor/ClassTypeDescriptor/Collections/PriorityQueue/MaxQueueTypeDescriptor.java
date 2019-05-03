@@ -20,6 +20,12 @@ public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
         addMethod(increaseKey());
     }
 
+    @Override
+    public void setElementType(TypeDescriptor elementType) {
+        super.setElementType(elementType);
+        this.addMethods();
+    }
+
     private Method maximum(){
         return new Method("maximum", getElementType(), new ArrayList<>());
     }
