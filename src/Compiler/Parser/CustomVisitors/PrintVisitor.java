@@ -3,11 +3,19 @@ package Compiler.Parser.CustomVisitors;
 import Compiler.Parser.GeneratedFiles.*;
 
 public class PrintVisitor implements TestParserVisitor {
+    private int amtOfTabs = 0;
 
     private Object defaultVisit(SimpleNode node, Object data){
         node.childrenAccept(this, data);
         return data;
     }
+
+    private void printAmtOfTabs(){
+        for(int i = 0; i < amtOfTabs; i++) {
+            System.out.print("\t");
+        }
+    }
+
     @Override
     public Object visit(SimpleNode node, Object data){
         return defaultVisit(node, data);
@@ -56,7 +64,11 @@ public class PrintVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
-        return null; //TODO: Fix
+        if(node.jjtGetParent() instanceof ASTVARIABLE) {
+            System.out.print(".");
+        }
+        node.childrenAccept(this, data);
+        return data;
     }
     @Override
     public Object visit(ASTOBJECT_TYPE node, Object data){
@@ -145,12 +157,14 @@ public class PrintVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLOR_VAL node, Object data) {
-        return null;
+        System.out.print(node.jjtGetValue());
+        return data;
     }
 
     @Override
     public Object visit(ASTLABEL_VAL node, Object data) {
-        return null;
+        System.out.print(node.jjtGetValue());
+        return data;
     }
 
     @Override
@@ -179,12 +193,15 @@ public class PrintVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTVARIABLE node, Object data) {
-        return null; //TODO: Fix
+        node.childrenAccept(this, data);
+        return data;
     }
 
     @Override
     public Object visit(ASTFIELD_ACCESS node, Object data) {
-        return null; //TODO: Fix
+        System.out.print(".");
+        node.childrenAccept(this, data);
+        return data;
     }
 
     @Override
@@ -205,24 +222,43 @@ public class PrintVisitor implements TestParserVisitor {
     public Object visit(ASTMAIN node, Object data) {
         System.out.print("function main()\n");
         node.jjtGetChild(0).jjtAccept(this, data);
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
 
     @Override
     public Object visit(ASTBLOCK node, Object data){
-        return defaultVisit(node, data);
+        int numChildren = node.jjtGetNumChildren();
+        amtOfTabs++;
+        for(int i = 0; i < numChildren; i++) {
+            printAmtOfTabs();
+            node.jjtGetChild(i).jjtAccept(this, data);
+        }
+        amtOfTabs--;
+        return data;
     }
 
     @Override
     public Object visit(ASTGRAPH_DCL node, Object data){
+        printGraphOrCollectionDcl(node, data);
+        return data;
+    }
+
+    private void printGraphOrCollectionDcl(Node node, Object data){
+        System.out.print("create ");
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print(" ");
         node.jjtGetChild(1).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 2)
+        if (node.jjtGetNumChildren() > 2) {
             node.jjtGetChild(2).jjtAccept(this, data);
-        return data;
+            printAmtOfTabs();
+            System.out.print("end \n");
+        } else {
+            System.out.print(" end \n");
+        }
     }
+
     @Override
     public Object visit(ASTGRAPH_TYPE node, Object data){
         System.out.print(node.jjtGetValue());
@@ -238,13 +274,14 @@ public class PrintVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data){
         System.out.print("\n");
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print("\n");
+        amtOfTabs++;
         int numChildren = node.jjtGetNumChildren();
-        for (int i = 1; i < numChildren; i++) {
+        for (int i = 0; i < numChildren; i++) {
+            printAmtOfTabs();
             node.jjtGetChild(i).jjtAccept(this, data);
             System.out.print("\n");
         }
+        amtOfTabs--;
         return data;
     }
     @Override
@@ -292,6 +329,7 @@ public class PrintVisitor implements TestParserVisitor {
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print(" do\n");
         node.jjtGetChild(1).jjtAccept(this, data);
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
@@ -305,6 +343,7 @@ public class PrintVisitor implements TestParserVisitor {
         node.jjtGetChild(2).jjtAccept(this, data);
         System.out.print(" do\n");
         node.jjtGetChild(3).jjtAccept(this, data);
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
@@ -317,6 +356,7 @@ public class PrintVisitor implements TestParserVisitor {
         node.jjtGetChild(1).jjtAccept(this, data);
         System.out.print(" do\n");
         node.jjtGetChild(2).jjtAccept(this, data);
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
@@ -335,6 +375,7 @@ public class PrintVisitor implements TestParserVisitor {
             System.out.print("else ");
             node.jjtGetChild(0).jjtAccept(this, data);
         }
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
@@ -348,54 +389,49 @@ public class PrintVisitor implements TestParserVisitor {
     }
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data){
-        node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" ");
-        node.jjtGetChild(1).jjtAccept(this, data);
-        if (node.jjtGetNumChildren() > 2) {
-            if (node.jjtGetChild(2).toString().equals("MEMBER_FUNCTION_CALL")) {
-                System.out.print(" = ");
-                node.jjtGetChild(2).jjtAccept(this, data);
-                System.out.print(" ");
-            }
-            else
-                node.jjtGetChild(2).jjtAccept(this, data);
-        }
+        printGraphOrCollectionDcl(node, data);
         return data;
     }
 
     @Override
     public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return null; // todo: fix
+        System.out.print(" = ");
+        node.childrenAccept(this, data);
+        System.out.print(" ");
+        return data;
     }
 
     @Override
     public Object visit(ASTELEMENT_LIST node, Object data){
         System.out.print("\n");
+        amtOfTabs++;
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            printAmtOfTabs();
             node.jjtGetChild(i).jjtAccept(this, data);
             System.out.print("\n");
         }
+        amtOfTabs--;
         return data;
     }
 
     @Override
     public Object visit(ASTMAP_ADT node, Object data) {
-        return null;
+        return null; //TODO: fix
     }
 
     @Override
     public Object visit(ASTMAP_ASSIGN node, Object data) {
-        return null;
+        return null; //TODO: fix
     }
 
     @Override
     public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
-        return null;
+        return null; //TODO: fix
     }
 
     @Override
     public Object visit(ASTKEY_VALUE_PAIR node, Object data) {
-        return null;
+        return null; //TODO fix
     }
 
     @Override
@@ -421,6 +457,7 @@ public class PrintVisitor implements TestParserVisitor {
         node.jjtGetChild(2).jjtAccept(this, data);
         System.out.print(")\n");
         node.jjtGetChild(3).jjtAccept(this, data);
+        printAmtOfTabs();
         System.out.print("end\n");
         return data;
     }
