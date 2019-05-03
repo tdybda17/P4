@@ -32,9 +32,8 @@ function main()
         x
     end
 
-    create Queue<int> intQueue end
-
-    intQueue = Q
+    //create Queue<int> intQueue end
+    //intQueue = Q
 end
 
 int function test()
