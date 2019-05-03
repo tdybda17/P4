@@ -150,7 +150,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
         if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
@@ -663,6 +662,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTFUNCS_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
         if(node.jjtGetNumChildren() != 4) {
             throw new WrongAmountOfChildrenException("A function declaration node did not have 4 children but instead had: " + node.jjtGetNumChildren());
@@ -695,12 +699,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTFUNCS_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-
-    @Override
     public Object visit(ASTFORMAL_PARAMETERS node, Object data) {
         return defaultVisit(node, data);
     }
@@ -714,7 +712,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         symbolTable.enterSymbol(symbol);
         return defaultVisit(node, data);
     }
-
 
     @Override
     public Object visit(SimpleNode node, Object data) {
@@ -730,6 +727,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTPROG node, Object data) {
         return defaultVisit(node, data);
     }
+
+    /*=====================================================================================
+                All the visit methods in this section are not needed
+                because they are related to the vertex and edge attributes
+                which is handled in the function visitor
+    =======================================================================================*/
 
     @Override
     public Object visit(ASTVERTEX_EDGE_ATTR node, Object data) {
