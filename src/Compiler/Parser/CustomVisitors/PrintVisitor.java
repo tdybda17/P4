@@ -232,8 +232,11 @@ public class PrintVisitor implements TestParserVisitor {
         int numChildren = node.jjtGetNumChildren();
         amtOfTabs++;
         for(int i = 0; i < numChildren; i++) {
-            printAmtOfTabs();
-            node.jjtGetChild(i).jjtAccept(this, data);
+            Node childNode = node.jjtGetChild(i);
+            if(!(childNode instanceof ASTBLOCK)) {
+                printAmtOfTabs();
+            }
+            childNode.jjtAccept(this, data);
         }
         amtOfTabs--;
         return data;
