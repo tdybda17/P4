@@ -33,7 +33,8 @@ class TreeOptimizerVisitorTest {
     @Test
     void printASTAfterOptimization() throws Exception {
         String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
-        Node root = TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
+        Node root = TestParser.createParseTree(path);
+        root.jjtAccept(treeOptimizerVisitor, childNumberIndex);
         System.out.println(TreePrinter.createDotOutput(root));
     }
 
@@ -42,9 +43,10 @@ class TreeOptimizerVisitorTest {
     void printCodeRepresentationBeforeAndAfter() throws Exception {
         String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
         System.out.println("Before:");
-        Node root = TestParser.useVisitorMethod(new PrintVisitor(), path, null);
+        Node root = TestParser.createParseTree(path);
+        root.jjtAccept(new PrintVisitor(), null);
 
-        root = TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
+        root.jjtAccept(treeOptimizerVisitor, childNumberIndex);
 
         System.out.println("\n\nAfter:");
         root.jjtAccept(new PrintVisitor(), null);

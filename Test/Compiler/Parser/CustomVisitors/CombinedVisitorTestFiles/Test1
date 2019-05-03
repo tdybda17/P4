@@ -1,4 +1,5 @@
 function main()
     int a
-    real a
+    real b = 3.0
+    Vertex c
 end

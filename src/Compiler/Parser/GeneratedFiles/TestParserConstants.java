@@ -125,19 +125,19 @@ public interface TestParserConstants {
   /** RegularExpression Id. */
   int collection = 64;
   /** RegularExpression Id. */
-  int INUM_VAL = 65;
+  int COLOR_VAL = 65;
   /** RegularExpression Id. */
-  int DIGIT = 66;
+  int INUM_VAL = 66;
   /** RegularExpression Id. */
-  int FNUM_VAL = 67;
+  int DIGIT = 67;
   /** RegularExpression Id. */
-  int DIGITF = 68;
+  int FNUM_VAL = 68;
   /** RegularExpression Id. */
-  int IDENTIFIER = 69;
+  int DIGITF = 69;
   /** RegularExpression Id. */
-  int ID = 70;
+  int IDENTIFIER = 70;
   /** RegularExpression Id. */
-  int COLOR_VAL = 71;
+  int ID = 71;
   /** RegularExpression Id. */
   int LABEL_VAL = 72;
 
@@ -195,7 +195,7 @@ public interface TestParserConstants {
     "\"return\"",
     "\"dcl\"",
     "\"Map\"",
-    "\"color\"",
+    "\"Color\"",
     "\"label\"",
     "<GRAPH_TYPE>",
     "<GRAPH>",
@@ -213,13 +213,13 @@ public interface TestParserConstants {
     "\">\"",
     "<COLLECTION_TYPE>",
     "<collection>",
+    "<COLOR_VAL>",
     "<INUM_VAL>",
     "<DIGIT>",
     "<FNUM_VAL>",
     "<DIGITF>",
     "<IDENTIFIER>",
     "<ID>",
-    "<COLOR_VAL>",
     "<LABEL_VAL>",
   };
 

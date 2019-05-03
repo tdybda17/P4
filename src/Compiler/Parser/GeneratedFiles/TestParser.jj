@@ -116,7 +116,7 @@ TOKEN : /* OPERATORS */
 | < RETURN : "return" >
 | < DCL : "dcl" >
 | < MAP : "Map" >
-| < COLOR : "color" >
+| < COLOR : "Color" >
 | < LABEL : "label" >
 }
 
@@ -138,13 +138,13 @@ TOKEN :
 | < RANGLE : ">" >
 | < COLLECTION_TYPE : (< collection >) >
 | < #collection : "Set" | "Queue" | "MinQueue" | "MaxQueue" | "Stack" >
+| < COLOR_VAL : "GRAY" | "BLACK" | "WHITE" | "RED" | "GREEN" | "BLUE" | "YELLOW" >
 | < INUM_VAL : (< DIGIT >) >
 | < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
 | < FNUM_VAL : (< DIGITF >) >
 | < #DIGITF : ("0" | ["1"-"9"](["0"-"9"])*)"."(["0"-"9"])+ >
 | < IDENTIFIER : (< ID >) >
 | < #ID : ["a"-"z", "A"-"Z"](["a"-"z", "A"-"Z"] | ["0"-"9"])* >
-| < COLOR_VAL : "GRAY" | "BLACK" | "WHITE" | "RED" | "GREEN" | "BLUE" | "YELLOW" >
 | < LABEL_VAL : "\"" <ID> "\"" >
 
 

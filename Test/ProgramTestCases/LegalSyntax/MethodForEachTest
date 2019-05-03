@@ -3,7 +3,7 @@ function main()
         a -- b
         b -- c
     end
-    foreach v in g.vertices() do
-        v.d = 0
+    foreach v in g.vertices do
+        v.color = RED
     end
 end

@@ -9,6 +9,7 @@ public class CombinedVisitor {
         root.jjtAccept(treeOptimizerVisitor, 0);
 
         SymbolTable symbolTable = new SymbolTable();
+        symbolTable.openScope();
         FunctionVisitor functionVisitor = new FunctionVisitor();
         root.jjtAccept(functionVisitor, symbolTable);
 
