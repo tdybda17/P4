@@ -5,11 +5,9 @@ function main()
      create DiGraph XYZ end
      XYZ = testGraph
      */
-
-     real j = 0.3
      create DiGraph testGraph
          a -- {b[0.3],c}
-         b -- d[j]
+         b -- d
      end
 
      //OMSKRIVES TIL:

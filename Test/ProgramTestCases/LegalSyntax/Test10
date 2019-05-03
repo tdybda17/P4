@@ -1,7 +1,0 @@
-function main()
-    create Graph g
-        a -- b
-    end
-
-    create Set s = g.vertices() end
-end

@@ -1,8 +1,0 @@
-function main()
-    create DiGraph g
-        a -- b
-        b -- c
-    foreach v in g.vertices() do
-        v.d = 0
-    end
-end

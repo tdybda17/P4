@@ -83,6 +83,7 @@ class CombinedVisitorTest {
         assertDoesNotThrow(() -> CombinedVisitor.visit(root));
     }
 
+    //TODO: denne test virker ikke af en eller anden grund kunne forestille mig at det har noget at gøre med at edge attributes ikke har nogle børn eller et eller andet når man laver en vertexDCL
     @Test
     void visitVertexDclTest() throws Exception {
         Node root = createAST("VertexDclTest");
@@ -101,4 +102,5 @@ class CombinedVisitorTest {
         assertDoesNotThrow(() -> CombinedVisitor.visit(root));
     }
 
+    //TODO: mangler file 13 og 14, samt af en eller
 }

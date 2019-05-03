@@ -1,7 +1,0 @@
-function main()
-    int a = foo(5)
-end
-
-int function foo(int a)
-    return a + a
-end
