@@ -30,8 +30,20 @@ class TreeOptimizerVisitorTest {
     @Test
     void visit2() throws Exception {
         String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
-        System.out.println(TestParser.parseTextFile(path));
         Node root = TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
         System.out.println(TreePrinter.createDotOutput(root));
     }
+
+    @Test
+    void visit3() throws Exception {
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/Test2";
+        System.out.println("Before:");
+        Node root = TestParser.useVisitorMethod(new PrintVisitor(), path, null);
+
+        root = TestParser.useVisitorMethod(treeOptimizerVisitor, path, childNumberIndex);
+
+        System.out.println("\n\nAfter:");
+        root.jjtAccept(new PrintVisitor(), null);
+    }
+
 }

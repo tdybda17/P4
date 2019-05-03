@@ -117,20 +117,27 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             int childIndex = 2;
             currentGraphType = (String) ((ASTGRAPH_TYPE) node.jjtGetChild(0)).jjtGetValue();
             currentGraphName = getIdentifierName(node.jjtGetChild(1));
-            Node childNode = node.jjtGetChild(childIndex);
-            List<Node> newNodesForASTList = new ArrayList<>();
-            if(childNode instanceof ASTGRAPH_ASSIGN) {
-                Node assignNodeForParent = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), childNode);
-                newNodesForASTList.add(assignNodeForParent);
-            } else if (childNode instanceof ASTGRAPH_DCL_ELEMENTS) {
-                newNodesForASTList = convertResultToNodeList(node.jjtGetChild(childIndex).jjtAccept(this, childIndex));
+
+            List<Node> newChildren = new ArrayList<>();
+            Node thirdChild = node.jjtGetChild(childIndex);
+
+            //Remove the third child from the Graph Dcl and then add the Graph Dcl to the list of new children
+            node.removeChild(childIndex);
+            newChildren.add(node);
+            if(thirdChild instanceof ASTGRAPH_ASSIGN) {
+                //Creating and assign node to replace the graph assign node
+                Node assignNode = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), thirdChild);
+                newChildren.add(assignNode);
+            } else if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
+                newChildren.addAll(convertResultToNodeList(thirdChild.jjtAccept(this, childIndex)));
             } else {
                 throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
             }
-            node.removeChild(childIndex);
+            //Replace old graph dcl node with new children in the tree
             SimpleNode parent = (SimpleNode) node.jjtGetParent();
-            parent.insertChildren(index + 1, newNodesForASTList);
-            return index;
+            parent.removeChild(index);
+            parent.insertChildren(index, newChildren);
+            return data;
         } else {
             throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
         }
@@ -162,9 +169,12 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         List<Node> blockNodeChildren = new ArrayList<>();
         Set<String> knownVertexNames = getAllVertexNames(node);
 
+        //Creating all the create vertex and add vertex function statements
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
         blockNodeChildren.addAll(createAddVertexFunctionCalls(knownVertexNames));
 
+
+        //Creating all the add edge and set weight method calls
         EdgeInformationHandler edgeInformationHandler = new EdgeInformationHandler(currentGraphType);
         List<EdgeInformation> edgeInformationList = edgeInformationHandler.getAllEdgeInformations(node);
 
@@ -569,39 +579,41 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         if (node.jjtGetNumChildren() == 2)
             return data;
         else if (node.jjtGetNumChildren() != 3)
-            throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() +" children. Should have 2 or 3");
+            throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() + " children. Should have 2 or 3");
 
         List<Node> newChildren = new ArrayList<>(); // list of new children to replace the original COLLECTION_ADT node
-
         Node thirdChild = node.jjtGetChild(2);
+        // Remove the third child from collection_adt and then add collection_adt to list of new children
+        node.removeChild(2);
+        newChildren.add(node);
         if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
-            // esbenados
-            return data;
-        } else if (thirdChild instanceof ASTELEMENT_LIST) {
-            // remove element_list from collection_adt and then add collection_adt to list of new children
-            node.removeChild(2);
-            newChildren.add(node);
+            String leftId = getIdentifierName(node.jjtGetChild(1));
 
-            // create function_call_stmt node for each child of element_list and add to list of new children
+            ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
+            newChildren.add(assignNode);
+        } else if (thirdChild instanceof ASTELEMENT_LIST) {
+            List<Node> newNodesForBlock = new ArrayList<>();
+            // Create function_call_stmt node for each child of element_list and add to list of new children
             ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) node.jjtGetChild(0);
             ASTIDENTIFIER idNode = (ASTIDENTIFIER) node.jjtGetChild(1);
             for (int i = 0; i < thirdChild.jjtGetNumChildren(); i++) {
-                newChildren.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
+                newNodesForBlock.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
             }
 
-            // create encapsulating block for the new children
+            // Create encapsulating block for the new children
             ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
-            blockNode.insertChildren(0, newChildren);
+            blockNode.insertChildren(0, newNodesForBlock);
+            newChildren.add(blockNode);
+        } else {
+            throw new WrongNodeTypeException("COLLECTION_ADT node's third child is of illegal type: " + thirdChild.getClass().getSimpleName());
+        }
 
-            // replace old collection_adt node with new block node in the tree
-            int index = convertDataToInt(data);
-            Node parent = node.jjtGetParent();
-            parent.jjtAddChild(blockNode, index);
-
-            return data;
-
-        } else
-            throw new IllegalArgumentException("COLLECTION_ADT node's third child is of illegal type: " + thirdChild.getClass().getSimpleName());
+        // Replace old collection_adt node with new children in the tree
+        int index = convertDataToInt(data);
+        SimpleNode parent = (SimpleNode) node.jjtGetParent();
+        parent.removeChild(index);
+        parent.insertChildren(index, newChildren);
+        return data;
     }
 
     private ASTFUNCTION_CALL_STMT createFunctionCallStmtNode(String collectionOrGraphId, String functionName, Node... actualParameters) {

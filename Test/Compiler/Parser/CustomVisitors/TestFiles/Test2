@@ -7,7 +7,7 @@ function main()
      */
 
      create DiGraph testGraph
-         //a -- {b[0.3],c}
+         a -- {b[0.3],c}
          b -- d
      end
 
@@ -20,27 +20,30 @@ function main()
      testGraph.addVertex(a)
      testGraph.addVertex(b)
      testGraph.addVertex(c)
-     testGraph.addVertex(d)*/
+     testGraph.addVertex(d)
      testGraph.addEdge(a,b)
-     testGraph.getEdge(a,b).weight = 0.3
-
      testGraph.addEdge(a,c)
      testGraph.addEdge(b,d)
+     testGraph.getEdge(a,b).weight = 0.3
+     testGraph.getEdge(a,c).weight = 1.0
+     testGraph.getEdge(b,d).weight = 1.0
+     */
 
 
-      /*create Queue<real> Q
+      create Queue<real> Q
             7.8
             3.2
       end
 
+      if 8 == 8 then
+           int x
+      end
+
       //Skal omskrives til
-      create Queue<real> Q end
+      /*create Queue<real> Q end
       Q.enqueue(7.8)
       Q.enqueue(3.2)
       */
-
-      //create Stack<int> s = stackOfStackCreate().pop().x end
-
       //s = stackOfStackCreate().pop().x
 end
 
