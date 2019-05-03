@@ -2,6 +2,7 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.Visitor.AssignmentException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.*;
@@ -115,9 +116,9 @@ class StaticSemanticsVisitorTest {
     }
 
     //We test that if our left node is not entered in the symbol table then the assignment throws an exception
-/*    @Test
+    @Test
     void visitAssignNodeTest3(){
-        ASTMEMBER leftNode = new ASTMEMBER(0);
+        ASTVARIABLE leftNode = new ASTVARIABLE(0);
         String identifierName = "x";
         ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(1);
         identifierNode.jjtSetValue(identifierName);
@@ -128,7 +129,7 @@ class StaticSemanticsVisitorTest {
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
         assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }*/
+    }
 
 
     private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
