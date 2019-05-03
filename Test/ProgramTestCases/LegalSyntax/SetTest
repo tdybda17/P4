@@ -3,5 +3,5 @@ function main()
         a -- b
     end
 
-    create Set<Vertex> s = g.vertices() end
+    create Set<Vertex> s = g.vertices end
 end

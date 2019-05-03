@@ -4,4 +4,6 @@ function main()
         51.2
         88.89
     end
+
+    create Queue<real> q2 = q end
 end

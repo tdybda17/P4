@@ -4,7 +4,7 @@ function main()
 
 	f(a)
 	b = g(a, b)
-            c = a
+    c = a
 end
 
 function f (int z)

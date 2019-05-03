@@ -77,4 +77,28 @@ class CombinedVisitorTest {
         assertDoesNotThrow(() -> CombinedVisitor.visit(root));
     }
 
+    @Test
+    void visitSetTest() throws Exception {
+        Node root = createAST("SetTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
+    @Test
+    void visitVertexDclTest() throws Exception {
+        Node root = createAST("VertexDclTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
+    @Test
+    void visitWGraphDclTest() throws Exception {
+        Node root = createAST("WGraphDclTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
+    @Test
+    void visitWhileLoopsTest() throws Exception {
+        Node root = createAST("WhileLoopsTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
 }

@@ -193,10 +193,30 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         Set<String> vertexNames = new HashSet<>();
         for(int i = 0; i < root.jjtGetNumChildren(); i++) {
             Node child = root.jjtGetChild(i);
-            if(child instanceof ASTIDENTIFIER) {
-                vertexNames.add(getIdentifierName(child));
+            if(child instanceof ASTGRAPH_VERTEX_DCL) {
+                vertexNames.add(getIdentifierName(child.jjtGetChild(0)));
+                if(child.jjtGetChild(1) instanceof ASTIDENTIFIER) {
+                    vertexNames.add(getIdentifierName(child.jjtGetChild(1)));
+                } else if (child.jjtGetChild(1) instanceof ASTVERTEX_LIST) {
+                    vertexNames.addAll(getAllVertexNamesFromVertexList((ASTVERTEX_LIST) child.jjtGetChild(1)));
+                } else {
+                    throw new WrongNodeTypeException(child.jjtGetChild(1).getClass().toString(), ASTIDENTIFIER.class.getSimpleName(), ASTVERTEX_LIST.class.getSimpleName());
+                }
             } else {
-                vertexNames.addAll(getAllVertexNames(child));
+                throw new WrongNodeTypeException("The graph dcl element node had a child that was not an node of the type: " + ASTGRAPH_VERTEX_DCL.class.getSimpleName() + ", but instead was: " + child.getClass().getSimpleName());
+            }
+        }
+        return vertexNames;
+    }
+
+    private Set<String> getAllVertexNamesFromVertexList(ASTVERTEX_LIST vertexListNode) {
+        Set<String> vertexNames = new HashSet<>();
+        for(int i = 0; i < vertexListNode.jjtGetNumChildren(); i++) {
+            Node child = vertexListNode.jjtGetChild(i);
+            if(child instanceof ASTVERTEX) {
+                vertexNames.add(getIdentifierName(child.jjtGetChild(0)));
+            } else {
+                throw new WrongNodeTypeException(child.getClass().getSimpleName(), ASTVERTEX.class.getSimpleName());
             }
         }
         return vertexNames;

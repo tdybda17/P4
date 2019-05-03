@@ -1,14 +1,15 @@
 Vertex dcl
-	int a = INF
+	int a = 3
 	real man = 0.0
 end
 
 
 function main()
-    if 5 > 3 then
+    Vertex c
+    if 5 > c.a then
     	int a = 5
     else
-    	int b = 5
+    	c.man = 9.5
     end
 end
 
