@@ -31,6 +31,10 @@ function main()
         8.0
         x
     end
+
+    create Queue<int> intQueue end
+
+    intQueue = Q
 end
 
 int function test()
