@@ -2,6 +2,7 @@ package Compiler.SymbolTable.Table;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.ScopeError.IllegalSymbolNameError;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.SymbolTable.Table.Scope.ScopeDisplay;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
@@ -79,7 +80,7 @@ public class SymbolTable implements ISymbolTable {
         Symbol symbol = hashMap.get(name);
         if(symbol!= null)
             return symbol;
-        else throw new SymbolTableException("The given identifier name: " + name + ", could not be retrieved because no mapping from it exists");
+        else throw new NoSuchSymbolError("The given identifier name: " + name + ", could not be retrieved because no mapping exists for it");
     }
 
     public boolean containsSymbol(String name) {

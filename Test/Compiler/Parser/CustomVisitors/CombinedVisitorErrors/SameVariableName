@@ -1,0 +1,5 @@
+function main()
+    Vertex a
+
+    create Queue<int> a end
+end

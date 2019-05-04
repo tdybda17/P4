@@ -1,0 +1,8 @@
+function main()
+    if true then
+        int a
+    end
+
+    a = 6
+end
+

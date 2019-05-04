@@ -1,0 +1,7 @@
+function main()
+    foo(5) = 5
+end
+
+int function foo(int a)
+    return a + a
+end

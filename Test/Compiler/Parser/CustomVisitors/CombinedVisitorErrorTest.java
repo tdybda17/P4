@@ -1,7 +1,10 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.DuplicateEdgeException;
+import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.Node;
@@ -56,4 +59,37 @@ public class CombinedVisitorErrorTest {
     void testNoSuchMethod() {
         assertThrows(NoSuchMethodException.class, () -> visitAndCreateAST("NoSuchMethod"));
     }
+
+    @Test
+    void testSameVariableName() {
+        assertThrows(DuplicateSymbolError.class, () -> visitAndCreateAST("SameVariableName"));
+    }
+
+    @Test
+    void testNoShadowingAllowed() {
+        assertThrows(DuplicateSymbolError.class, () -> visitAndCreateAST("NoShadowingAllowed"));
+    }
+
+    @Test
+    void UseBeforeDeclaration() {
+        assertThrows(NoSuchSymbolError.class, () -> visitAndCreateAST("UseBeforeDeclaration"));
+    }
+
+    @Test
+    void ReferenceOutsideScope() {
+        assertThrows(NoSuchSymbolError.class, () -> visitAndCreateAST("ReferenceOutsideScope"));
+    }
+
+    @Test
+    void DuplicateEdgeDiGraph() {
+        assertThrows(DuplicateEdgeException.class, () -> visitAndCreateAST("DuplicateEdgeDiGraph"));
+    }
+
+    @Test
+    void DuplicateEdgeGraph() {
+        assertThrows(DuplicateEdgeException.class, () -> visitAndCreateAST("DuplicateEdgeGraph"));
+    }
+
+
+
 }

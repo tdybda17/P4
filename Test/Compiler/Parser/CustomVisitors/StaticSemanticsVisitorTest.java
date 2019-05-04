@@ -2,6 +2,7 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Exceptions.DuplicateEdgeException;
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.Exceptions.SymbolTable.SymbolTableException;
 import Compiler.Exceptions.Visitor.AssignmentException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
@@ -128,7 +129,7 @@ class StaticSemanticsVisitorTest {
         rightNode.jjtSetValue("6");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(SymbolTableException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
+        assertThrows(NoSuchSymbolError.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
     }
 
 

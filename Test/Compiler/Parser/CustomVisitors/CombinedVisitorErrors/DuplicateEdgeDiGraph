@@ -1,0 +1,6 @@
+function main()
+    create DiGraph g
+        a -- b
+        a -- b
+    end
+end

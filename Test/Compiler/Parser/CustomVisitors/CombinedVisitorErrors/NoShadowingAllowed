@@ -1,0 +1,8 @@
+function main()
+    Vertex a
+
+    if false then
+        create Queue<int> a end
+    end
+end
+
