@@ -72,33 +72,49 @@ public class CombinedVisitorErrorTest {
     }
 
     @Test
-    void UseBeforeDeclaration() {
+    void testUseBeforeDeclaration() {
         assertThrows(NoSuchSymbolError.class, () -> visitAndCreateAST("UseBeforeDeclaration"));
     }
 
     @Test
-    void ReferenceOutsideScope() {
+    void testReferenceOutsideScope() {
         assertThrows(NoSuchSymbolError.class, () -> visitAndCreateAST("ReferenceOutsideScope"));
     }
 
     @Test
-    void DuplicateEdgeDiGraph() {
+    void testDuplicateEdgeDiGraph() {
         assertThrows(DuplicateEdgeException.class, () -> visitAndCreateAST("DuplicateEdgeDiGraph"));
     }
 
     @Test
-    void DuplicateEdgeGraph() {
+    void testDuplicateEdgeGraph() {
         assertThrows(DuplicateEdgeException.class, () -> visitAndCreateAST("DuplicateEdgeGraph"));
     }
 
     @Test
-    void FunctionAssignment() {
+    void testFunctionAssignment() {
         assertThrows(AssignmentException.class, () -> visitAndCreateAST("FunctionAssignment"));
     }
 
     @Test
-    void MethodAssignment() {
+    void testMethodAssignment() {
         assertThrows(AssignmentException.class, () -> visitAndCreateAST("MethodAssignment"));
     }
+
+    @Test
+    void testIfConditionNotBool() {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("IfConditionNotBool"));
+    }
+
+    @Test
+    void testWhileConditionNotBool() {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WhileConditionNotBool"));
+    }
+
+    @Test
+    void testWrongReturnType() {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongReturnType"));
+    }
+
 }
 

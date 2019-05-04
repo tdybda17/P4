@@ -150,83 +150,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-            if(node.jjtGetNumChildren() == 3) {
-                TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
-                Node initializationNode = node.jjtGetChild(2);
-
-                TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-                try {
-                    typeCheck(expectedType, actualType);
-                } catch (IncorrectTypeException e) {
-                    throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
-                }
-            }
-            return defaultVisit(node, data);
-        } else {
-            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
-        }
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        return getTypeDescriptorFromTypeNode(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-            return defaultVisit(node, data);
-        } else if (node.jjtGetNumChildren() == 3) {
-            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
-        }
-        else {
-            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
-        }
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_TYPE node, Object data) {
-        return getTypeDescriptorFromTypeNode(node);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        if(node.jjtGetNumChildren() == 2) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-        }else if (node.jjtGetNumChildren() == 3) {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
-        } else {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
-        }
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        SimpleNode collectionTypeNode = convertToSimpleNode(node);
-
-        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
-        if(type instanceof CollectionTypeDescriptor) {
-            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
-
-            Node childNode = node.jjtGetChild(0);
-            //We make a recursive call to the visit method for the sub node
-            TypeDescriptor elementType = convertToTypeDescriptor(childNode.jjtAccept(this, data));
-            collectionTypeDescriptor.setElementType(elementType);
-            return collectionTypeDescriptor;
-        } else {
-            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
-        }
-    }
-
-    @Override
     public Object visit(ASTASSIGN node, Object data) {
         if(node.jjtGetNumChildren() != 2) {
             throw new WrongAmountOfChildrenException("The assignment node did not have two children");
@@ -306,51 +229,81 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return node.jjtGetChild(0).jjtAccept(this, symbolTable);
     }
 
-    //TODO: få lavet map
-    public Object visit(ASTMAP node, Object data) {
+    @Override
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            Symbol symbol = createSymbolFromDclNode(node, data);
+            symbolTable.enterSymbol(symbol);
+            if(node.jjtGetNumChildren() == 3) {
+                TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
+                Node initializationNode = node.jjtGetChild(2);
+
+                TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
+                try {
+                    typeCheck(expectedType, actualType);
+                } catch (IncorrectTypeException e) {
+                    throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
+                }
+            }
+            return defaultVisit(node, data);
+        } else {
+            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_TYPES node, Object data) {
+        return getTypeDescriptorFromTypeNode(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL node, Object data) {
+        if(node.jjtGetNumChildren() == 2) {
+            Symbol symbol = createSymbolFromDclNode(node, data);
+            symbolTable.enterSymbol(symbol);
+            return defaultVisit(node, data);
+        } else if (node.jjtGetNumChildren() == 3) {
+            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
+        }
+        else {
+            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_TYPE node, Object data) {
+        return getTypeDescriptorFromTypeNode(node);
+    }
+
+    @Override
+    public Object visit(ASTCOLLECTION_ADT node, Object data) {
+        if(node.jjtGetNumChildren() == 2) {
+            Symbol symbol = createSymbolFromDclNode(node, data);
+            symbolTable.enterSymbol(symbol);
+        }else if (node.jjtGetNumChildren() == 3) {
+            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
+        } else {
+            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
+        }
         return defaultVisit(node, data);
     }
 
     @Override
-    public Object visit(ASTMAP_ADT node, Object data) {
-        // get key-value type and create MapTypeDescriptor
-        TypeDescriptor keyType = getTypeDescriptorFromTypeNode(node.jjtGetChild(0));
-        TypeDescriptor valueType = getTypeDescriptorFromTypeNode(node.jjtGetChild(1));
-        MapTypeDescriptor mapType = new MapTypeDescriptor(keyType, valueType);
+    public Object visit(ASTCOLLECTION_TYPE node, Object data) {
+        SimpleNode collectionTypeNode = convertToSimpleNode(node);
 
-        // add id to symbol table
-        String id = getValueStringOfChild(node, 2);
-        symbolTable.enterSymbol(id, new IdentifierAttributes(mapType));
+        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
+        if(type instanceof CollectionTypeDescriptor) {
+            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
 
-        // accept 4th child with parameter MapTypeDescriptor
-        node.jjtGetChild(3).jjtAccept(this, mapType);
-        return data;
-    }
-
-    @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
-        MapTypeDescriptor expectedType = (MapTypeDescriptor) data;
-        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(expectedType, actualType);
-        return data;
-    }
-
-    @Override
-    public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTKEY_VALUE_PAIR node, Object data) {
-        MapTypeDescriptor mapType = (MapTypeDescriptor) data;
-
-        TypeDescriptor keyType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(mapType.getKeyType(), keyType);
-
-        TypeDescriptor valueType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
-        typeCheck(mapType.getElementType(), valueType);
-
-        return data;
+            Node childNode = node.jjtGetChild(0);
+            //We make a recursive call to the visit method for the sub node
+            TypeDescriptor elementType = convertToTypeDescriptor(childNode.jjtAccept(this, data));
+            collectionTypeDescriptor.setElementType(elementType);
+            return collectionTypeDescriptor;
+        } else {
+            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
+        }
     }
 
     @Override
@@ -472,6 +425,73 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTMAIN node, Object data) {
+        currentFunctionName = "main";
+        currentFunctionReturnType = new VoidTypeDescriptor();
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTWHILE_STATEMENT node, Object data) {
+        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTFOREACH_STATEMENT node, Object data) {
+        // check that id does not already exist
+        String id = getValueStringOfChild(node, 0);
+        if (symbolTable.containsSymbol(id))
+            throw new IllegalTypeException("Error: Tried to use the already declared variable '" + id + "' as iterator variable in foreach loop");
+
+        // check that second child returns collection type
+        TypeDescriptor type = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        if (!(type instanceof CollectionTypeDescriptor))
+            throw new IllegalTypeException("Error: Tried to iterate through non-collection type '" + type.getTypeName() + "' in foreach loop");
+
+        // open node scope, add id to symbol table, accept all of third child's (block's) children, close node scope
+        symbolTable.openScope();
+        symbolTable.enterSymbol(id, new IdentifierAttributes(((CollectionTypeDescriptor) type).getElementType()));
+        defaultVisit((SimpleNode) node.jjtGetChild(2), data);
+        symbolTable.closeScope();
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTIF_STATEMENT node, Object data) {
+        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTELSE_STATEMENT node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTRETURN_STMT node, Object data) {
+        if (node.jjtGetNumChildren() == 0) {
+            if (currentFunctionReturnType instanceof VoidTypeDescriptor)
+                return data;
+            else
+                throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentFunctionName +
+                        "'. Expected return value of type " + currentFunctionReturnType.getTypeName());
+        }
+        else {
+            TypeDescriptor actualReturnType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
+            TypeDescriptor expectedReturnType = currentFunctionReturnType;
+            if (isCorrectType(expectedReturnType, actualReturnType))
+                return data;
+            else
+                throw new IncorrectTypeException("Illegal return value in function " + currentFunctionName +
+                        ". Expected return value of type " + expectedReturnType.getTypeName() + " but it was of type " +
+                        actualReturnType.getTypeName());
+        }
+    }
+
+    @Override
     public Object visit(ASTVARIABLE node, Object data) {
         Symbol symbol = symbolTable.retrieveSymbol(getValueStringOfChild(node, 0));
         TypeDescriptor variableType = getTypeForIdentifierSymbol(symbol);
@@ -527,36 +547,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTACTUAL_PARAMETERS node, Object data) {
-        FunctionAttributes attributes = (FunctionAttributes) data;
-        List<TypeDescriptor> formalParameters = attributes.getParameterTypes();
-        int numActualParameters = node.jjtGetNumChildren();
-        if (formalParameters == null) {
-            if (numActualParameters == 0)
-                return data;
-            else
-                throw new UnmatchedParametersException("Error: Tried to pass parameters to the parameterless function");
-        }
-        else if (numActualParameters == formalParameters.size()) {
-            for (int i = 0; i < numActualParameters; i++) {
-                TypeDescriptor formalParameterType = formalParameters.get(i);
-                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
-                typeCheck(formalParameterType, actualParameterType);
-            }
-            return data;
-        }
-        else
-            throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
-    }
-
-    @Override
-    public Object visit(ASTMAIN node, Object data) {
-        currentFunctionName = "main";
-        currentFunctionReturnType = new VoidTypeDescriptor();
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTFUNCTION_CALL node, Object data) {
         FunctionAttributes attributes;
         String identifier = getValueStringOfChild(node, 0);
@@ -603,64 +593,26 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTWHILE_STATEMENT node, Object data) {
-        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
-        return defaultVisit(node, data);
-    }
-
-
-    @Override
-    public Object visit(ASTFOREACH_STATEMENT node, Object data) {
-        // check that id does not already exist
-        String id = getValueStringOfChild(node, 0);
-        if (symbolTable.containsSymbol(id))
-            throw new IllegalTypeException("Error: Tried to use the already declared variable '" + id + "' as iterator variable in foreach loop");
-
-        // check that second child returns collection type
-        TypeDescriptor type = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
-        if (!(type instanceof CollectionTypeDescriptor))
-            throw new IllegalTypeException("Error: Tried to iterate through non-collection type '" + type.getTypeName() + "' in foreach loop");
-
-        // open node scope, add id to symbol table, accept all of third child's (block's) children, close node scope
-        symbolTable.openScope();
-        symbolTable.enterSymbol(id, new IdentifierAttributes(((CollectionTypeDescriptor) type).getElementType()));
-        defaultVisit((SimpleNode) node.jjtGetChild(2), data);
-        symbolTable.closeScope();
-        return data;
-    }
-
-    @Override
-    public Object visit(ASTIF_STATEMENT node, Object data) {
-        TypeDescriptor actualConditionType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(new BooleanTypeDescriptor(), actualConditionType);
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTELSE_STATEMENT node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTRETURN_STMT node, Object data) {
-        if (node.jjtGetNumChildren() == 0) {
-            if (currentFunctionReturnType instanceof VoidTypeDescriptor)
+    public Object visit(ASTACTUAL_PARAMETERS node, Object data) {
+        FunctionAttributes attributes = (FunctionAttributes) data;
+        List<TypeDescriptor> formalParameters = attributes.getParameterTypes();
+        int numActualParameters = node.jjtGetNumChildren();
+        if (formalParameters == null) {
+            if (numActualParameters == 0)
                 return data;
             else
-                throw new IncorrectTypeException("Missing return value in a return statement located in function '" + currentFunctionName +
-                        "'. Expected return value of type " + currentFunctionReturnType.getTypeName());
+                throw new UnmatchedParametersException("Error: Tried to pass parameters to the parameterless function");
         }
-        else {
-            TypeDescriptor actualReturnType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, data));
-            TypeDescriptor expectedReturnType = currentFunctionReturnType;
-            if (isCorrectType(expectedReturnType, actualReturnType))
-                return data;
-            else
-                throw new IncorrectTypeException("Illegal return value in function " + currentFunctionName +
-                        ". Expected return value of type " + expectedReturnType.getTypeName() + " but it was of type " +
-                        actualReturnType.getTypeName());
+        else if (numActualParameters == formalParameters.size()) {
+            for (int i = 0; i < numActualParameters; i++) {
+                TypeDescriptor formalParameterType = formalParameters.get(i);
+                TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
+                typeCheck(formalParameterType, actualParameterType);
+            }
+            return data;
         }
+        else
+            throw new UnmatchedParametersException("Error: Tried to parse " + numActualParameters + " parameters to a function that requires " + formalParameters.size() + " parameters");
     }
 
     @Override
@@ -728,6 +680,53 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTPROG node, Object data) {
         return defaultVisit(node, data);
+    }
+
+    //TODO: få lavet map
+    public Object visit(ASTMAP node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTMAP_ADT node, Object data) {
+        // get key-value type and create MapTypeDescriptor
+        TypeDescriptor keyType = getTypeDescriptorFromTypeNode(node.jjtGetChild(0));
+        TypeDescriptor valueType = getTypeDescriptorFromTypeNode(node.jjtGetChild(1));
+        MapTypeDescriptor mapType = new MapTypeDescriptor(keyType, valueType);
+
+        // add id to symbol table
+        String id = getValueStringOfChild(node, 2);
+        symbolTable.enterSymbol(id, new IdentifierAttributes(mapType));
+
+        // accept 4th child with parameter MapTypeDescriptor
+        node.jjtGetChild(3).jjtAccept(this, mapType);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTMAP_ASSIGN node, Object data) {
+        MapTypeDescriptor expectedType = (MapTypeDescriptor) data;
+        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(expectedType, actualType);
+        return data;
+    }
+
+    @Override
+    public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTKEY_VALUE_PAIR node, Object data) {
+        MapTypeDescriptor mapType = (MapTypeDescriptor) data;
+
+        TypeDescriptor keyType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
+        typeCheck(mapType.getKeyType(), keyType);
+
+        TypeDescriptor valueType = convertToTypeDescriptor(node.jjtGetChild(1).jjtAccept(this, symbolTable));
+        typeCheck(mapType.getElementType(), valueType);
+
+        return data;
     }
 
     /*=====================================================================================

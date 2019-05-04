@@ -1,0 +1,9 @@
+function main()
+
+end
+
+
+int function foo(int a)
+    return true
+end
+
