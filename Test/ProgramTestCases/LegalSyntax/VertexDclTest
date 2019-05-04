@@ -1,6 +1,7 @@
 Vertex dcl
 	int a = 3
 	real man = 0.0
+	Queue<int> intQueue
 end
 
 

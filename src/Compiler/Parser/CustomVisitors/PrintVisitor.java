@@ -42,10 +42,7 @@ public class PrintVisitor implements TestParserVisitor {
         System.out.print("end\n\n");
         return data;
     }
-    @Override
-    public Object visit(ASTATTRIBUTE_DCL node, Object data){
-        return defaultVisit(node, data);
-    }
+
     @Override
     public Object visit(ASTASSIGN node, Object data){
         node.jjtGetChild(0).jjtAccept(this, data);
@@ -70,8 +67,14 @@ public class PrintVisitor implements TestParserVisitor {
         node.childrenAccept(this, data);
         return data;
     }
+
     @Override
-    public Object visit(ASTOBJECT_TYPE node, Object data){
+    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print(" ");
         node.jjtGetChild(1).jjtAccept(this, data);

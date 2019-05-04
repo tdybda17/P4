@@ -27,10 +27,10 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTEDGE_ATTRIBUTES node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTATTRIBUTE_DCL node, Object data){
+  public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTOBJECT_TYPE node, Object data){
+  public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTSIMPLE_DCL node, Object data){
@@ -187,4 +187,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=3e8bcebc1eb78c2b88f84828c4ef670b (do not edit this line) */
+/* JavaCC - OriginalChecksum=91dd12ea93a4ef4a59d30e5cda32fad8 (do not edit this line) */

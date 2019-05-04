@@ -729,7 +729,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     /*=====================================================================================
-                All the visit methods in this section are not needed
+                Most of the visit methods in this section are not needed
                 because they are related to the vertex and edge attributes
                 which is handled in the function visitor
     =======================================================================================*/
@@ -749,21 +749,25 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    //TODO få hørt Anton ad omkring hvordan man undgår den laver en Simple Dcl node mellem
     @Override
-    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
-        return defaultVisit(node, data);
+    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
+        Node child = node.jjtGetChild(0);
+
+        TypeDescriptor expectedType = convertToTypeDescriptor(child.jjtGetChild(0).jjtAccept(this, data));
+        TypeDescriptor actualType = convertToTypeDescriptor(child.jjtGetChild(2).jjtAccept(this, data));
+        typeCheck(expectedType, actualType);
+        return data;
     }
 
-    //This is the object type node used in the vertex/edge attribute declaration so we ignore it in this visitor
     @Override
-    public Object visit(ASTOBJECT_TYPE node, Object data) {
+    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
         return defaultVisit(node, data);
     }
-
 
     /*=====================================================================================
-                ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
-    =======================================================================================*/
+                    ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
+        =======================================================================================*/
     @Override
     public Object visit(ASTFOR_STATEMENT node, Object data) {
         return illegalVisit(node);

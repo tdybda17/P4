@@ -38,48 +38,55 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
-        List<Field> fields = (List<Field>) node.jjtGetChild(0).jjtAccept(this, data);
-        for (Field field : fields)
+        List<Field> fields = new ArrayList<>();
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            fields.addAll((List<Field>) node.jjtGetChild(i).jjtAccept(this, data));
+        }
+        for (Field field : fields) {
             VertexTypeDescriptor.addUserAttribute(field);
+        }
         return data;
     }
 
     @Override
     public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
-        List<Field> fields = (List<Field>) node.jjtGetChild(0).jjtAccept(this, data);
-        for (Field field : fields)
+        List<Field> fields = new ArrayList<>();
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            fields.addAll((List<Field>) node.jjtGetChild(i).jjtAccept(this, data));
+        }
+        for (Field field : fields) {
             EdgeTypeDescriptor.addUserAttribute(field);
+        }
         return data;
     }
 
     @Override
-    public Object visit(ASTATTRIBUTE_DCL node, Object data) {
-        List<Field> fields = new ArrayList<>();
-        for (int i = 0; i < node.jjtGetNumChildren(); i++)
-            fields.addAll((List<Field>) node.jjtGetChild(i).jjtAccept(this, data));
-        return fields;
+    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
-    public Object visit(ASTOBJECT_TYPE node, Object data) {
-        return createFieldFromChildren(node);
+    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
+        return createFieldFromChildren(node, data);
     }
 
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return createFieldFromChildren(node);
+        return createFieldFromChildren(node, data);
     }
 
-    private List<Field> createFieldFromChildren(SimpleNode node) {
+    private List<Field> createFieldFromChildren(Node node, Object data) {
+        TypeDescriptor type = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         String fieldName = ((SimpleNode)node.jjtGetChild(1)).jjtGetValue().toString();
-        String type = ((SimpleNode)node.jjtGetChild(0)).jjtGetValue().toString();
-        TypeDescriptor typeDescriptor = new TypeDescriptorFactory().create(type);
-        return List.of(new Field(fieldName, typeDescriptor));
+
+        return List.of(new Field(fieldName, type));
     }
+
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        return defaultVisit(node, data);
+        TypeDescriptor typeDescriptor = new TypeDescriptorFactory().create(node.jjtGetValue().toString());
+        return typeDescriptor;
     }
 
     @Override
@@ -94,7 +101,20 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        return defaultVisit(node, data);
+        SimpleNode collectionTypeNode = (SimpleNode) node;
+
+        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
+        if(type instanceof CollectionTypeDescriptor) {
+            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
+
+            Node childNode = node.jjtGetChild(0);
+            //We make a recursive call to the visit method for the sub node
+            TypeDescriptor elementType = (TypeDescriptor)(childNode.jjtAccept(this, data));
+            collectionTypeDescriptor.setElementType(elementType);
+            return collectionTypeDescriptor;
+        } else {
+            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
+        }
     }
 
     @Override

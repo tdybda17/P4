@@ -205,10 +205,10 @@ void vertex_edge_attributes() #VERTEX_EDGE_ATTR(>1) :
 void vertex_attributes() #void :
 {}
 {
-    vertex_attr_dcl() #VERTEX_ATTRIBUTES newlines_star() vertex_attr_tail() #EDGE_ATTRIBUTES
+    vertex_attr_dcl() newlines_star() vertex_attr_tail()
 }
 
-void vertex_attr_dcl() #void :
+void vertex_attr_dcl() #VERTEX_ATTRIBUTES :
 {}
 {
     <VERTEX> <DCL> newlines_plus() attribute_dcl() <END>
@@ -223,10 +223,10 @@ void vertex_attr_tail() #void :
 void edge_attributes() #void :
 {}
 {
-    edge_attr_dcl() #EDGE_ATTRIBUTES newlines_star() edge_attr_tail() #VERTEX_ATTRIBUTES
+    edge_attr_dcl()  newlines_star() edge_attr_tail()
 }
 
-void edge_attr_dcl() #void :
+void edge_attr_dcl() #EDGE_ATTRIBUTES :
 {}
 {
     <EDGE> <DCL> newlines_plus() attribute_dcl() <END>
@@ -238,10 +238,10 @@ void edge_attr_tail() #void :
     vertex_attr_dcl() newlines_star() | empty()
 }
 
-void attribute_dcl() #ATTRIBUTE_DCL(>1) :
+void attribute_dcl() #void :
 {}
 {
-    simple_types_dcl() newlines_plus() attribute_dcl() | (object_types() identifier() newlines_plus()) #OBJECT_TYPE attribute_dcl() | empty()
+    (simple_types_dcl() newlines_plus()) #SIMPLE_ATTRIBUTES_DCL attribute_dcl()  | (object_types() identifier() newlines_plus()) #OBJECT_ATTRIBUTE_DCL attribute_dcl() | empty()
 }
 
 void simple_types_dcl() #SIMPLE_DCL :

@@ -10,8 +10,8 @@ public interface TestParserTreeConstants
   public int JJTVERTEX_EDGE_ATTR = 4;
   public int JJTVERTEX_ATTRIBUTES = 5;
   public int JJTEDGE_ATTRIBUTES = 6;
-  public int JJTATTRIBUTE_DCL = 7;
-  public int JJTOBJECT_TYPE = 8;
+  public int JJTSIMPLE_ATTRIBUTES_DCL = 7;
+  public int JJTOBJECT_ATTRIBUTE_DCL = 8;
   public int JJTSIMPLE_DCL = 9;
   public int JJTSIMPLE_TYPES = 10;
   public int JJTIDENTIFIER = 11;
@@ -73,8 +73,8 @@ public interface TestParserTreeConstants
     "VERTEX_EDGE_ATTR",
     "VERTEX_ATTRIBUTES",
     "EDGE_ATTRIBUTES",
-    "ATTRIBUTE_DCL",
-    "OBJECT_TYPE",
+    "SIMPLE_ATTRIBUTES_DCL",
+    "OBJECT_ATTRIBUTE_DCL",
     "SIMPLE_DCL",
     "SIMPLE_TYPES",
     "IDENTIFIER",
@@ -128,4 +128,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=fea08a96edad32b948a5f19ab980170c (do not edit this line) */
+/* JavaCC - OriginalChecksum=2c094a360cfbf0211d61c0ae78a86eb7 (do not edit this line) */

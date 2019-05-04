@@ -10,8 +10,8 @@ public interface TestParserVisitor
   public Object visit(ASTVERTEX_EDGE_ATTR node, Object data);
   public Object visit(ASTVERTEX_ATTRIBUTES node, Object data);
   public Object visit(ASTEDGE_ATTRIBUTES node, Object data);
-  public Object visit(ASTATTRIBUTE_DCL node, Object data);
-  public Object visit(ASTOBJECT_TYPE node, Object data);
+  public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data);
+  public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data);
   public Object visit(ASTSIMPLE_DCL node, Object data);
   public Object visit(ASTSIMPLE_TYPES node, Object data);
   public Object visit(ASTIDENTIFIER node, Object data);
@@ -64,4 +64,4 @@ public interface TestParserVisitor
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
 }
-/* JavaCC - OriginalChecksum=27be75d8a3eba57ab89fd5fd168ff69d (do not edit this line) */
+/* JavaCC - OriginalChecksum=af40ecf8090da23e6cd8d2e9c48b3c23 (do not edit this line) */
