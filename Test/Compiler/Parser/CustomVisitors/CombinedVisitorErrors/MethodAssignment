@@ -1,0 +1,6 @@
+function main()
+    create Queue<int> q end
+
+    q.isEmpty() = false
+end
+

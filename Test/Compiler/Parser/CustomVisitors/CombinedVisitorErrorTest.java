@@ -6,6 +6,7 @@ import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
 import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
+import Compiler.Exceptions.Visitor.AssignmentException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.Node;
 import Compiler.Parser.GeneratedFiles.TestParser;
@@ -90,6 +91,14 @@ public class CombinedVisitorErrorTest {
         assertThrows(DuplicateEdgeException.class, () -> visitAndCreateAST("DuplicateEdgeGraph"));
     }
 
+    @Test
+    void FunctionAssignment() {
+        assertThrows(AssignmentException.class, () -> visitAndCreateAST("FunctionAssignment"));
+    }
 
-
+    @Test
+    void MethodAssignment() {
+        assertThrows(AssignmentException.class, () -> visitAndCreateAST("MethodAssignment"));
+    }
 }
+

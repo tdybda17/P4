@@ -85,6 +85,11 @@ class TestParserTest {
         assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "IfElseTest"));
     }
 
+    @Test
+    void testGetEdge() {
+        assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "GetEdgeTest"));
+    }
+
 
 
 }

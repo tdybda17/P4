@@ -1,0 +1,12 @@
+function main()
+    create Graph g
+        a -- b
+    end
+
+    label labelA = "a"
+    Vertex a = g.getVertex(labelA)
+    Vertex b = g.getVertex("b")
+
+    Edge e = g.getEdge(a, b)
+end
+

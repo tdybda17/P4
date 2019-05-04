@@ -113,5 +113,9 @@ class CombinedVisitorTest {
         assertDoesNotThrow(() -> CombinedVisitor.visit(root));
     }
 
-    //TODO: mangler file 13 og 14, samt af en eller
+    @Test
+    void visitGetEdgeTest() throws Exception {
+        Node root = createAST("GetEdgeTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
 }
