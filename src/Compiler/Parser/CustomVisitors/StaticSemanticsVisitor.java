@@ -41,7 +41,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         this.symbolTable = symbolTable;
     }
 
-    //TODO: få denne kaldt ved alle de nodes som vi ikke længere skal kunne visite
     private Object illegalVisit(Node node) {
         throw new IllegalVisitException("There is not visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
