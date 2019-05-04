@@ -248,7 +248,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             typeCheck(expectedType, actualType);
         } catch (IncorrectTypeException e) {
             String leftNodeName = getLeftNodeName(leftNode);
-            throw new AssignmentException("You tried to assign a value of the type \'" + actualType + "\' to \'" + leftNodeName + "\' instead of the expected type \'" + expectedType + "\'");
+            throw new IncorrectTypeException("You tried to assign a value of the type \'" + actualType + "\' to \'" + leftNodeName + "\' instead of the expected type \'" + expectedType + "\'");
         }
         return null;
     }

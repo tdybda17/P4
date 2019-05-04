@@ -1,5 +1,6 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.Node;
 import Compiler.Parser.GeneratedFiles.TestParser;
@@ -20,7 +21,17 @@ public class CombinedVisitorErrorTest {
     }
 
     @Test
-    void testWrongValueType() throws Exception {
-        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongValueType"));
+    void testWrongTypeOfValue()  {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongTypeOfValue"));
+    }
+
+    @Test
+    void testWrongFormalParameter() {
+        assertThrows(UnmatchedParametersException.class, () -> visitAndCreateAST("WrongFormalParameter"));
+    }
+
+    @Test
+    void testWrongElementType() {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongElementType"));
     }
 }

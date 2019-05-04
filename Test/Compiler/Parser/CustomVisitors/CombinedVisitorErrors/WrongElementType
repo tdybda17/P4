@@ -1,0 +1,5 @@
+function main()
+    create Queue<int> iQueue end
+    create Queue<real> rQueue end
+    iQueue = rQueue
+end

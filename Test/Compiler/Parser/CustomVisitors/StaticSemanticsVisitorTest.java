@@ -112,7 +112,7 @@ class StaticSemanticsVisitorTest {
         rightNode.jjtSetValue("6.5");
 
         ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(AssignmentException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
+        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
     }
 
     //We test that if our left node is not entered in the symbol table then the assignment throws an exception
