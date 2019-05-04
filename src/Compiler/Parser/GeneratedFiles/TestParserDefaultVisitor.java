@@ -63,7 +63,7 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTADD_SUB node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTMUL_DIV node, Object data){
+  public Object visit(ASTMUL_DIV_MOD node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTNEG_EXPR node, Object data){
@@ -187,4 +187,4 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=91dd12ea93a4ef4a59d30e5cda32fad8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=60f69a695ec30fa3021c9f6ee5b0b287 (do not edit this line) */

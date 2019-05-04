@@ -124,8 +124,8 @@ TOKEN :
 | < #CONSTANT : "INF" | "NEG_INF" | "Ø" >
 | < ADD_SUB : (< addsub >) >
 | < #addsub : "+" | "-" >
-| < MUL_DIV : (< muldiv >) >
-| < #muldiv : "*" | "/" >
+| < MUL_DIV_MOD : (< muldiv >) >
+| < #muldiv : "*" | "/" | "%" >
 | < EQUALITY_OP : (< equality_ope >) >
 | < #equality_ope : "==" | "!=" >
 | < RELATIONAL_OP : (< relational_ope >) >
@@ -352,7 +352,7 @@ Token C() #void :
   t = < ADD_SUB > term() C() {return t;} | empty() {return new Token();}
 }
 
-void term() #MUL_DIV(>1) :
+void term() #MUL_DIV_MOD(>1) :
 {Token t;}
 {
     neg_expr() t = D() {jjtThis.value = t.image;}
@@ -361,7 +361,7 @@ void term() #MUL_DIV(>1) :
 Token D() #void :
 {Token t;}
 {
-    t = < MUL_DIV > atomic_expr() D() {return t;} | empty() {return new Token();}
+    t = < MUL_DIV_MOD > atomic_expr() D() {return t;} | empty() {return new Token();}
 }
 
 void neg_expr() #void :

@@ -1,6 +1,10 @@
 function main()
     boolean a = ((5 == 2 | 3 < 2) & (8.5 != 8) | (3 >= 3)) | true
 
-    int i = 7 * 7
+    int i = 7 + 7
+    i = 7 - 7
+    i = 7 * 7
+    i = 7 / 7
+    i = 7 % 7
     real r = i + 6.8
 end

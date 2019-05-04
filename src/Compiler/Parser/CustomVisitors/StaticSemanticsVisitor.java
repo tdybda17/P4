@@ -415,7 +415,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMUL_DIV node, Object data) {
+    public Object visit(ASTMUL_DIV_MOD node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
         if(!(firstType instanceof NumberTypeDescriptor)) {

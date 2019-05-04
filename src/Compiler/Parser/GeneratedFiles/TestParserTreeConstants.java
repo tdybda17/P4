@@ -22,7 +22,7 @@ public interface TestParserTreeConstants
   public int JJTEQUAL_EXPR = 16;
   public int JJTREL_EXPR = 17;
   public int JJTADD_SUB = 18;
-  public int JJTMUL_DIV = 19;
+  public int JJTMUL_DIV_MOD = 19;
   public int JJTNEG_EXPR = 20;
   public int JJTINUM_VAL = 21;
   public int JJTFNUM_VAL = 22;
@@ -85,7 +85,7 @@ public interface TestParserTreeConstants
     "EQUAL_EXPR",
     "REL_EXPR",
     "ADD_SUB",
-    "MUL_DIV",
+    "MUL_DIV_MOD",
     "NEG_EXPR",
     "INUM_VAL",
     "FNUM_VAL",
@@ -128,4 +128,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=2c094a360cfbf0211d61c0ae78a86eb7 (do not edit this line) */
+/* JavaCC - OriginalChecksum=1e37b9a2212e7cf6d90b015a89880813 (do not edit this line) */

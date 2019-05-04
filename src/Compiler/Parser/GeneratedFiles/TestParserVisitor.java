@@ -22,7 +22,7 @@ public interface TestParserVisitor
   public Object visit(ASTEQUAL_EXPR node, Object data);
   public Object visit(ASTREL_EXPR node, Object data);
   public Object visit(ASTADD_SUB node, Object data);
-  public Object visit(ASTMUL_DIV node, Object data);
+  public Object visit(ASTMUL_DIV_MOD node, Object data);
   public Object visit(ASTNEG_EXPR node, Object data);
   public Object visit(ASTINUM_VAL node, Object data);
   public Object visit(ASTFNUM_VAL node, Object data);
@@ -64,4 +64,4 @@ public interface TestParserVisitor
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
 }
-/* JavaCC - OriginalChecksum=af40ecf8090da23e6cd8d2e9c48b3c23 (do not edit this line) */
+/* JavaCC - OriginalChecksum=a9c721ea15ca49d5d2cfc72128158c28 (do not edit this line) */

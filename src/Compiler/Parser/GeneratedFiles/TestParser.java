@@ -898,8 +898,8 @@ if (jjtc000) {
     throw new Error("Missing return statement in function");
   }
 
-  final public void term() throws ParseException {/*@bgen(jjtree) #MUL_DIV(> 1) */
- ASTMUL_DIV jjtn000 = new ASTMUL_DIV(JJTMUL_DIV);
+  final public void term() throws ParseException {/*@bgen(jjtree) #MUL_DIV_MOD(> 1) */
+ ASTMUL_DIV_MOD jjtn000 = new ASTMUL_DIV_MOD(JJTMUL_DIV_MOD);
  boolean jjtc000 = true;
  jjtree.openNodeScope(jjtn000);
  jjtn000.jjtSetFirstToken(getToken(1));Token t;
@@ -934,8 +934,8 @@ if (jjtc000) {
 
   final public Token D() throws ParseException {Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case MUL_DIV:{
-      t = jj_consume_token(MUL_DIV);
+    case MUL_DIV_MOD:{
+      t = jj_consume_token(MUL_DIV_MOD);
       atomic_expr();
       D();
 {if ("" != null) return t;}

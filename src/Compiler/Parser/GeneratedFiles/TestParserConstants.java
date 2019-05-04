@@ -105,7 +105,7 @@ public interface TestParserConstants {
   /** RegularExpression Id. */
   int addsub = 54;
   /** RegularExpression Id. */
-  int MUL_DIV = 55;
+  int MUL_DIV_MOD = 55;
   /** RegularExpression Id. */
   int muldiv = 56;
   /** RegularExpression Id. */
@@ -203,7 +203,7 @@ public interface TestParserConstants {
     "<CONSTANT>",
     "<ADD_SUB>",
     "<addsub>",
-    "<MUL_DIV>",
+    "<MUL_DIV_MOD>",
     "<muldiv>",
     "<EQUALITY_OP>",
     "<equality_ope>",

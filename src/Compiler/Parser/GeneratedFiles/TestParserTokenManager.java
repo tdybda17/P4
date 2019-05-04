@@ -571,7 +571,7 @@ private int jjMoveNfa_0(int startState, int curPos)
                         kind = 66;
                      { jjCheckNAddStates(0, 2); }
                   }
-                  else if ((0x840000000000L & l) != 0L)
+                  else if ((0x842000000000L & l) != 0L)
                   {
                      if (kind > 55)
                         kind = 55;
@@ -663,7 +663,7 @@ private int jjMoveNfa_0(int startState, int curPos)
                      kind = 53;
                   break;
                case 31:
-                  if ((0x840000000000L & l) != 0L && kind > 55)
+                  if ((0x842000000000L & l) != 0L && kind > 55)
                      kind = 55;
                   break;
                case 32:

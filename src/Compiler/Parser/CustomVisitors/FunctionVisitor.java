@@ -143,7 +143,7 @@ public class FunctionVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTMUL_DIV node, Object data) {
+    public Object visit(ASTMUL_DIV_MOD node, Object data) {
         return defaultVisit(node, data);
     }
 

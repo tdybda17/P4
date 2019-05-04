@@ -1,0 +1,5 @@
+function main()
+    Vertex a
+
+    Vertex b = a + 7
+end
