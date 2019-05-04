@@ -140,7 +140,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTBLOCK node, Object data) {
         symbolTable.openScope();
         node.childrenAccept(this, data);
-        System.out.println(symbolTable.toString()); //TODO: fjern denne print statement når vi er færdige
         symbolTable.closeScope();
         return null;
     }
@@ -382,8 +381,12 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     public Object visit(ASTEQUAL_EXPR node, Object data) {
         TypeDescriptor firstType = (TypeDescriptor) node.jjtGetChild(0).jjtAccept(this, data);
         TypeDescriptor secondType = (TypeDescriptor) node.jjtGetChild(1).jjtAccept(this, data);
-        if (!firstType.equals(secondType))
+        if (!firstType.equals(secondType)) {
+            if (firstType instanceof NumberTypeDescriptor | secondType instanceof NumberTypeDescriptor) {
+                return new BooleanTypeDescriptor();
+            }
             throw new IncorrectTypeException("You tried to assert equality between an object of type \'" + firstType + "\' and an object of type \'" + secondType + "\'");
+        }
         return new BooleanTypeDescriptor();
     }
 
@@ -538,8 +541,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             for (int i = 0; i < numActualParameters; i++) {
                 TypeDescriptor formalParameterType = formalParameters.get(i);
                 TypeDescriptor actualParameterType = (TypeDescriptor) node.jjtGetChild(i).jjtAccept(this, data);
-                if (!isCorrectType(formalParameterType, actualParameterType))
-                    throw new UnmatchedParametersException(formalParameterType, actualParameterType, currentFunctionName);
+                typeCheck(formalParameterType, actualParameterType);
             }
             return data;
         }

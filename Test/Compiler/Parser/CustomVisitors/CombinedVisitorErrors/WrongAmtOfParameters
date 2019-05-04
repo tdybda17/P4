@@ -1,0 +1,10 @@
+function main()
+    Vertex x
+
+    int a = foo(x, x)
+end
+
+int function foo(int a)
+    return a + a
+end
+

@@ -2277,7 +2277,7 @@ void collection_dcl()       :
 void element_list()       :
 {}
 {
-    value() newlines_plus() element_list_continuous()
+    expr() newlines_plus() element_list_continuous()
 }
 
 void element_list_continuous()       :

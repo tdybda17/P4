@@ -1,0 +1,5 @@
+function main()
+    Vertex x
+
+    x.wrongField
+end

@@ -1,9 +1,14 @@
 function main()
+    real x = 69
+
     create Queue<real> q
         36.0
-        51.2
+        x
+        51.2 + x
         88.89
     end
 
     create Queue<real> q2 = q end
+
+    q2.enqueue(78.0)
 end

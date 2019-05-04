@@ -1,0 +1,6 @@
+function main()
+    create Queue<int> iQueue
+        6
+        8.9
+    end
+end

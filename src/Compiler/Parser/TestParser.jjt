@@ -649,7 +649,7 @@ void collection_dcl() #void :
 void element_list() #void :
 {}
 {
-    value() newlines_plus() element_list_continuous()
+    expr() newlines_plus() element_list_continuous()
 }
 
 void element_list_continuous() #void :

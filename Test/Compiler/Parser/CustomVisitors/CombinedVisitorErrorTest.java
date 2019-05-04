@@ -1,5 +1,7 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchFieldException;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchMethodException;
 import Compiler.Exceptions.SymbolTable.UnmatchedParametersException;
 import Compiler.Exceptions.Visitor.IncorrectTypeException;
 import Compiler.Parser.GeneratedFiles.Node;
@@ -27,11 +29,31 @@ public class CombinedVisitorErrorTest {
 
     @Test
     void testWrongFormalParameter() {
-        assertThrows(UnmatchedParametersException.class, () -> visitAndCreateAST("WrongFormalParameter"));
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongFormalParameter"));
     }
 
     @Test
     void testWrongElementType() {
         assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongElementType"));
+    }
+
+    @Test
+    void testWrongElementInDcl() {
+        assertThrows(IncorrectTypeException.class, () -> visitAndCreateAST("WrongElementInDcl"));
+    }
+
+    @Test
+    void testWrongAmountOfParameters() {
+        assertThrows(UnmatchedParametersException.class, () -> visitAndCreateAST("WrongAmtOfParameters"));
+    }
+
+    @Test
+    void testNoSuchField() {
+        assertThrows(NoSuchFieldException.class, () -> visitAndCreateAST("NoSuchField"));
+    }
+
+    @Test
+    void testNoSuchMethod() {
+        assertThrows(NoSuchMethodException.class, () -> visitAndCreateAST("NoSuchMethod"));
     }
 }

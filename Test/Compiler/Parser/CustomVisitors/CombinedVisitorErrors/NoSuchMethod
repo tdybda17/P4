@@ -1,0 +1,5 @@
+function main()
+    Vertex x
+
+    x.wrongMethod(x)
+end

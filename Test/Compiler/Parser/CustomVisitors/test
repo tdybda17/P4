@@ -1,15 +1,5 @@
 function main()
-    real x = 7.8
-    /*int i
-
-    i = 6
-    x = i
-
-    i = foo(3.0, 7.0)
-    i = foo(x, x)
-
-    x = 7
-
+    /*
     create DiGraph testGraph
         a -- b
         b -- c
@@ -26,6 +16,8 @@ function main()
 
     create Stack<Stack<int>> S end
     */
+
+    real x = 7
     create Queue<real> Q
         6.0
         8.0
