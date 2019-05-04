@@ -1,5 +1,0 @@
-function main()
-    int a
-    real b = 3.0
-    Vertex c
-end

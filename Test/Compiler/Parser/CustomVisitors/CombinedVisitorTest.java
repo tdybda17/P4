@@ -11,7 +11,6 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CombinedVisitorTest {
-
     private Node createAST(String fileName) throws Exception {
         String path = "Test/ProgramTestCases/LegalSyntax/" + fileName;
         return TestParser.createParseTree(path);
@@ -56,6 +55,18 @@ class CombinedVisitorTest {
     @Test
     void visitIfElseTest() throws Exception {
         Node root = createAST("IfElseTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
+    @Test
+    void visitLongBooleanExprTest() throws Exception {
+        Node root = createAST("LongBooleanExprTest");
+        assertDoesNotThrow(() -> CombinedVisitor.visit(root));
+    }
+
+    @Test
+    void visitLotsOfNegationsTest() throws Exception {
+        Node root = createAST("LotsOfNegationsTest");
         assertDoesNotThrow(() -> CombinedVisitor.visit(root));
     }
 
