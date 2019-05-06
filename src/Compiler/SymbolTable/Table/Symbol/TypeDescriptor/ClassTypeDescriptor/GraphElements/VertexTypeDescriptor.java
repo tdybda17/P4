@@ -4,6 +4,7 @@ import Compiler.Exceptions.SymbolTable.TypeDescriptorException;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.LabelTypeDescriptor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,11 +40,16 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
     private static Set<Field> getStandardFields() {
         Set<Field> standardFields = new HashSet<>();
         standardFields.add(color());
+        standardFields.add(label());
         return standardFields;
     }
 
     private static Field color(){
         return new Field("color", new ColorTypeDescriptor());
+    }
+
+    private static Field label(){
+        return new Field("label", new LabelTypeDescriptor());
     }
 
     public static void addUserAttribute(Field userAttribute) throws TypeDescriptorException {
