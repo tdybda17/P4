@@ -729,7 +729,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     /*=====================================================================================
-                Most of the visit methods in this section are not needed
+                All of the visit methods in this section are not needed
                 because they are related to the vertex and edge attributes
                 which is handled in the function visitor
     =======================================================================================*/
@@ -749,19 +749,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    //TODO få hørt Anton ad omkring hvordan man undgår den laver en Simple Dcl node mellem
     @Override
-    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
-        Node child = node.jjtGetChild(0);
-
-        TypeDescriptor expectedType = convertToTypeDescriptor(child.jjtGetChild(0).jjtAccept(this, data));
-        TypeDescriptor actualType = convertToTypeDescriptor(child.jjtGetChild(2).jjtAccept(this, data));
-        typeCheck(expectedType, actualType);
-        return data;
-    }
-
-    @Override
-    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
+    public Object visit(ASTATTRIBUTES_DCL node, Object data) {
         return defaultVisit(node, data);
     }
 

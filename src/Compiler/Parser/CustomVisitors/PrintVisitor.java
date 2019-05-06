@@ -69,12 +69,7 @@ public class PrintVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
+    public Object visit(ASTATTRIBUTES_DCL node, Object data) {
         node.jjtGetChild(0).jjtAccept(this, data);
         System.out.print(" ");
         node.jjtGetChild(1).jjtAccept(this, data);

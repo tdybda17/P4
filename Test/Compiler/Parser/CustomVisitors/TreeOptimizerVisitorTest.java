@@ -32,7 +32,7 @@ class TreeOptimizerVisitorTest {
     @Disabled
     @Test
     void printASTAfterOptimization() throws Exception {
-        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest2";
         Node root = TestParser.createParseTree(path);
         root.jjtAccept(treeOptimizerVisitor, childNumberIndex);
         System.out.println(TreePrinter.createDotOutput(root));

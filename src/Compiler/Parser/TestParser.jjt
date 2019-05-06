@@ -44,7 +44,7 @@ public class TestParser {
         root.jjtAccept(visitor, data);
     }
 
-    private static Node createParseTree(String filePath) throws Exception {
+    public static Node createParseTree(String filePath) throws Exception {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         TestParser parser = new TestParser(reader);
@@ -241,7 +241,7 @@ void edge_attr_tail() #void :
 void attribute_dcl() #void :
 {}
 {
-    (simple_types_dcl() newlines_plus()) #SIMPLE_ATTRIBUTES_DCL attribute_dcl()  | (object_types() identifier() newlines_plus()) #OBJECT_ATTRIBUTE_DCL attribute_dcl() | empty()
+    (type() identifier()) #ATTRIBUTES_DCL newlines_plus() attribute_dcl() | empty()
 }
 
 void simple_types_dcl() #SIMPLE_DCL :

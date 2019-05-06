@@ -1,12 +1,6 @@
 function main()
     real x = 7
     real y
-    create DiGraph testGraph
-        a -- b
-        b -- c
-        c -- a[9.0]
-        //d -- a[foo(3.0,3.0)]
-    end
 
     create Graph g
         a -- b
@@ -17,7 +11,6 @@ function main()
 
     create Stack<Stack<int>> S end
 
-
     create Queue<real> Q
         6.0
         8.0
@@ -26,16 +19,6 @@ function main()
 end
 
 int function test()
-end
-
-int function foo(real a, real b)
-    return 1
-end
-
-function bar()
-end
-
-Edge function edg(int a, real b)
 end
 
 Graph function createGraph()

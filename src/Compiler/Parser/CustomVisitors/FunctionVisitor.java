@@ -61,18 +61,13 @@ public class FunctionVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTSIMPLE_ATTRIBUTES_DCL node, Object data) {
-        return node.jjtGetChild(0).jjtAccept(this, data);
-    }
-
-    @Override
-    public Object visit(ASTOBJECT_ATTRIBUTE_DCL node, Object data) {
+    public Object visit(ASTATTRIBUTES_DCL node, Object data) {
         return createFieldFromChildren(node, data);
     }
 
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return createFieldFromChildren(node, data);
+        return defaultVisit(node, data);
     }
 
     private List<Field> createFieldFromChildren(Node node, Object data) {

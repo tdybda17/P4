@@ -1,12 +1,13 @@
 Vertex dcl
-	int a = 3
-	real man = 0.0
+	int a
+	real man
 	Queue<int> intQueue
 end
 
 
 function main()
     Vertex c
+    c.a = 3
     if 5 > c.a then
     	int a = 5
     else
