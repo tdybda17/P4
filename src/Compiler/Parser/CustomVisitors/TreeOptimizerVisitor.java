@@ -119,13 +119,16 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             currentGraphName = getIdentifierName(node.jjtGetChild(1));
 
             List<Node> newChildren = new ArrayList<>();
-            Node thirdChild = node.jjtGetChild(childIndex);
 
-            //Remove the third child from the Graph Dcl and then add the Graph Dcl to the list of new children
-            node.removeChild(childIndex);
-            newChildren.add(node);
+            // Create new simple_dcl node and adopt graph_dcl node's two children. Add simple_dcl to list of new children
+            ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
+            simpleDclNode.insertChildren(0, node.jjtGetChild(0), node.jjtGetChild(1));
+            newChildren.add(simpleDclNode);
+
+            // transform third child
+            Node thirdChild = node.jjtGetChild(childIndex);
             if(thirdChild instanceof ASTGRAPH_ASSIGN) {
-                //Creating and assign node to replace the graph assign node
+                //Creating an assign node to replace the graph assign node
                 Node assignNode = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), thirdChild);
                 newChildren.add(assignNode);
             } else if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
@@ -597,20 +600,23 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() + " children. Should have 2 or 3");
 
         List<Node> newChildren = new ArrayList<>(); // list of new children to replace the original COLLECTION_ADT node
+        // Create a new simple_dcl node and adopt collection_adt's first two children. Add simple_dcl node to list of new children
+        ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
+        simpleDclNode.insertChildren(0, node.jjtGetChild(0), node.jjtGetChild(1));
+        newChildren.add(simpleDclNode);
+
+        // transform third child
         Node thirdChild = node.jjtGetChild(2);
-        // Remove the third child from collection_adt and then add collection_adt to list of new children
-        node.removeChild(2);
-        newChildren.add(node);
         if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
-            String leftId = getIdentifierName(node.jjtGetChild(1));
+            String leftId = getIdentifierName(simpleDclNode.jjtGetChild(1));
 
             ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
             newChildren.add(assignNode);
         } else if (thirdChild instanceof ASTELEMENT_LIST) {
             List<Node> newNodesForBlock = new ArrayList<>();
             // Create function_call_stmt node for each child of element_list and add to list of new children
-            ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) node.jjtGetChild(0);
-            ASTIDENTIFIER idNode = (ASTIDENTIFIER) node.jjtGetChild(1);
+            ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) simpleDclNode.jjtGetChild(0);
+            ASTIDENTIFIER idNode = (ASTIDENTIFIER) simpleDclNode.jjtGetChild(1);
             for (int i = 0; i < thirdChild.jjtGetNumChildren(); i++) {
                 newNodesForBlock.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
             }

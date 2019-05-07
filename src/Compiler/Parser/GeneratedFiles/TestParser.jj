@@ -17,7 +17,13 @@ PARSER_BEGIN(TestParser)
 
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.CustomVisitors.FunctionVisitor;import Compiler.Parser.CustomVisitors.PrintVisitor;import Compiler.Parser.TreePrinter;import Compiler.SymbolTable.Table.SymbolTable;import java.io.BufferedReader;
+import Compiler.Parser.CustomVisitors.FunctionVisitor;
+import Compiler.Parser.CustomVisitors.PrintVisitor;
+import Compiler.Parser.CustomVisitors.StaticSemanticsVisitor;
+import Compiler.Parser.CustomVisitors.TreeOptimizerVisitor;
+import Compiler.Parser.TreePrinter;
+import Compiler.SymbolTable.Table.SymbolTable;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
@@ -28,11 +34,11 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@ege
     public static void main(String[] args) {
         try {
             System.out.println(parseTextFile("src/Compiler/Parser/test"));
-            //useVisitorMethod(new PrintVisitor(), "src/Compiler/Parser/test", null);
-//            SymbolTable st = new SymbolTable();
-//            st.openScope();
-//            useVisitorMethod(new FunctionVisitor(), "src/Compiler/Parser/test", st);
-//            useVisitorMethod(new StaticSemanticsVisitor(st), "src/Compiler/Parser/test", st);
+            System.out.println("\n\n\n");
+            SymbolTable st = new SymbolTable();
+            st.openScope();
+            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new FunctionVisitor(), new TreeOptimizerVisitor(), new StaticSemanticsVisitor(st));
+            System.out.println(TreePrinter.createDotOutput(root));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,9 +49,12 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@ege
         return TreePrinter.createDotOutput(root);
   }
 
-    public static void useVisitorMethod(TestParserVisitor visitor, String filePath, Object data) throws Exception {
+    public static Node useVisitorMethods(String filePath, Object data, TestParserVisitor... visitors) throws Exception {
         Node root = createParseTree(filePath);
-        root.jjtAccept(visitor, data);
+        for (int i = 0; i < visitors.length; i++) {
+            root.jjtAccept(visitors[i], data);
+        }
+        return root;
     }
 
     public static Node createParseTree(String filePath) throws Exception {
