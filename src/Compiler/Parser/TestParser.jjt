@@ -274,7 +274,7 @@ void identifier() #IDENTIFIER :
 void initialization() #void :
 {}
 {
-    < ASSIGN > expr() | empty()
+    < ASSIGN > expr() #INITIALIZATION | empty()
 }
 
 void object_types() #void :
@@ -493,7 +493,7 @@ void block_content() #void :
     dcl() | stmt() | empty()
 }
 
-void dcl() #void :
+void dcl() #DCL :
 {}
 {
     simple_types_dcl() | create()
@@ -742,11 +742,6 @@ void type() #void :
 void empty() #void : {}
 {
      {}
-}
-
-void emptydcl() #DCL : {}
-{
-    {}
 }
 
 

@@ -494,6 +494,11 @@ public class PrintVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
+    @Override
+    public Object visit(ASTINITIALIZATION node, Object data) {
+        return defaultVisit(node, data);
+    }
+
     private Object simpleExpr(SimpleNode node, Object data, String operator) {
         System.out.print("(");
         node.jjtGetChild(0).jjtAccept(this, data);

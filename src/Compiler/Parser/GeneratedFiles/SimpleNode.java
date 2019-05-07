@@ -77,7 +77,7 @@ class SimpleNode implements Node {
 
   public void insertChildren(int index, Node ... newChildren) {
     if(newChildren== null || newChildren.length == 0) {
-      throw new IllegalArgumentException("You did not specify any children to be added");
+      return;
     }
 
     if (children == null) {

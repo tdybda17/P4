@@ -116,7 +116,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     //This is a helping method used to create symbols from our declaration nodes
     private Symbol createSymbolFromDclNode(Node dclNode, Object data) {
-        if(dclNode instanceof ASTSIMPLE_DCL | dclNode instanceof ASTGRAPH_DCL | dclNode instanceof ASTCOLLECTION_ADT) {
+        if(dclNode instanceof ASTDCL) {
             //The first child of our dcl nodes is always their type, which we can then call the visit method on to get the child.
             Node typeNode = dclNode.jjtGetChild(0);
             TypeDescriptor type = convertToTypeDescriptor(typeNode.jjtAccept(this, data));
@@ -125,7 +125,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             String id = getIdentifierName(dclNode.jjtGetChild(1));
             return new Symbol(id, new IdentifierAttributes(type));
         } else {
-            throw new IllegalArgumentException("The given node was not an SIMPLE_DCL, GRAPH_DCL, COLLECTION_ADT or GRAPH_ELEMENT_DCL node");
+            throw new IllegalArgumentException("The given node was not an declaration node");
         }
     }
 
@@ -230,20 +230,14 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTDCL node, Object data) {
+        if(node.jjtGetNumChildren() == 2) {
             Symbol symbol = createSymbolFromDclNode(node, data);
             symbolTable.enterSymbol(symbol);
-            if(node.jjtGetNumChildren() == 3) {
-                TypeDescriptor expectedType = getTypeForIdentifierSymbol(symbol);
-                Node initializationNode = node.jjtGetChild(2);
-
-                TypeDescriptor actualType = convertToTypeDescriptor(initializationNode.jjtAccept(this, data));
-                try {
-                    typeCheck(expectedType, actualType);
-                } catch (IncorrectTypeException e) {
-                    throw new IncorrectTypeException("You declared the identifier: \'" + symbol.getName() + "\' as a type \'" + expectedType + "\' but tried to assign it a value of type \'" + actualType + '\'');
-                }
-            }
             return defaultVisit(node, data);
         } else {
             throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
@@ -667,11 +661,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTDCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(SimpleNode node, Object data) {
         return defaultVisit(node, data);
     }
@@ -797,7 +786,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return illegalVisit(node);
     }
 
-
     @Override
     public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
         return illegalVisit(node);
@@ -808,4 +796,8 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return illegalVisit(node);
     }
 
+    @Override
+    public Object visit(ASTINITIALIZATION node, Object data) {
+        return illegalVisit(node);
+    }
 }

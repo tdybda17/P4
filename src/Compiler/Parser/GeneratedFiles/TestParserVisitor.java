@@ -14,6 +14,7 @@ public interface TestParserVisitor
   public Object visit(ASTSIMPLE_DCL node, Object data);
   public Object visit(ASTSIMPLE_TYPES node, Object data);
   public Object visit(ASTIDENTIFIER node, Object data);
+  public Object visit(ASTINITIALIZATION node, Object data);
   public Object visit(ASTMAP node, Object data);
   public Object visit(ASTCOLLECTION_TYPE node, Object data);
   public Object visit(ASTOR_EXPR node, Object data);
@@ -35,6 +36,7 @@ public interface TestParserVisitor
   public Object visit(ASTACTUAL_PARAMETERS node, Object data);
   public Object visit(ASTMAIN node, Object data);
   public Object visit(ASTBLOCK node, Object data);
+  public Object visit(ASTDCL node, Object data);
   public Object visit(ASTGRAPH_DCL node, Object data);
   public Object visit(ASTGRAPH_TYPE node, Object data);
   public Object visit(ASTGRAPH_ASSIGN node, Object data);
@@ -62,6 +64,5 @@ public interface TestParserVisitor
   public Object visit(ASTRETURN_TYPE node, Object data);
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
-  public Object visit(ASTDCL node, Object data);
 }
-/* JavaCC - OriginalChecksum=1e11f4eafa7a219b2dc2de8ee6e64cda (do not edit this line) */
+/* JavaCC - OriginalChecksum=e149a08af02b91c55f3e5f78b451fa9a (do not edit this line) */
