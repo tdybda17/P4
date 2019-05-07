@@ -183,5 +183,8 @@ public class TestParserDefaultVisitor implements TestParserVisitor{
   public Object visit(ASTFORMAL_PARAMETER node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTDCL node, Object data){
+    return defaultVisit(node, data);
+  }
 }
-/* JavaCC - OriginalChecksum=92fcf6361f9f55656650a77a5baa806c (do not edit this line) */
+/* JavaCC - OriginalChecksum=b7595f4269ee9519696d05c88ac83485 (do not edit this line) */

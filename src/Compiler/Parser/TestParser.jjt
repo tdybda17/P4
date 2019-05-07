@@ -742,7 +742,12 @@ void type() #void :
 void empty() #void : {}
 {
      {}
-} 
+}
+
+void emptydcl() #DCL : {}
+{
+    {}
+}
 
 
 

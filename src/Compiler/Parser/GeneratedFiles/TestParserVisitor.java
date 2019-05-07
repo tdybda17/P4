@@ -62,5 +62,6 @@ public interface TestParserVisitor
   public Object visit(ASTRETURN_TYPE node, Object data);
   public Object visit(ASTFORMAL_PARAMETERS node, Object data);
   public Object visit(ASTFORMAL_PARAMETER node, Object data);
+  public Object visit(ASTDCL node, Object data);
 }
-/* JavaCC - OriginalChecksum=f5c8036b744cc5e2b4440bf29ff51f1a (do not edit this line) */
+/* JavaCC - OriginalChecksum=1e11f4eafa7a219b2dc2de8ee6e64cda (do not edit this line) */

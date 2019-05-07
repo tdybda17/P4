@@ -62,6 +62,7 @@ public interface TestParserTreeConstants
   public int JJTRETURN_TYPE = 56;
   public int JJTFORMAL_PARAMETERS = 57;
   public int JJTFORMAL_PARAMETER = 58;
+  public int JJTDCL = 59;
 
 
   public String[] jjtNodeName = {
@@ -124,6 +125,7 @@ public interface TestParserTreeConstants
     "RETURN_TYPE",
     "FORMAL_PARAMETERS",
     "FORMAL_PARAMETER",
+    "DCL",
   };
 }
-/* JavaCC - OriginalChecksum=3099618c51aa46dcdd6bc4f6a724b852 (do not edit this line) */
+/* JavaCC - OriginalChecksum=918b2df06f6f950b1999fa75c6c2f5de (do not edit this line) */
