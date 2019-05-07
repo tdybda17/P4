@@ -2877,6 +2877,24 @@ if (jjtc000) {
 
   }
 
+  final public void emptydcl() throws ParseException {/*@bgen(jjtree) DCL */
+  ASTDCL jjtn000 = new ASTDCL(JJTDCL);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+    try {
+jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+      jjtn000.jjtSetLastToken(getToken(0));
+
+    } finally {
+if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
+      }
+    }
+  }
+
   /** Generated Token Manager. */
   public TestParserTokenManager token_source;
   SimpleCharStream jj_input_stream;

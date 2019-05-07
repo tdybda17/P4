@@ -667,6 +667,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
+    public Object visit(ASTDCL node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
     public Object visit(SimpleNode node, Object data) {
         return defaultVisit(node, data);
     }

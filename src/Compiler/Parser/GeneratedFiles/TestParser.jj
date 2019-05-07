@@ -2598,3 +2598,28 @@ void empty()       : {}
 {
      {}
 }
+
+void emptydcl()      : {/*@bgen(jjtree) DCL */
+  ASTDCL jjtn000 = new ASTDCL(JJTDCL);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+/*@egen*/}
+{/*@bgen(jjtree) DCL */
+    try {
+/*@egen*//*@bgen(jjtree)*/
+    {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+      jjtn000.jjtSetLastToken(getToken(0));
+    }
+/*@egen*/
+    {}/*@bgen(jjtree)*/
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
+      }
+    }
+/*@egen*/
+}
