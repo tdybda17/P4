@@ -22,6 +22,14 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return data;
     }
 
+    private ASTDCL convertToDclNode(Object node) {
+        if(node instanceof ASTDCL) {
+            return (ASTDCL) node;
+        } else {
+            throw new IllegalArgumentException("The given node was not an dcl node");
+        }
+    }
+
     private int convertDataToInt(Object data) {
         if(data instanceof Integer) {
             return (int) data;
@@ -59,27 +67,23 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return newVariableNode;
     }
 
-    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, Node idNode, Node valueNode) {
+    private ASTDCL createDclNode(String simpleTypeValue, Node idNode) {
         if (!(idNode instanceof ASTIDENTIFIER))
             throw new IllegalArgumentException("idNode was of illegal type: " + idNode.getClass().getSimpleName());
 
-        ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
+        ASTDCL dclNode = new ASTDCL(TestParserTreeConstants.JJTDCL);
 
         ASTSIMPLE_TYPES simpleTypesNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
         simpleTypesNode.jjtSetValue(simpleTypeValue);
 
-        if (valueNode == null)
-            simpleDclNode.insertChildren(0, simpleTypesNode, copyIdentifierNode((ASTIDENTIFIER) idNode));
-        else
-            simpleDclNode.insertChildren(0, simpleTypesNode, copyIdentifierNode((ASTIDENTIFIER) idNode), valueNode);
-
-        return simpleDclNode;
+        dclNode.insertChildren(0, simpleTypesNode, copyIdentifierNode((ASTIDENTIFIER) idNode));
+        return dclNode;
     }
 
-    private ASTSIMPLE_DCL createSimpleDclNode(String simpleTypeValue, String identifier) {
+    private ASTDCL createDclNode(String simpleTypeValue, String identifier) {
         ASTIDENTIFIER idNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
         idNode.jjtSetValue(identifier);
-        return createSimpleDclNode(simpleTypeValue, idNode, null);
+        return createDclNode(simpleTypeValue, idNode);
     }
 
     public List<Node> convertResultToNodeList(Object result){
@@ -108,42 +112,57 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
+    public Object visit(ASTDCL node, Object data) {
         int index = convertDataToInt(data);
 
-        if(node.jjtGetNumChildren() == 2) {
-            return defaultVisit(node, data);
-        } else if(node.jjtGetNumChildren() == 3) {
-            int childIndex = 2;
-            currentGraphType = (String) ((ASTGRAPH_TYPE) node.jjtGetChild(0)).jjtGetValue();
-            currentGraphName = getIdentifierName(node.jjtGetChild(1));
+        if(node.jjtGetNumChildren() == 1) {
+            int childIndex = 0;
+            Object result = node.jjtGetChild(childIndex).jjtAccept(this, childIndex);
+            List<Node> newChildren = convertResultToNodeList(result);
 
-            List<Node> newChildren = new ArrayList<>();
-
-            // Create new simple_dcl node and adopt graph_dcl node's two children. Add simple_dcl to list of new children
-            ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
-            simpleDclNode.insertChildren(0, node.jjtGetChild(0), node.jjtGetChild(1));
-            newChildren.add(simpleDclNode);
-
-            // transform third child
-            Node thirdChild = node.jjtGetChild(childIndex);
-            if(thirdChild instanceof ASTGRAPH_ASSIGN) {
-                //Creating an assign node to replace the graph assign node
-                Node assignNode = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), thirdChild);
-                newChildren.add(assignNode);
-            } else if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
-                newChildren.addAll(convertResultToNodeList(thirdChild.jjtAccept(this, childIndex)));
-            } else {
-                throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
-            }
-            //Replace old graph dcl node with new children in the tree
             SimpleNode parent = (SimpleNode) node.jjtGetParent();
-            parent.removeChild(index);
-            parent.insertChildren(index, newChildren);
+            parent.insertChildren(index + 1, newChildren);
             return data;
+        } else if (node.jjtGetNumChildren() == 2) {
+            return data;
+        } else {
+            throw new WrongAmountOfChildrenException("An dcl node did not have 1 or 2 children but instead had: " + node.jjtGetNumChildren());
+        }
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL node, Object data) {
+        List<Node> newChildren = new ArrayList<>();
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            // We grap the parent dcl node and move our type and identifier up to it
+            ASTDCL dclNode = convertToDclNode(node.jjtGetParent());
+            moveTypeAndIdentifierToDclNode(dclNode, node.jjtGetChild(0), node.jjtGetChild(1));
+            if(node.jjtGetNumChildren() == 3) {
+                int childIndex = 2;
+                currentGraphType = (String) ((ASTGRAPH_TYPE) node.jjtGetChild(0)).jjtGetValue();
+                currentGraphName = getIdentifierName(node.jjtGetChild(1));
+
+                // transform third child
+                Node thirdChild = node.jjtGetChild(childIndex);
+                if(thirdChild instanceof ASTGRAPH_ASSIGN) {
+                    //Creating an assign node to replace the graph assign node
+                    Node assignNode = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), thirdChild);
+                    newChildren.add(assignNode);
+                } else if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
+                    newChildren.addAll(convertResultToNodeList(thirdChild.jjtAccept(this, childIndex)));
+                } else {
+                    throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
+                }
+            }
         } else {
             throw new WrongAmountOfChildrenException("A graph declaration node in the AST had neither 2 or 3 children");
         }
+        return newChildren;
+    }
+
+    private void moveTypeAndIdentifierToDclNode(ASTDCL dclNode, Node typeNode, Node identifierNode) {
+        dclNode.removeChild(0);
+        dclNode.insertChildren(0, typeNode, identifierNode);
     }
 
     @Override
@@ -152,7 +171,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     }
 
     private ASTASSIGN createAssignNodeFromInitialization(String leftId, Node rightNode){
-        if(rightNode instanceof ASTGRAPH_ASSIGN | rightNode instanceof ASTCOLLECTION_ASSIGN) {
+        if(rightNode instanceof ASTGRAPH_ASSIGN | rightNode instanceof ASTCOLLECTION_ASSIGN | rightNode instanceof ASTINITIALIZATION) {
             ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
 
             ASTVARIABLE leftNode = createVariableFromId(leftId);
@@ -162,7 +181,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             assignNode.jjtAddChild(rightNode.jjtGetChild(0), 1);
             return assignNode;
         } else {
-            throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName());
+            throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName(), ASTINITIALIZATION.class.getSimpleName());
         }
     }
 
@@ -225,10 +244,10 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return vertexNames;
     }
 
-    private List<ASTSIMPLE_DCL> createAllVertexDclNodes(Set<String> vertexNames) {
-        List<ASTSIMPLE_DCL> dclNodes = new ArrayList<>();
+    private List<ASTDCL> createAllVertexDclNodes(Set<String> vertexNames) {
+        List<ASTDCL> dclNodes = new ArrayList<>();
         for(String vertexName : vertexNames) {
-            dclNodes.add(createSimpleDclNode("Vertex", vertexName));
+            dclNodes.add(createDclNode("Vertex", vertexName));
         }
         return dclNodes;
     }
@@ -351,7 +370,29 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return defaultVisit(node, data);
+        List<Node> newChildren = new ArrayList<>();
+        if(node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            // We grap the parent dcl node and move our type and identifier up to it
+            ASTDCL dclNode = convertToDclNode(node.jjtGetParent());
+            moveTypeAndIdentifierToDclNode(dclNode, node.jjtGetChild(0), node.jjtGetChild(1));
+            if(node.jjtGetNumChildren() == 3) {
+                int childIndex = 2;
+                // transform third child
+                Node thirdChild = node.jjtGetChild(childIndex);
+
+                if(thirdChild instanceof ASTINITIALIZATION) {
+                    String leftId = getIdentifierName(node.jjtGetChild(1));
+
+                    ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
+                    newChildren.add(assignNode);
+                } else {
+                    throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTINITIALIZATION.class.getSimpleName());
+                }
+            }
+        } else {
+            throw new WrongAmountOfChildrenException("A simple declaration node in the AST had neither 2 or 3 children");
+        }
+        return newChildren;
     }
 
     @Override
@@ -361,6 +402,11 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTIDENTIFIER node, Object data) {
+        return defaultVisit(node, data);
+    }
+
+    @Override
+    public Object visit(ASTINITIALIZATION node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -493,15 +539,21 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     public Object visit(ASTFOR_STATEMENT node, Object data) {
         SimpleNode parent = (SimpleNode) node.jjtGetParent();
 
-        // create simple_dcl node
-        ASTSIMPLE_DCL simpleDclNode = createSimpleDclNode("int", node.jjtGetChild(0), node.jjtGetChild(1));
+        ASTIDENTIFIER counterVariableIdNode = (ASTIDENTIFIER) node.jjtGetChild(0);
+        // create dcl node
+        ASTDCL dclNode = createDclNode("int", counterVariableIdNode);
+
+        //Create assign node with initial value for our loop parameter:
+        ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+        assignNode.jjtAddChild(createVariableFromId((String) counterVariableIdNode.jjtGetValue()), 0);
+        assignNode.jjtAddChild(node.jjtGetChild(1), 1);
 
         // create while node
         ASTWHILE_STATEMENT whileNode = createWhileNodeFromForLoop(node);
 
         // create encapsulating block for declaration and while loop
         ASTBLOCK newBlockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
-        newBlockNode.insertChildren(0, simpleDclNode, whileNode);
+        newBlockNode.insertChildren(0, dclNode, assignNode, whileNode);
 
         // replace the for-statement node with the new block node in the tree
         int index = convertDataToInt(data);
@@ -594,47 +646,39 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        if (node.jjtGetNumChildren() == 2)
-            return data;
-        else if (node.jjtGetNumChildren() != 3)
-            throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() + " children. Should have 2 or 3");
-
         List<Node> newChildren = new ArrayList<>(); // list of new children to replace the original COLLECTION_ADT node
-        // Create a new simple_dcl node and adopt collection_adt's first two children. Add simple_dcl node to list of new children
-        ASTSIMPLE_DCL simpleDclNode = new ASTSIMPLE_DCL(TestParserTreeConstants.JJTSIMPLE_DCL);
-        simpleDclNode.insertChildren(0, node.jjtGetChild(0), node.jjtGetChild(1));
-        newChildren.add(simpleDclNode);
+        if (node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
+            // Create a new simple_dcl node and adopt collection_adt's first two children. Add simple_dcl node to list of new children
+            ASTDCL dclNode = convertToDclNode(node.jjtGetParent());
+            moveTypeAndIdentifierToDclNode(dclNode, node.jjtGetChild(0), node.jjtGetChild(1));
+            if(node.jjtGetNumChildren() == 3) {
+                Node thirdChild = node.jjtGetChild(2);
+                if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
+                    String leftId = getIdentifierName(node.jjtGetChild(1));
 
-        // transform third child
-        Node thirdChild = node.jjtGetChild(2);
-        if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
-            String leftId = getIdentifierName(simpleDclNode.jjtGetChild(1));
+                    ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
+                    newChildren.add(assignNode);
+                } else if (thirdChild instanceof ASTELEMENT_LIST) {
+                    List<Node> newNodesForBlock = new ArrayList<>();
+                    // Create function_call_stmt node for each child of element_list and add to list of new children
+                    ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) node.jjtGetChild(0);
+                    ASTIDENTIFIER idNode = (ASTIDENTIFIER) node.jjtGetChild(1);
+                    for (int i = 0; i < thirdChild.jjtGetNumChildren(); i++) {
+                        newNodesForBlock.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
+                    }
 
-            ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
-            newChildren.add(assignNode);
-        } else if (thirdChild instanceof ASTELEMENT_LIST) {
-            List<Node> newNodesForBlock = new ArrayList<>();
-            // Create function_call_stmt node for each child of element_list and add to list of new children
-            ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) simpleDclNode.jjtGetChild(0);
-            ASTIDENTIFIER idNode = (ASTIDENTIFIER) simpleDclNode.jjtGetChild(1);
-            for (int i = 0; i < thirdChild.jjtGetNumChildren(); i++) {
-                newNodesForBlock.add(createFunctionCallStmtNode((String) idNode.jjtGetValue(), getFunctionNameFromCollectionType(collectionTypeNode), thirdChild.jjtGetChild(i)));
+                    // Create encapsulating block for the new children
+                    ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
+                    blockNode.insertChildren(0, newNodesForBlock);
+                    newChildren.add(blockNode);
+                } else {
+                    throw new WrongNodeTypeException("COLLECTION_ADT node's third child is of illegal type: " + thirdChild.getClass().getSimpleName());
+                }
             }
-
-            // Create encapsulating block for the new children
-            ASTBLOCK blockNode = new ASTBLOCK(TestParserTreeConstants.JJTBLOCK);
-            blockNode.insertChildren(0, newNodesForBlock);
-            newChildren.add(blockNode);
         } else {
-            throw new WrongNodeTypeException("COLLECTION_ADT node's third child is of illegal type: " + thirdChild.getClass().getSimpleName());
+            throw new IllegalArgumentException("COLLECTION_ADT node has " + node.jjtGetNumChildren() + " children. Should have 2 or 3");
         }
-
-        // Replace old collection_adt node with new children in the tree
-        int index = convertDataToInt(data);
-        SimpleNode parent = (SimpleNode) node.jjtGetParent();
-        parent.removeChild(index);
-        parent.insertChildren(index, newChildren);
-        return data;
+        return newChildren;
     }
 
     private ASTFUNCTION_CALL_STMT createFunctionCallStmtNode(String collectionOrGraphId, String functionName, Node... actualParameters) {
@@ -717,11 +761,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTDCL node, Object data) {
         return defaultVisit(node, data);
     }
 }

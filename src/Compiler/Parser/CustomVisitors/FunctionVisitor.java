@@ -403,4 +403,9 @@ public class FunctionVisitor implements TestParserVisitor {
     public Object visit(ASTDCL node, Object data) {
         return defaultVisit(node, data);
     }
+
+    @Override
+    public Object visit(ASTINITIALIZATION node, Object data) {
+        return defaultVisit(node, data);
+    }
 }

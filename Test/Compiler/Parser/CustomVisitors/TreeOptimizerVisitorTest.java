@@ -25,7 +25,7 @@ class TreeOptimizerVisitorTest {
     @Disabled
     @Test
     void printASTBeforeOptimization() throws Exception{
-        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest2";
         System.out.println(TestParser.parseTextFile(path));
     }
 

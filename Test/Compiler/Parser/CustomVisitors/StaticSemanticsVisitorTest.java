@@ -34,7 +34,7 @@ class StaticSemanticsVisitorTest {
     }
 
     //Testing that we can make a simple declaration with no initialization
-    @Test
+    /*@Test
     void visitSimpleDeclarationNodeTest1() {
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "i");
         staticSemanticsVisitor.visit(intDclNode, null);
@@ -80,7 +80,7 @@ class StaticSemanticsVisitorTest {
         dclNode.jjtAddChild(identifierNode, 1);
         return dclNode;
     }
-
+    */
     //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
     @Test
     void visitAssignNodeTest1(){
@@ -141,7 +141,7 @@ class StaticSemanticsVisitorTest {
         return assignmentNode;
     }
 
-    @Test
+    /*@Test
     void duplicateSymbolExceptionTest() throws Exception{
         ASTSIMPLE_DCL edgeDclNode = createSimpleDCLnode("DiEdge", "a");
         ASTSIMPLE_DCL intDclNode = createSimpleDCLnode("int", "a");
@@ -160,7 +160,7 @@ class StaticSemanticsVisitorTest {
 
         staticSemanticsVisitor.visit(block1, symbolTable);
         assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, null));
-    }
+    }*/
 
     @Test
     void visit1() throws Exception{

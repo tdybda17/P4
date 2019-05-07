@@ -16,6 +16,10 @@ function main()
         8.0
         x
     end
+
+    for i = 3 to 10 do
+        int x
+    end
 end
 
 int function test()

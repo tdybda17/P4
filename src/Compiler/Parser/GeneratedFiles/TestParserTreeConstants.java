@@ -14,55 +14,56 @@ public interface TestParserTreeConstants
   public int JJTSIMPLE_DCL = 8;
   public int JJTSIMPLE_TYPES = 9;
   public int JJTIDENTIFIER = 10;
-  public int JJTMAP = 11;
-  public int JJTCOLLECTION_TYPE = 12;
-  public int JJTOR_EXPR = 13;
-  public int JJTAND_EXPR = 14;
-  public int JJTEQUAL_EXPR = 15;
-  public int JJTREL_EXPR = 16;
-  public int JJTADD_SUB = 17;
-  public int JJTMUL_DIV_MOD = 18;
-  public int JJTNEG_EXPR = 19;
-  public int JJTINUM_VAL = 20;
-  public int JJTFNUM_VAL = 21;
-  public int JJTBOOL_VAL = 22;
-  public int JJTCONSTANT_VAL = 23;
-  public int JJTCOLOR_VAL = 24;
-  public int JJTLABEL_VAL = 25;
-  public int JJTVARIABLE = 26;
-  public int JJTFUNCTION_CALL = 27;
-  public int JJTFIELD_ACCESS = 28;
-  public int JJTACTUAL_PARAMETERS = 29;
-  public int JJTMAIN = 30;
-  public int JJTBLOCK = 31;
-  public int JJTGRAPH_DCL = 32;
-  public int JJTGRAPH_TYPE = 33;
-  public int JJTGRAPH_ASSIGN = 34;
-  public int JJTGRAPH_DCL_ELEMENTS = 35;
-  public int JJTGRAPH_VERTEX_DCL = 36;
-  public int JJTVERTEX_LIST = 37;
-  public int JJTVERTEX = 38;
-  public int JJTWEIGHT = 39;
-  public int JJTASSIGN = 40;
-  public int JJTFUNCTION_CALL_STMT = 41;
-  public int JJTWHILE_STATEMENT = 42;
-  public int JJTFOR_STATEMENT = 43;
-  public int JJTFOREACH_STATEMENT = 44;
-  public int JJTIF_STATEMENT = 45;
-  public int JJTELSE_STATEMENT = 46;
-  public int JJTRETURN_STMT = 47;
-  public int JJTCOLLECTION_ADT = 48;
-  public int JJTCOLLECTION_ASSIGN = 49;
-  public int JJTELEMENT_LIST = 50;
-  public int JJTMAP_ADT = 51;
-  public int JJTMAP_ASSIGN = 52;
-  public int JJTMAP_ELEMENT_LIST = 53;
-  public int JJTKEY_VALUE_PAIR = 54;
-  public int JJTFUNC_DCL = 55;
-  public int JJTRETURN_TYPE = 56;
-  public int JJTFORMAL_PARAMETERS = 57;
-  public int JJTFORMAL_PARAMETER = 58;
-  public int JJTDCL = 59;
+  public int JJTINITIALIZATION = 11;
+  public int JJTMAP = 12;
+  public int JJTCOLLECTION_TYPE = 13;
+  public int JJTOR_EXPR = 14;
+  public int JJTAND_EXPR = 15;
+  public int JJTEQUAL_EXPR = 16;
+  public int JJTREL_EXPR = 17;
+  public int JJTADD_SUB = 18;
+  public int JJTMUL_DIV_MOD = 19;
+  public int JJTNEG_EXPR = 20;
+  public int JJTINUM_VAL = 21;
+  public int JJTFNUM_VAL = 22;
+  public int JJTBOOL_VAL = 23;
+  public int JJTCONSTANT_VAL = 24;
+  public int JJTCOLOR_VAL = 25;
+  public int JJTLABEL_VAL = 26;
+  public int JJTVARIABLE = 27;
+  public int JJTFUNCTION_CALL = 28;
+  public int JJTFIELD_ACCESS = 29;
+  public int JJTACTUAL_PARAMETERS = 30;
+  public int JJTMAIN = 31;
+  public int JJTBLOCK = 32;
+  public int JJTDCL = 33;
+  public int JJTGRAPH_DCL = 34;
+  public int JJTGRAPH_TYPE = 35;
+  public int JJTGRAPH_ASSIGN = 36;
+  public int JJTGRAPH_DCL_ELEMENTS = 37;
+  public int JJTGRAPH_VERTEX_DCL = 38;
+  public int JJTVERTEX_LIST = 39;
+  public int JJTVERTEX = 40;
+  public int JJTWEIGHT = 41;
+  public int JJTASSIGN = 42;
+  public int JJTFUNCTION_CALL_STMT = 43;
+  public int JJTWHILE_STATEMENT = 44;
+  public int JJTFOR_STATEMENT = 45;
+  public int JJTFOREACH_STATEMENT = 46;
+  public int JJTIF_STATEMENT = 47;
+  public int JJTELSE_STATEMENT = 48;
+  public int JJTRETURN_STMT = 49;
+  public int JJTCOLLECTION_ADT = 50;
+  public int JJTCOLLECTION_ASSIGN = 51;
+  public int JJTELEMENT_LIST = 52;
+  public int JJTMAP_ADT = 53;
+  public int JJTMAP_ASSIGN = 54;
+  public int JJTMAP_ELEMENT_LIST = 55;
+  public int JJTKEY_VALUE_PAIR = 56;
+  public int JJTFUNC_DCL = 57;
+  public int JJTRETURN_TYPE = 58;
+  public int JJTFORMAL_PARAMETERS = 59;
+  public int JJTFORMAL_PARAMETER = 60;
 
 
   public String[] jjtNodeName = {
@@ -77,6 +78,7 @@ public interface TestParserTreeConstants
     "SIMPLE_DCL",
     "SIMPLE_TYPES",
     "IDENTIFIER",
+    "INITIALIZATION",
     "MAP",
     "COLLECTION_TYPE",
     "OR_EXPR",
@@ -98,6 +100,7 @@ public interface TestParserTreeConstants
     "ACTUAL_PARAMETERS",
     "MAIN",
     "BLOCK",
+    "DCL",
     "GRAPH_DCL",
     "GRAPH_TYPE",
     "GRAPH_ASSIGN",
@@ -125,7 +128,6 @@ public interface TestParserTreeConstants
     "RETURN_TYPE",
     "FORMAL_PARAMETERS",
     "FORMAL_PARAMETER",
-    "DCL",
   };
 }
-/* JavaCC - OriginalChecksum=918b2df06f6f950b1999fa75c6c2f5de (do not edit this line) */
+/* JavaCC - OriginalChecksum=510e8a7a2ec939ceae255e3d1c1898f8 (do not edit this line) */
