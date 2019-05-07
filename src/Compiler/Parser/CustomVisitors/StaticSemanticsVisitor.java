@@ -229,11 +229,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
     public Object visit(ASTDCL node, Object data) {
         if(node.jjtGetNumChildren() == 2) {
             Symbol symbol = createSymbolFromDclNode(node, data);
@@ -793,6 +788,11 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTELEMENT_LIST node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTSIMPLE_DCL node, Object data) {
         return illegalVisit(node);
     }
 
