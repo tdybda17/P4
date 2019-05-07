@@ -122,8 +122,12 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
             SimpleNode parent = (SimpleNode) node.jjtGetParent();
             parent.insertChildren(index + 1, newChildren);
+            return data;
+        } else if (node.jjtGetNumChildren() == 2) {
+            return data;
+        } else {
+            throw new WrongAmountOfChildrenException("An dcl node did not have 1 or 2 children but instead had: " + node.jjtGetNumChildren());
         }
-        return data;
     }
 
     @Override
