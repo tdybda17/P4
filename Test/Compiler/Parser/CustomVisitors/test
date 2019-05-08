@@ -2,8 +2,6 @@ function main()
     real x = 7
     real y
 
-    create Stack<Stack<int>> S end
-
     /*create DiGraph testGraph
         a -- b
         b -- c
