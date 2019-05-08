@@ -1,6 +1,9 @@
 function main()
     real x = 7
     real y
+
+    create Stack<Stack<int>> S end
+
     /*create DiGraph testGraph
         a -- b
         b -- c
@@ -15,7 +18,6 @@ function main()
 
     create Graph XYZ = g end
 
-    create Stack<Stack<int>> S end
 
 
     create Queue<real> Q

@@ -608,11 +608,11 @@ if (jjtc000) {
     try {
       t = jj_consume_token(COLLECTION_TYPE);
       jj_consume_token(LANGLE);
-      type();
+      simple_types();
       jj_consume_token(RANGLE);
 jjtree.closeNodeScope(jjtn000, true);
-                                                     jjtc000 = false;
-                                                     jjtn000.jjtSetLastToken(getToken(0));
+                                                             jjtc000 = false;
+                                                             jjtn000.jjtSetLastToken(getToken(0));
 jjtn000.value = t.image;
     } catch (Throwable jjte000) {
 if (jjtc000) {

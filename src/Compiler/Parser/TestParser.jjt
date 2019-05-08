@@ -292,7 +292,7 @@ void map() #MAP :
 void collection_type() #COLLECTION_TYPE :
 {Token t;}
 {
-    t = <COLLECTION_TYPE> <LANGLE> type() <RANGLE> {jjtThis.value = t.image;}
+    t = <COLLECTION_TYPE> <LANGLE> simple_types() <RANGLE> {jjtThis.value = t.image;}
 }
 
 void expr() #OR_EXPR(>1) :

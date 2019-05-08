@@ -3,6 +3,7 @@ package Compiler.Parser.CustomVisitors;
 import Compiler.Parser.GeneratedFiles.Node;
 import Compiler.Parser.GeneratedFiles.TestParser;
 import Compiler.Parser.TreePrinter;
+import Compiler.SymbolTable.Table.Symbol.Symbol;
 import Compiler.SymbolTable.Table.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -50,6 +51,18 @@ class TreeOptimizerVisitorTest {
 
         System.out.println("\n\nAfter:");
         root.jjtAccept(new PrintVisitor(), null);
+    }
+
+    @Test
+    void test() {
+        Symbol o = new Symbol("A");
+        method(o);
+        System.out.println(o.getName());
+    }
+
+    void method(Symbol p) {
+        p.setName("C");
+        p = new Symbol("B");
     }
 
 }

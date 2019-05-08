@@ -674,12 +674,12 @@ void collection_type()                  :
 {/*@bgen(jjtree) COLLECTION_TYPE */
     try {
 /*@egen*/
-    t = <COLLECTION_TYPE> <LANGLE> type() <RANGLE>/*@bgen(jjtree)*/
-                                                   {
-                                                     jjtree.closeNodeScope(jjtn000, true);
-                                                     jjtc000 = false;
-                                                     jjtn000.jjtSetLastToken(getToken(0));
-                                                   }
+    t = <COLLECTION_TYPE> <LANGLE> simple_types() <RANGLE>/*@bgen(jjtree)*/
+                                                           {
+                                                             jjtree.closeNodeScope(jjtn000, true);
+                                                             jjtc000 = false;
+                                                             jjtn000.jjtSetLastToken(getToken(0));
+                                                           }
 /*@egen*/ {jjtn000.value = t.image;}/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
