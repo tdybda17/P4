@@ -15,7 +15,7 @@ class BuildSymbolTableTest {
     void setUp() {
         try {
             symbolTableBuilder = new BuildSymbolTable(
-                    new BufferedInputStream(new FileInputStream("/Users/toby/Programs/P4/Test/ProgramTestCases/LegalSyntax/scopetestprogram"))
+                    new BufferedInputStream(new FileInputStream("Test/ProgramTestCases/LegalSyntax/scopetestprogram"))
             );
         } catch (IOException e) {
             System.out.println(e.getMessage());

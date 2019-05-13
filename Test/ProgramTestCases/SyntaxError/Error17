@@ -1,0 +1,8 @@
+function main()
+    int a = 0
+    if 5 > 3 then
+    	a = a + 1
+    else
+    	int b = 5
+    end
+end
