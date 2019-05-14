@@ -26,14 +26,14 @@ class TreeOptimizerVisitorTest {
     @Disabled
     @Test
     void printASTBeforeOptimization() throws Exception{
-        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest2";
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
         System.out.println(TestParser.parseTextFile(path));
     }
 
     @Disabled
     @Test
     void printASTAfterOptimization() throws Exception {
-        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest2";
+        String path = "Test/Compiler/Parser/CustomVisitors/TestFiles/TreeOptimizerTest";
         Node root = TestParser.createParseTree(path);
         root.jjtAccept(treeOptimizerVisitor, childNumberIndex);
         System.out.println(TreePrinter.createDotOutput(root));

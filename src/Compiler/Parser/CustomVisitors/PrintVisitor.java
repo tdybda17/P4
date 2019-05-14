@@ -491,7 +491,15 @@ public class PrintVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTDCL node, Object data) {
-        return defaultVisit(node, data);
+        if(node.jjtGetNumChildren() == 2) {
+            node.jjtGetChild(0).jjtAccept(this, data);
+            System.out.print(" ");
+            node.jjtGetChild(1).jjtAccept(this, data);
+            System.out.print("\n");
+            return data;
+        } else {
+            return defaultVisit(node, data);
+        }
     }
 
     @Override

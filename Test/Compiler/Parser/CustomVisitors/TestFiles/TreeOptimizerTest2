@@ -9,8 +9,6 @@ function main()
 
     create Graph XYZ = g end
 
-    create Stack<Stack<int>> S end
-
     create Queue<real> Q
         6.0
         8.0
