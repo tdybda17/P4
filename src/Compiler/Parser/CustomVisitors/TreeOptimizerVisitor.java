@@ -648,7 +648,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     public Object visit(ASTCOLLECTION_ADT node, Object data) {
         List<Node> newChildren = new ArrayList<>(); // list of new children to replace the original COLLECTION_ADT node
         if (node.jjtGetNumChildren() == 2 | node.jjtGetNumChildren() == 3) {
-            // Create a new simple_dcl node and adopt collection_adt's first two children. Add simple_dcl node to list of new children
+            // Create a new dcl node and adopt collection_adt's first two children. Add dcl node to list of new children
             ASTDCL dclNode = convertToDclNode(node.jjtGetParent());
             moveTypeAndIdentifierToDclNode(dclNode, node.jjtGetChild(0), node.jjtGetChild(1));
             if(node.jjtGetNumChildren() == 3) {

@@ -44,4 +44,5 @@ public abstract class ClassTypeDescriptor extends TypeDescriptor {
     protected void resetMethods(){
         methods = new HashSet<>();
     }
+
 }

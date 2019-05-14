@@ -1,5 +1,5 @@
 function main()
-/*
+
     create Set<real> s end
 
     create Set<int> set
@@ -8,56 +8,43 @@ function main()
         3
         4
     end
-*/
 
     Vertex a
     Vertex b
-    create Queue<Vertex> q
+    create Queue<Vertex> que
         a
         b
     end
 
 
-/*
-    create Queue<Vertex> queue = q end
 
-    create Queue<Vertex> q end
+    create Queue<Vertex> queue = que end
+
+    create Queue<real> q end
     q.enqueue(7.8)
     q.enqueue(3.2)
-*/
 
-/*
+
+
     label name = "Anton"
-    a.b()
 
     create Graph g
-        a -- b
+        f -- k
     end
 
-    create Map<int, boolean> map
-        1 -- true
-        0 -- false
-    end
 
-    create Map<int, real> map2 = map end
-
-    create Set<int> set
-        1
-        2
-        3
-        4
-    end
-
-    foreach a in g.vertices do
-        int index = 2
-        real b = 1.2 + index
-        Vertex v = a
-
-    end
-
-    for a = 1 to 2 do
+    for i = 1 to 2 do
         Vertex v
     end
-*/
+
+    int i = 2 + foo()
+    foo()
+
+
 
 end
+
+int function foo()
+    return 1
+end
+

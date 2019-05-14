@@ -9,6 +9,11 @@ public class DirectedGraphTypeDescriptor extends GraphTypeDescriptor {
     }
 
     @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
+
+    @Override
     public String getTypeName() {
         return "DiGraph";
     }

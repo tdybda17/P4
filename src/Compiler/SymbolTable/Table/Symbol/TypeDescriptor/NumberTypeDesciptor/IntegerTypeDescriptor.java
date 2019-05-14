@@ -7,4 +7,9 @@ public class IntegerTypeDescriptor extends NumberTypeDescriptor {
     public String getTypeName() {
         return "Integer";
     }
+
+    @Override
+    public String getJavaName() {
+        return "Integer";
+    }
 }

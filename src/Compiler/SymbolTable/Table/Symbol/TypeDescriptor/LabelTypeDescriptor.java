@@ -5,4 +5,9 @@ public class LabelTypeDescriptor extends TypeDescriptor {
     public String getTypeName() {
         return "Label";
     }
+
+    @Override
+    public String getJavaName() {
+        return "String";
+    }
 }

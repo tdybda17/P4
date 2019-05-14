@@ -1,4 +1,4 @@
-package Compiler.FileReader;
+package Compiler.FileOperations;
 
 
 import Compiler.Exceptions.NotADirectoryException;

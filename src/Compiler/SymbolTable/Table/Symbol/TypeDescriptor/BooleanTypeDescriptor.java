@@ -5,4 +5,9 @@ public class BooleanTypeDescriptor extends TypeDescriptor {
     public String getTypeName() {
         return "Boolean";
     }
+
+    @Override
+    public String getJavaName() {
+        return "Boolean";
+    }
 }

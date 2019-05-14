@@ -5,4 +5,9 @@ public class ColorTypeDescriptor extends TypeDescriptor {
     public String getTypeName() {
         return "Color";
     }
+
+    @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
 }

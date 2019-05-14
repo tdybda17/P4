@@ -1,6 +1,8 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
 
 import Compiler.Exceptions.SymbolTable.IllegalTypeException;
+import Compiler.Exceptions.Visitor.WrongAmountOfChildrenException;
+import Compiler.Parser.GeneratedFiles.SimpleNode;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue.MaxQueueTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.PriorityQueue.MinQueueTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.QueueTypeDescriptor;
@@ -18,7 +20,8 @@ public class TypeDescriptorFactory {
     public TypeDescriptorFactory() {
     }
 
-    public TypeDescriptor create(String typeName) throws IllegalTypeException {
+    public TypeDescriptor create(SimpleNode node) {
+        String typeName = (String) node.jjtGetValue();
         switch (typeName) {
             case "Void": return new VoidTypeDescriptor();
             case "Integer": case "int": return new IntegerTypeDescriptor();
@@ -31,13 +34,19 @@ public class TypeDescriptorFactory {
             case "Edge": return new UndirectedEdgeTypeDescriptor();
             case "Graph": return new UndirectedGraphTypeDescriptor();
             case "DiGraph": return new DirectedGraphTypeDescriptor();
-            case "Set": return new SetTypeDescriptor(new UndefinedTypeDescriptor());
-            case "Stack": return new StackTypeDescriptor(new UndefinedTypeDescriptor());
-            case "Queue": return new QueueTypeDescriptor(new UndefinedTypeDescriptor());
-            case "MinQueue": return new MinQueueTypeDescriptor(new UndefinedTypeDescriptor());
-            case "MaxQueue": return new MaxQueueTypeDescriptor(new UndefinedTypeDescriptor());
+            case "Set": return new SetTypeDescriptor(create(getChild(node)));
+            case "Stack": return new StackTypeDescriptor(create(getChild(node)));
+            case "Queue": return new QueueTypeDescriptor(create(getChild(node)));
+            case "MinQueue": return new MinQueueTypeDescriptor(create(getChild(node)));
+            case "MaxQueue": return new MaxQueueTypeDescriptor(create(getChild(node)));
             //MANGLER MAP.
             default: throw new IllegalTypeException("The typename:" + typeName + ", is not a legal type in our language");
         }
+    }
+
+    private SimpleNode getChild(SimpleNode node) {
+        if (node.jjtGetNumChildren() != 1)
+            throw new WrongAmountOfChildrenException("Collection type node should have exactly 1 child, not " + node.jjtGetNumChildren());
+        return (SimpleNode) node.jjtGetChild(0);
     }
 }
