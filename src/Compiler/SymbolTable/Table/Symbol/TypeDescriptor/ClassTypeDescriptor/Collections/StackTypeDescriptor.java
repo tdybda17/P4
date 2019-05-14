@@ -19,7 +19,7 @@ public class StackTypeDescriptor extends CollectionTypeDescriptor {
         this.addMethods();
     }
 
-    private void addMethods(){
+    private void addMethods() {
         this.addMethod(push());
         this.addMethod(pop());
     }

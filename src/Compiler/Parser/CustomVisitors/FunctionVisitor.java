@@ -320,13 +320,13 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTFUNC_DCL node, Object data) {
-        SymbolTable st = (SymbolTable) data;
+        SymbolTable symbolTable = (SymbolTable) data;
         Attributes functionAttributes = new FunctionAttributes(getReturnType(node), getParameterTypes(node));
-
+        // getting the right child
         SimpleNode idNode = (SimpleNode) node.jjtGetChild(1);
-        String idValue = (String) idNode.jjtGetValue();
+        String nodeName = (String) idNode.jjtGetValue();
 
-        st.enterSymbol(idValue, functionAttributes);
+        symbolTable.enterSymbol(nodeName, functionAttributes);
         return data;
     }
 
