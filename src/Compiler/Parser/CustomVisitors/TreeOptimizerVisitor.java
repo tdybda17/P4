@@ -193,6 +193,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
         //Creating all the create vertex and add vertex function statements
         blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
+        //blockNodeChildren.addAll()
         blockNodeChildren.addAll(createAddVertexFunctionCalls(knownVertexNames));
 
 

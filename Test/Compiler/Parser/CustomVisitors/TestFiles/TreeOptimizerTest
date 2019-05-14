@@ -10,6 +10,10 @@ function main()
          b -- d
      end
 
+     Vertex a
+     a.label = "a"
+     testGraph.addVertex(a)
+
      //OMSKRIVES TIL:
      /*create DiGraph testGraph end
      Vertex a

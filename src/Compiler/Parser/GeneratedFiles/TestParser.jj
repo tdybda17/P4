@@ -17,10 +17,7 @@ PARSER_BEGIN(TestParser)
 
 package Compiler.Parser.GeneratedFiles;
 
-import Compiler.Parser.CustomVisitors.FunctionVisitor;
-import Compiler.Parser.CustomVisitors.PrintVisitor;
-import Compiler.Parser.CustomVisitors.StaticSemanticsVisitor;
-import Compiler.Parser.CustomVisitors.TreeOptimizerVisitor;
+import Compiler.Parser.CustomVisitors.*;
 import Compiler.Parser.TreePrinter;
 import Compiler.SymbolTable.Table.SymbolTable;
 import java.io.BufferedReader;
@@ -33,11 +30,11 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@ege
 /*@egen*/
     public static void main(String[] args) {
         try {
-            System.out.println(parseTextFile("src/Compiler/Parser/test"));
-            System.out.println("\n\n\n");
+//            System.out.println(parseTextFile("src/Compiler/Parser/test"));
+//            System.out.println("\n\n\n");
             SymbolTable st = new SymbolTable();
             st.openScope();
-            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new FunctionVisitor(), new TreeOptimizerVisitor(), new StaticSemanticsVisitor(st));
+            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new FunctionVisitor(), new TreeOptimizerVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
             System.out.println(TreePrinter.createDotOutput(root));
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +123,7 @@ TOKEN : /* OPERATORS */
 | < DCL : "dcl" >
 | < MAP : "Map" >
 | < COLOR : "Color" >
-| < LABEL : "label" >
+| < LABEL : "Label" >
 }
 
 TOKEN :

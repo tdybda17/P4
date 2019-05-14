@@ -3,7 +3,7 @@ function main()
         a -- b
     end
 
-    label labelA = "a"
+    Label labelA = "a"
     Vertex a = g.getVertex(labelA)
     Vertex b = g.getVertex("b")
 

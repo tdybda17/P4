@@ -196,7 +196,7 @@ public interface TestParserConstants {
     "\"dcl\"",
     "\"Map\"",
     "\"Color\"",
-    "\"label\"",
+    "\"Label\"",
     "<GRAPH_TYPE>",
     "<GRAPH>",
     "<CONSTANTS>",
