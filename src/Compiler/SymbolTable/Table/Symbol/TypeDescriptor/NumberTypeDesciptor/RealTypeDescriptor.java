@@ -6,4 +6,9 @@ public class RealTypeDescriptor extends NumberTypeDescriptor {
     public String getTypeName() {
         return "Real";
     }
+
+    @Override
+    public String getJavaName() {
+        return "Double";
+    }
 }

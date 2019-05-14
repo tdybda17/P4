@@ -24,4 +24,6 @@ public abstract class TypeDescriptor {
     public String toString() {
         return getTypeName();
     }
+
+    public abstract String getJavaName();
 }

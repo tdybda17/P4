@@ -25,6 +25,11 @@ public class DirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
         return new HashSet<>(fields);
     }
 
+    @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
+
     private void addDirectedFields(Set<Field> fields) {
         fields.add(startVertex());
         fields.add(endVertex());

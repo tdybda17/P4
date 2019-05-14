@@ -9,6 +9,11 @@ public class UndirectedGraphTypeDescriptor extends GraphTypeDescriptor {
     }
 
     @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
+
+    @Override
     public String getTypeName() {
         return "Graph";
     }

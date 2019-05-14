@@ -25,6 +25,11 @@ public class UndirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
         return super.getFields();
     }
 
+    @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
+
 
     private void addUndirectedFields(Set<Field> fields) {
         fields.add(vertices());

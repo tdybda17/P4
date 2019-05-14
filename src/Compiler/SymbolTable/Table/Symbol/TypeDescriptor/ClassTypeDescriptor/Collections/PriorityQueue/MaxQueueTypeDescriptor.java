@@ -45,4 +45,9 @@ public class MaxQueueTypeDescriptor extends PriorityQueueTypeDescriptor{
     public String getTypeName() {
         return "MaxQueue";
     }
+
+    @Override
+    public String getJavaName() {
+        return "PriorityQueue<" + getElementType().getJavaName() + ">";
+    }
 }

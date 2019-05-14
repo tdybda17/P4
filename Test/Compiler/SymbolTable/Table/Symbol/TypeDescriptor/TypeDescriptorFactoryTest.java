@@ -1,5 +1,7 @@
 package Compiler.SymbolTable.Table.Symbol.TypeDescriptor;
 
+import Compiler.Parser.GeneratedFiles.ASTSIMPLE_TYPES;
+import Compiler.Parser.GeneratedFiles.TestParserTreeConstants;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,17 +18,23 @@ class TypeDescriptorFactoryTest {
 
     @Test
     void createBoolean() {
-        assertEquals(new BooleanTypeDescriptor(), factory.create("boolean"));
+        ASTSIMPLE_TYPES typeNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
+        typeNode.jjtSetValue("boolean");
+        assertEquals(new BooleanTypeDescriptor(), factory.create(typeNode));
     }
 
     @Test
     void createColor() {
-        assertEquals(new ColorTypeDescriptor(), factory.create("Color"));
+        ASTSIMPLE_TYPES typeNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
+        typeNode.jjtSetValue("Color");
+        assertEquals(new ColorTypeDescriptor(), factory.create(typeNode));
     }
 
     @Test
     void createInteger() {
-        assertEquals(new IntegerTypeDescriptor(), factory.create("int"));
+        ASTSIMPLE_TYPES typeNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
+        typeNode.jjtSetValue("int");
+        assertEquals(new IntegerTypeDescriptor(), factory.create(typeNode));
     }
 
     @Test

@@ -32,6 +32,11 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
         return new HashSet<>(fields);
     }
 
+    @Override
+    public String getJavaName() {
+        return getTypeName();
+    }
+
     private static Set<Method> getStandardMethods() {
         //We do not have any methods for vertices yet
         return new HashSet<>();
