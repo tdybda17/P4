@@ -191,10 +191,16 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         List<Node> blockNodeChildren = new ArrayList<>();
         Set<String> knownVertexNames = getAllVertexNames(node);
 
+        Set<String> vertexNames = new HashSet<>();
+        String prefix = "_";
+        for(String vertexName : knownVertexNames) {
+            vertexNames.add(prefix + vertexName);
+        }
+
         //Creating all the create vertex and add vertex function statements
-        blockNodeChildren.addAll(createAllVertexDclNodes(knownVertexNames));
-        //blockNodeChildren.addAll()
-        blockNodeChildren.addAll(createAddVertexFunctionCalls(knownVertexNames));
+        blockNodeChildren.addAll(createAllVertexDclNodes(vertexNames));
+        blockNodeChildren.addAll(createLabelAssignNodes(vertexNames));
+        blockNodeChildren.addAll(createAddVertexFunctionCalls(vertexNames));
 
 
         //Creating all the add edge and set weight method calls
@@ -253,6 +259,37 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return dclNodes;
     }
 
+    private List<ASTASSIGN> createLabelAssignNodes(Set<String> vertexNames) {
+        List<ASTASSIGN> assignNodes = new ArrayList<>();
+
+        for(String vertexName : vertexNames) {
+            assignNodes.add(createAssignNodeFromVertexName(vertexName));
+        }
+
+        return assignNodes;
+    }
+
+    private ASTASSIGN createAssignNodeFromVertexName(String vertexName) {
+        ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
+
+        ASTVARIABLE leftChild = createVariableFromId(vertexName);
+        ASTFIELD_ACCESS fieldAccess = createFieldAccessFromId("label");
+        leftChild.jjtAddChild(fieldAccess, 1);
+
+        ASTLABEL_VAL rightChild = new ASTLABEL_VAL(TestParserTreeConstants.JJTLABEL_VAL);
+        StringBuilder labelBuilder = new StringBuilder();
+        labelBuilder.append('\"');
+        labelBuilder.append(vertexName);
+        labelBuilder.deleteCharAt(1); //We remove the _
+        labelBuilder.append('\"');
+
+        rightChild.jjtSetValue(labelBuilder.toString());
+
+        assignNode.jjtAddChild(leftChild, 0);
+        assignNode.jjtAddChild(rightChild, 1);
+        return assignNode;
+    }
+
     private List<ASTFUNCTION_CALL_STMT> createAddVertexFunctionCalls(Set<String> vertexNames) {
         List<ASTFUNCTION_CALL_STMT> functionCallNodes = new ArrayList<>();
         for(String vertexName : vertexNames) {
@@ -284,7 +321,6 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     private ASTASSIGN createAssignNodeFromEdgeInformation(EdgeInformation edgeInformation){
         ASTASSIGN assingNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
 
-
         ASTVARIABLE firstActualParameter = createVariableFromId(edgeInformation.getFirstVertex());
         ASTVARIABLE secondActualParameter = createVariableFromId(edgeInformation.getSecondVertex());
 
@@ -294,7 +330,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         Node leftValue = functionCall.jjtGetChild(0);
 
         Node leftChild = leftValue.jjtGetChild(1);
-        leftChild.jjtAddChild(createFieldAccessId("weight"), 2);
+        leftChild.jjtAddChild(createFieldAccessFromId("weight"), 2);
 
         assingNode.jjtAddChild(leftValue, 0);
         //Right value:
@@ -302,7 +338,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         return assingNode;
     }
 
-    private ASTFIELD_ACCESS createFieldAccessId(String id) {
+    private ASTFIELD_ACCESS createFieldAccessFromId(String id) {
         ASTFIELD_ACCESS fieldAcessNode = new ASTFIELD_ACCESS(TestParserTreeConstants.JJTFIELD_ACCESS);
         ASTIDENTIFIER idNode = createIdentifierNodeForId(id);
         fieldAcessNode.jjtAddChild(idNode, 0);

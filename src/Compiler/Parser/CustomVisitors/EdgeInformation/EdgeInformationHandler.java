@@ -16,6 +16,7 @@ import java.util.Map;
 public class EdgeInformationHandler {
     private TreeOptimizerVisitor treeOptimizerVisitor;
     private String graphType;
+    private static String prefix = "_";
 
     public EdgeInformationHandler(String graphType) {
         if(!graphType.equals("Graph") && !graphType.equals("DiGraph")){
@@ -43,13 +44,13 @@ public class EdgeInformationHandler {
     private List<EdgeInformation> getEdgeInformation(ASTGRAPH_VERTEX_DCL node) {
         List<EdgeInformation> edgeInformations = new ArrayList<>();
         if(node.jjtGetNumChildren() == 2) {
-            String firstVertex = treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
+            String firstVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
 
             Node vertexList = node.jjtGetChild(1);
             for(int i = 0; i < vertexList.jjtGetNumChildren(); i++){
                 Node vertexNode = vertexList.jjtGetChild(i);
 
-                String secondVertex = treeOptimizerVisitor.getIdentifierName(vertexNode.jjtGetChild(0));
+                String secondVertex = prefix + treeOptimizerVisitor.getIdentifierName(vertexNode.jjtGetChild(0));
                 if(vertexNode.jjtGetChild(1) instanceof ASTWEIGHT) {
                     ASTWEIGHT weightNode = (ASTWEIGHT) vertexNode.jjtGetChild(1);
                     edgeInformations.add(new EdgeInformation(firstVertex, secondVertex, weightNode));
@@ -58,8 +59,8 @@ public class EdgeInformationHandler {
                 }
             }
         } else if (node.jjtGetNumChildren() == 3) {
-            String firstVertex = treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
-            String secondVertex = treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(1));
+            String firstVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
+            String secondVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(1));
             if(node.jjtGetChild(2) instanceof ASTWEIGHT) {
                 ASTWEIGHT weightNode = (ASTWEIGHT) node.jjtGetChild(2);
                 edgeInformations.add(new EdgeInformation(firstVertex, secondVertex, weightNode));
@@ -75,15 +76,15 @@ public class EdgeInformationHandler {
 
 
     private void checkEdgeInformation(List<EdgeInformation> edgeInformationList) {
-        Map<String, List<String>> edgesGraph = new HashMap<>();
+        Map<String, List<String>> edgesInGraph = new HashMap<>();
         if(graphType.equals("DiGraph")) {
             for(EdgeInformation edgeInformation : edgeInformationList) {
-                addEdgeToGraphInfo(edgesGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
+                addEdgeToGraphInfo(edgesInGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
             }
         } else if(graphType.equals("Graph")) {
             for(EdgeInformation edgeInformation : edgeInformationList) {
-                addEdgeToGraphInfo(edgesGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
-                addEdgeToGraphInfo(edgesGraph, edgeInformation.getSecondVertex(), edgeInformation.getFirstVertex());
+                addEdgeToGraphInfo(edgesInGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
+                addEdgeToGraphInfo(edgesInGraph, edgeInformation.getSecondVertex(), edgeInformation.getFirstVertex());
             }
         }
     }
