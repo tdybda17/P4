@@ -1,6 +1,6 @@
 package Compiler.Parser;
 
-import Compiler.FileReader.FileOperations;
+import Compiler.FileOperations.FileOperations;
 
 import java.io.BufferedReader;
 import java.io.File;

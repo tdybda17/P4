@@ -31,6 +31,8 @@ import java.util.Optional;
 
 import java.util.*;
 
+import static Compiler.Parser.CustomVisitors.VisitorOperations.*;
+
 public class StaticSemanticsVisitor implements TestParserVisitor {
     private SymbolTable symbolTable;
     private String currentFunctionName;
@@ -42,7 +44,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     private Object illegalVisit(Node node) {
-        throw new IllegalVisitException("There is not visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
+        throw new IllegalVisitException("There is no visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
 
     private void typeCheck(TypeDescriptor expectedType, TypeDescriptor actualType) {
@@ -73,34 +75,6 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             return (SymbolTable) data;
         } else {
             throw new IllegalArgumentException("The given data object was not a SymbolTable");
-        }
-    }
-
-    private SimpleNode convertToSimpleNode(Object node) {
-        if(node instanceof SimpleNode) {
-            return (SimpleNode) node;
-        } else {
-            throw new IllegalArgumentException("The given data object was not a SimpleNode");
-        }
-    }
-
-    private String getIdentifierName(Node identifierNode) {
-        if(identifierNode instanceof ASTIDENTIFIER) {
-            SimpleNode simpleNode = (SimpleNode) identifierNode;
-            return (String) simpleNode.jjtGetValue();
-        } else {
-            throw new IllegalArgumentException("The given node was not an IdentifierNode");
-        }
-    }
-
-    //We get the value from the type node and convert it to a type descriptor
-    private TypeDescriptor getTypeDescriptorFromTypeNode(Object node){
-        if (node instanceof ASTSIMPLE_TYPES | node instanceof ASTGRAPH_TYPE) {
-            SimpleNode simpleNode = convertToSimpleNode(node);
-            TypeDescriptorFactory typeDescriptorFactory = new TypeDescriptorFactory();
-            return typeDescriptorFactory.create((String) simpleNode.jjtGetValue());
-        } else {
-            throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTSIMPLE_TYPES.class.getSimpleName(), ASTGRAPH_TYPE.class.getSimpleName());
         }
     }
 
@@ -245,53 +219,13 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        if(node.jjtGetNumChildren() == 2) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-            return defaultVisit(node, data);
-        } else if (node.jjtGetNumChildren() == 3) {
-            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
-        }
-        else {
-            throw new WrongAmountOfChildrenException("The graph declaration node had: " + node.jjtGetNumChildren());
-        }
-    }
-
-    @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
         return getTypeDescriptorFromTypeNode(node);
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        if(node.jjtGetNumChildren() == 2) {
-            Symbol symbol = createSymbolFromDclNode(node, data);
-            symbolTable.enterSymbol(symbol);
-        }else if (node.jjtGetNumChildren() == 3) {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren() + ", which happens if you did not run the tree optimizer first");
-        } else {
-            throw new WrongAmountOfChildrenException("The collection ADT node had: " + node.jjtGetNumChildren());
-        }
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        SimpleNode collectionTypeNode = convertToSimpleNode(node);
-
-        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
-        if(type instanceof CollectionTypeDescriptor) {
-            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
-
-            Node childNode = node.jjtGetChild(0);
-            //We make a recursive call to the visit method for the sub node
-            TypeDescriptor elementType = convertToTypeDescriptor(childNode.jjtAccept(this, data));
-            collectionTypeDescriptor.setElementType(elementType);
-            return collectionTypeDescriptor;
-        } else {
-            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
-        }
+        return new TypeDescriptorFactory().create(node);
     }
 
     @Override
@@ -798,6 +732,16 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTINITIALIZATION node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTGRAPH_DCL node, Object data) {
+        return illegalVisit(node);
+    }
+
+    @Override
+    public Object visit(ASTCOLLECTION_ADT node, Object data) {
         return illegalVisit(node);
     }
 }

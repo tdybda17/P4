@@ -2,6 +2,7 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Col
 
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
         this.addMethod(add());
         this.addMethod(remove());
         this.addMethod(contains());
+        this.addMethod(size());
     }
 
     private Method add(){
@@ -42,6 +44,10 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(getElementType());
         return new Method("contains", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method size() {
+        return new Method("size", new IntegerTypeDescriptor(), new ArrayList<>());
     }
 
     @Override
@@ -66,5 +72,10 @@ public class SetTypeDescriptor extends CollectionTypeDescriptor {
     @Override
     public String toString() {
         return "Set<" + getElementType() + '>';
+    }
+
+    @Override
+    public String getJavaName() {
+        return "HashSet<" + getElementType().getJavaName() + ">";
     }
 }

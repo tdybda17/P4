@@ -5,6 +5,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,6 +94,14 @@ public class MapTypeDescriptor extends CollectionTypeDescriptor {
     @Override
     public String toString() {
         return "MapTypeDescriptor<" +
+                keyType +
+                ", " + getElementType() +
+                '>';
+    }
+
+    @Override
+    public String getJavaName() {
+        return "HashMap<" +
                 keyType +
                 ", " + getElementType() +
                 '>';

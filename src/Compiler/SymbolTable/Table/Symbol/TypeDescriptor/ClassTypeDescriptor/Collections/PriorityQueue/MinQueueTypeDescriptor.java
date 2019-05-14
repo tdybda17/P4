@@ -45,4 +45,9 @@ public class MinQueueTypeDescriptor extends PriorityQueueTypeDescriptor {
     public String getTypeName() {
         return "MinQueue";
     }
+
+    @Override
+    public String getJavaName() {
+        return "PriorityQueue<" + getElementType().getJavaName() + ">";
+    }
 }

@@ -1,7 +1,6 @@
-package Compiler.FileReader;
+package Compiler.FileOperations;
 
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;

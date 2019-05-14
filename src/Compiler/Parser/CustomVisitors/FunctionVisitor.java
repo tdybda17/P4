@@ -80,8 +80,7 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTSIMPLE_TYPES node, Object data) {
-        TypeDescriptor typeDescriptor = new TypeDescriptorFactory().create(node.jjtGetValue().toString());
-        return typeDescriptor;
+        return new TypeDescriptorFactory().create(node);
     }
 
     @Override
@@ -96,20 +95,7 @@ public class FunctionVisitor implements TestParserVisitor {
 
     @Override
     public Object visit(ASTCOLLECTION_TYPE node, Object data) {
-        SimpleNode collectionTypeNode = (SimpleNode) node;
-
-        TypeDescriptor type = new TypeDescriptorFactory().create((String) collectionTypeNode.jjtGetValue());
-        if(type instanceof CollectionTypeDescriptor) {
-            CollectionTypeDescriptor collectionTypeDescriptor = (CollectionTypeDescriptor) type;
-
-            Node childNode = node.jjtGetChild(0);
-            //We make a recursive call to the visit method for the sub node
-            TypeDescriptor elementType = (TypeDescriptor)(childNode.jjtAccept(this, data));
-            collectionTypeDescriptor.setElementType(elementType);
-            return collectionTypeDescriptor;
-        } else {
-            throw new IllegalArgumentException("Somehow you got an none collection type descriptor from your collection type node");
-        }
+        return new TypeDescriptorFactory().create(node);
     }
 
     @Override
@@ -350,7 +336,7 @@ public class FunctionVisitor implements TestParserVisitor {
             return new VoidTypeDescriptor();
         else {
             SimpleNode returnTypeNode = (SimpleNode) returnNode.jjtGetChild(0);
-            TypeDescriptor returnTypeDescriptor = new TypeDescriptorFactory().create(returnTypeNode.jjtGetValue().toString());
+            TypeDescriptor returnTypeDescriptor = new TypeDescriptorFactory().create(returnTypeNode);
             setElementType(returnTypeDescriptor, returnTypeNode);
 
             return returnTypeDescriptor;
@@ -360,7 +346,7 @@ public class FunctionVisitor implements TestParserVisitor {
     private void setElementType(TypeDescriptor typeDescriptor, SimpleNode typeNode) {
         if (typeDescriptor instanceof CollectionTypeDescriptor) {
             SimpleNode elementTypeNode = (SimpleNode) typeNode.jjtGetChild(0);
-            TypeDescriptor elementTypeDescriptor = new TypeDescriptorFactory().create(elementTypeNode.jjtGetValue().toString());
+            TypeDescriptor elementTypeDescriptor = new TypeDescriptorFactory().create(elementTypeNode);
             ((CollectionTypeDescriptor) typeDescriptor).setElementType(elementTypeDescriptor);
             setElementType(elementTypeDescriptor, elementTypeNode);
         }
@@ -379,7 +365,7 @@ public class FunctionVisitor implements TestParserVisitor {
 
     private void addParameter(List<TypeDescriptor> parameterTypes, SimpleNode parameterNode) {
         SimpleNode parameterTypeNode = (SimpleNode) parameterNode.jjtGetChild(0);
-        TypeDescriptor parameterType = new TypeDescriptorFactory().create(parameterTypeNode.jjtGetValue().toString());
+        TypeDescriptor parameterType = new TypeDescriptorFactory().create(parameterTypeNode);
         setElementType(parameterType, parameterTypeNode);
         parameterTypes.add(parameterType);
     }

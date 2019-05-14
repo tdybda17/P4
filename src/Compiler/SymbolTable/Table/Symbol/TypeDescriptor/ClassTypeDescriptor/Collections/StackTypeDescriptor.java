@@ -3,6 +3,7 @@ package Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Col
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class StackTypeDescriptor extends CollectionTypeDescriptor {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(getElementType());
 
-        return new Method("push", new BooleanTypeDescriptor(), parameters);
+        return new Method("push", new VoidTypeDescriptor(), parameters);
     }
 
     private Method pop(){
@@ -51,5 +52,10 @@ public class StackTypeDescriptor extends CollectionTypeDescriptor {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getElementType());
+    }
+
+    @Override
+    public String getJavaName() {
+        return "Stack<" + getElementType().getJavaName() + ">";
     }
 }
