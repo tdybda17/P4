@@ -37,7 +37,7 @@ public class VisitorOperations {
         if(data instanceof String) {
             return (String) data;
         } else {
-            throw new IllegalArgumentException("The given data object was not a String but instead was " + data.getClass().getSimpleName());
+            throw new IllegalArgumentException("The given data object was not a String but instead was " + data);
         }
     }
 }

@@ -1,50 +1,48 @@
+Vertex dcl
+    boolean isVisited
+    Vertex previous
+end
+
 function main()
-
-    create Set<real> s end
-
-    create Set<int> set
-        1
-        2
-        3
-        4
+    create DiGraph g
+        a -- {b[2], c[3], d[4]}
+        b -- e[7]
+        c -- f[6]
+        d -- g[4]
+        e -- l[6]
+        f -- l[2]
+        g -- l[3]
     end
-
-    Vertex a
-    Vertex b
-    create Queue<Vertex> que
-        a
-        b
-    end
-
-
-
-    create Queue<Vertex> queue = que end
-
-    create Queue<real> q end
-    q.enqueue(7.8)
-    q.enqueue(3.2)
-
-
-
-    label name = "Anton"
-
-    create Graph g
-        f -- k
-    end
-
-
-    for i = 1 to 2 do
-        Vertex v
-    end
-
-    int i = 2 + foo()
-    foo()
-
-
-
+    Dijkstra(g, g.getVertex("a"))
 end
 
-int function foo()
-    return 1
-end
+function Dijkstra(DiGraph g, Vertex source)
+    foreach v in g.vertices do
+        v.distance = 10000
+    end
+    source.distance = 0
 
+    create MinQueue<Vertex> Q end
+    foreach v in g.vertices do
+        Q.insert(v)
+    end
+
+    while Q.isEmpty() == false do
+        Vertex u = Q.extractMin()
+        u.color = GRAY
+        g.print()
+        u.isVisited = true
+
+        foreach v in g.getNeighbours(u) do
+            if v.isVisited == false then
+                real alt = u.distance + g.getEdge(u, v).weight
+                if alt < v.distance then
+                    v.distance = alt
+                    v.previous = u
+                end
+            end
+        end
+        u.color = BLACK
+        g.print()
+    end
+end
