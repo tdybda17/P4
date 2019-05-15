@@ -15,7 +15,7 @@ import java.util.List;
 
 import static Compiler.Parser.CustomVisitors.VisitorOperations.*;
 
-public class CodeGenerationVisitor implements TestParserVisitor {
+public class CodeGenerationVisitor implements Visitor {
     private List<String> vertexAttributes;
     private List<String> edgeAttributes;
     private String main;
@@ -389,78 +389,5 @@ public class CodeGenerationVisitor implements TestParserVisitor {
         String type = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
         String identifier = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
         return type + " " + identifier;
-    }
-
-
-    /*=====================================================================================
-                    ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
-        =======================================================================================*/
-    @Override
-    public Object visit(ASTFOR_STATEMENT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_LIST node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTELEMENT_LIST node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTINITIALIZATION node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    private Object illegalVisit(Node node) {
-        throw new IllegalVisitException("There is no visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
 }
