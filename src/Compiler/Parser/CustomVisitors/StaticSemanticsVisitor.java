@@ -17,7 +17,9 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.*;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Collections.MapTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Field;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.GraphElementTypeDescriptors;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.DirectedGraphTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.GraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Graphs.UndirectedGraphTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.IntegerTypeDescriptor;
@@ -372,12 +374,30 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         if (!(type instanceof CollectionTypeDescriptor))
             throw new IllegalTypeException("Error: Tried to iterate through non-collection type '" + type.getTypeName() + "' in foreach loop");
 
-        // open node scope, add id to symbol table, accept all of third child's (block's) children, close node scope
+        // add collection's element type node as second child
+        TypeDescriptor elementType = ((CollectionTypeDescriptor) type).getElementType();
+        node.insertChildren(1, createTypeNodeFromTypeDescriptor(elementType));
+
+        // open node scope, add id to symbol table, accept all of fourth child's (block's) children, close node scope
         symbolTable.openScope();
         symbolTable.enterSymbol(id, new IdentifierAttributes(((CollectionTypeDescriptor) type).getElementType()));
-        defaultVisit((SimpleNode) node.jjtGetChild(2), data);
+        defaultVisit((SimpleNode) node.jjtGetChild(3), data);
         symbolTable.closeScope();
         return data;
+    }
+
+    private SimpleNode createTypeNodeFromTypeDescriptor(TypeDescriptor type) {
+        SimpleNode typeNode;
+        if (type instanceof GraphTypeDescriptor) {
+            typeNode = new ASTGRAPH_TYPE(TestParserTreeConstants.JJTGRAPH_TYPE);
+        } else if (type instanceof CollectionTypeDescriptor) {
+            typeNode = new ASTCOLLECTION_TYPE(TestParserTreeConstants.JJTCOLLECTION_TYPE);
+            typeNode.insertChildren(0, createTypeNodeFromTypeDescriptor(((CollectionTypeDescriptor) type).getElementType()));
+        } else {
+            typeNode = new ASTSIMPLE_TYPES(TestParserTreeConstants.JJTSIMPLE_TYPES);
+        }
+        typeNode.jjtSetValue(type.getTypeName());
+        return typeNode;
     }
 
     @Override

@@ -29,6 +29,10 @@ public class CCC {
         Runtime rt = Runtime.getRuntime();
         Process proc = rt.exec(cmd, null, new File(cd.toString()));
         proc.waitFor();
+        System.out.println(getOutputString(proc));
+    }
+
+    public static String getOutputString(Process proc) {
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
@@ -49,6 +53,6 @@ public class CCC {
             }
         }
 
-        System.out.println(sb.toString());
+        return sb.toString();
     }
 }

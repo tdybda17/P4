@@ -9,6 +9,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.BooleanTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.GraphElements.EdgeTypeDescriptor.EdgeTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.LabelTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.VoidTypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         this.addMethod(removeVertex());
         this.addMethod(getEdge());
         this.addMethod(getVertex());
+        this.addMethod(print());
 
 
         this.addMethod(getNeighbours());
@@ -61,6 +63,10 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new LabelTypeDescriptor());
         return new Method("getVertex", new VertexTypeDescriptor(), parameters);
+    }
+
+    private Method print() {
+        return new Method("print", new VoidTypeDescriptor(), new ArrayList<>());
     }
 
     private Method addVertex() {

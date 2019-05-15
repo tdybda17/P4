@@ -1,4 +1,5 @@
-/*
+
+import Compiler.CodeGeneration.DotFileGenerator.DotFileGenerator;
 
 import java.util.*;
 
@@ -7,7 +8,7 @@ enum Color {
 }
 
 interface Collection<T> {
-    Boolean isEmpty();
+    boolean isEmpty();
 }
 
 class Queue<T> implements Collection {
@@ -17,11 +18,11 @@ class Queue<T> implements Collection {
          p = new LinkedList<>();
     }
 
-    public Boolean isEmpty() {
+    public boolean isEmpty() {
         return p.isEmpty();
     }
 
-    Boolean enqueue(T p0) {
+    boolean enqueue(T p0) {
         return p.add(p0);
     }
 
@@ -37,7 +38,7 @@ class MinQueue<T> implements Collection {
         p = new PriorityQueue<>();
     }
 
-    Boolean insert(T p0) {
+    boolean insert(T p0) {
         return p.add(p0);
     }
 
@@ -49,15 +50,18 @@ class MinQueue<T> implements Collection {
         return p.poll();
     }
 
-    Boolean decreaseKey(T p0, Double p1) {
+    boolean decreaseKey(T p0, double p1) {
         if (p0 instanceof Edge) {
             ((Edge) p0).weight -= p1;
             return true;
         }
+        else if (p0 instanceof Vertex) {
+            ((Vertex) p0).distance -= p1;
+        }
         return false;
     }
 
-    public Boolean isEmpty() {
+    public boolean isEmpty() {
         return p.isEmpty();
     }
 
@@ -70,7 +74,7 @@ class MaxQueue<T> implements Collection {
         p = new PriorityQueue<>();
     }
 
-    Boolean insert(T p0) {
+    boolean insert(T p0) {
         return p.add(p0);
     }
 
@@ -82,28 +86,43 @@ class MaxQueue<T> implements Collection {
         return p.poll();
     }
 
-    Boolean increaseKey(T p0, Double p1) {
+    boolean increaseKey(T p0, double p1) {
         if (p0 instanceof DirectedEdge || p0 instanceof UndirectedEdge) {
             ((Edge) p0).weight += p1;
             return true;
         }
+        else if (p0 instanceof Vertex) {
+            ((Vertex) p0).distance += p1;
+        }
         return false;
     }
 
-    public Boolean isEmpty() {
+    public boolean isEmpty() {
         return p.isEmpty();
     }
 }
 
-class Vertex {
+class Vertex implements Comparable<Vertex> {
     Color color = Color.WHITE;
     String label = new String("");
+    double distance;
     // insert vertex attributes here
+
+    @Override
+    public int compareTo(Vertex o) {
+        double diff = this.distance - o.distance;
+        if (diff > 0)
+            return 1;
+        else if (diff < 0)
+            return -1;
+        else
+            return 0;
+    }
 }
 
 abstract class Edge {
-    Double weight = 1.0;
-    Color color = Color.WHITE;
+    double weight = 1.0;
+    Color color = Color.BLACK;
     // insert edge attributes here
 }
 
@@ -121,12 +140,14 @@ class UndirectedEdge extends Edge {
     Set<Vertex> vertices;
 
     UndirectedEdge(Vertex v1, Vertex v2) {
+        vertices = new HashSet<>();
         vertices.add(v1);
         vertices.add(v2);
     }
 }
 
 class DiGraph {
+    private int printIndex = 0;
     Set<Vertex> vertices;
     Set<DirectedEdge> edges;
 
@@ -135,13 +156,13 @@ class DiGraph {
         edges = new HashSet<>();
     }
 
-    Boolean addEdge(Vertex p0, Vertex p1) {
+    boolean addEdge(Vertex p0, Vertex p1) {
         vertices.add(p0);
         vertices.add(p1);
         return edges.add(new DirectedEdge(p0, p1));
     }
 
-    Boolean removeEdge(DirectedEdge edge) {
+    boolean removeEdge(DirectedEdge edge) {
         return edges.remove(edge);
     }
 
@@ -161,11 +182,11 @@ class DiGraph {
         throw new RuntimeException("Tried to get nonexistent vertex from label '" + label + "'");
     }
 
-    Boolean addVertex(Vertex v) {
+    boolean addVertex(Vertex v) {
         return vertices.add(v);
     }
 
-    Boolean removeVertex(Vertex v) {
+    boolean removeVertex(Vertex v) {
         return vertices.remove(v);
     }
 
@@ -187,9 +208,25 @@ class DiGraph {
         return neighbours;
     }
 
+    void print() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("digraph {\n");
+        for (Vertex vertex : vertices)
+            sb.append(vertex.label).append(" [style=\"filled\", fillcolor=").append(vertex.color.name()).append("]\n");
+
+        for (DirectedEdge edge : edges) {
+            sb.append(edge.startVertex.label).append(" -> ").append(edge.endVertex.label);
+            sb.append(" [color=\"").append(edge.color.name()).append("\", label=\"").append(edge.weight).append("\"]\n");
+        }
+        sb.append("}\n");
+        DotFileGenerator.createDotFile(sb.toString(), printIndex);
+        printIndex++;
+    }
+
 }
 
 class Graph {
+    private int printIndex = 0;
     Set<Vertex> vertices;
     Set<UndirectedEdge> edges;
 
@@ -198,13 +235,13 @@ class Graph {
         edges = new HashSet<>();
     }
 
-    Boolean addEdge(Vertex p0, Vertex p1) {
+    boolean addEdge(Vertex p0, Vertex p1) {
         vertices.add(p0);
         vertices.add(p1);
         return edges.add(new UndirectedEdge(p0, p1));
     }
 
-    Boolean removeEdge(UndirectedEdge edge) {
+    boolean removeEdge(UndirectedEdge edge) {
         return edges.remove(edge);
     }
 
@@ -224,11 +261,11 @@ class Graph {
         throw new RuntimeException("Tried to get nonexistent vertex from label '" + label + "'");
     }
 
-    Boolean addVertex(Vertex v) {
+    boolean addVertex(Vertex v) {
         return vertices.add(v);
     }
 
-    Boolean removeVertex(Vertex v) {
+    boolean removeVertex(Vertex v) {
         return vertices.remove(v);
     }
 
@@ -254,6 +291,22 @@ class Graph {
         return neighbours;
     }
 
+    void print() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("graph {\n");
+        for (Vertex vertex : vertices)
+            sb.append(vertex.label).append(" [style=\"filled\", fillcolor=").append(vertex.color.name()).append("]\n");
+
+        for (UndirectedEdge edge : edges) {
+            Iterator<Vertex> vertexIterator = edge.vertices.iterator();
+            sb.append(vertexIterator.next().label).append(" -- ").append(vertexIterator.next().label);
+            sb.append(" [color=\"").append(edge.color.name()).append("\", label=\"").append(edge.weight).append("\"]\n");
+        }
+        sb.append("}\n");
+        DotFileGenerator.createDotFile(sb.toString(), printIndex);
+        printIndex++;
+    }
+
 }
 
 class Main {
@@ -267,4 +320,3 @@ class Main {
 
 
 
-*/
