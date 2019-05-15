@@ -167,10 +167,9 @@ class StaticSemanticsVisitorTest {
         String path = "Test/Compiler/Parser/CustomVisitors/test";
         //We use the function visitor to fill up our symbol table with functions
         Node root = TestParser.createParseTree(path);
-        root.jjtAccept(staticSemanticsVisitor, symbolTable);
         root.jjtAccept(new TreeOptimizerVisitor(), symbolTable);
         root.jjtAccept(new FunctionVisitor(), symbolTable);
-
+        root.jjtAccept(staticSemanticsVisitor, symbolTable);
     }
 
     @Test
