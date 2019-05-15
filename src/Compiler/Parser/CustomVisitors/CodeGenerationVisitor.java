@@ -298,12 +298,11 @@ public class CodeGenerationVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
         String identifier = getIdentifierName(node.jjtGetChild(0));
-        String collection = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
-        String block = convertToString(node.jjtGetChild(2).jjtAccept(this, data));
+        String elementType = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
+        String collection = convertToString(node.jjtGetChild(2).jjtAccept(this, data));
+        String block = convertToString(node.jjtGetChild(3).jjtAccept(this, data));
 
-        // for at kende typen, skal der muligvis addes en element type node til foreach's children
-        //return "for (" + type + " " + identifier + " : " + collection + ") " + block;
-        return null;
+        return "for (" + elementType + " " + identifier + " : " + collection + ") " + block;
     }
 
     @Override

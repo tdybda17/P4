@@ -5,6 +5,7 @@ import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Fiel
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.Method;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ColorTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.LabelTypeDescriptor;
+import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.NumberTypeDesciptor.RealTypeDescriptor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
         Set<Field> standardFields = new HashSet<>();
         standardFields.add(color());
         standardFields.add(label());
+        standardFields.add(distance());
         return standardFields;
     }
 
@@ -55,6 +57,10 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
 
     private static Field label(){
         return new Field("label", new LabelTypeDescriptor());
+    }
+
+    private static Field distance() {
+        return new Field("distance", new RealTypeDescriptor());
     }
 
     public static void addUserAttribute(Field userAttribute) throws TypeDescriptorException {

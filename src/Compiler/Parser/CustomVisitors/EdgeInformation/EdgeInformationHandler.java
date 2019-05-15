@@ -83,6 +83,8 @@ public class EdgeInformationHandler {
             }
         } else if(graphType.equals("Graph")) {
             for(EdgeInformation edgeInformation : edgeInformationList) {
+                if (edgeInformation.getFirstVertex().equals(edgeInformation.getSecondVertex()))
+                    throw new IllegalArgumentException("Self loops are not allowed");
                 addEdgeToGraphInfo(edgesInGraph, edgeInformation.getFirstVertex(), edgeInformation.getSecondVertex());
                 addEdgeToGraphInfo(edgesInGraph, edgeInformation.getSecondVertex(), edgeInformation.getFirstVertex());
             }
