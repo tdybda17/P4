@@ -1,5 +1,6 @@
 package Compiler.Parser.CustomVisitors;
 
+import Compiler.Exceptions.Visitor.IllegalVisitException;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.Attributes.Attributes;
 import Compiler.SymbolTable.Table.Symbol.Attributes.FunctionAttributes;
@@ -15,10 +16,14 @@ import Compiler.SymbolTable.Table.SymbolTable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FunctionVisitor implements TestParserVisitor {
+public class FunctionVisitor implements Visitor {
     private Object defaultVisit(SimpleNode node, Object data){
         node.childrenAccept(this, data);
         return data;
+    }
+
+    private Object illegalVisit(Node node) {
+        throw new IllegalVisitException("There is no visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
     }
 
     @Override

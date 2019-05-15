@@ -2,7 +2,7 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
 
-public class PrintVisitor implements TestParserVisitor {
+public class PrintVisitor implements Visitor {
     private int amtOfTabs = 0;
 
     private Object defaultVisit(SimpleNode node, Object data){

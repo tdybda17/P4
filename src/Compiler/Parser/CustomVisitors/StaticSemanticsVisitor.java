@@ -35,7 +35,7 @@ import java.util.*;
 
 import static Compiler.Parser.CustomVisitors.VisitorOperations.*;
 
-public class StaticSemanticsVisitor implements TestParserVisitor {
+public class StaticSemanticsVisitor implements Visitor {
     private SymbolTable symbolTable;
     private String currentFunctionName;
     private TypeDescriptor currentFunctionReturnType;
@@ -211,7 +211,7 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
             symbolTable.enterSymbol(symbol);
             return defaultVisit(node, data);
         } else {
-            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren());
+            throw new WrongAmountOfChildrenException("The declaration node had: " + node.jjtGetNumChildren() + ", this usually happens when you have not run the tree optimizer first");
         }
     }
 
@@ -697,71 +697,4 @@ public class StaticSemanticsVisitor implements TestParserVisitor {
         return defaultVisit(node, data);
     }
 
-    /*=====================================================================================
-                    ALL THE VISIT METHODS BELOW THIS POINT SHOULD NOT BE IMPLEMENTED
-        =======================================================================================*/
-    @Override
-    public Object visit(ASTFOR_STATEMENT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_LIST node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTELEMENT_LIST node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTINITIALIZATION node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        return illegalVisit(node);
-    }
 }
