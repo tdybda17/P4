@@ -22,10 +22,6 @@ public class FunctionVisitor implements Visitor {
         return data;
     }
 
-    private Object illegalVisit(Node node) {
-        throw new IllegalVisitException("There is no visit method for nodes of the type \'" + node.getClass().getSimpleName() + "\' because they should have been removed by the tree optimizer");
-    }
-
     @Override
     public Object visit(SimpleNode node, Object data) {
         return defaultVisit(node, data);
@@ -68,11 +64,6 @@ public class FunctionVisitor implements Visitor {
     @Override
     public Object visit(ASTATTRIBUTES_DCL node, Object data) {
         return createFieldFromChildren(node, data);
-    }
-
-    @Override
-    public Object visit(ASTSIMPLE_DCL node, Object data) {
-        return defaultVisit(node, data);
     }
 
     private List<Field> createFieldFromChildren(Node node, Object data) {
@@ -194,44 +185,10 @@ public class FunctionVisitor implements Visitor {
     }
 
     @Override
-    public Object visit(ASTGRAPH_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTGRAPH_TYPE node, Object data) {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTGRAPH_VERTEX_DCL node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTVERTEX node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTWEIGHT node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTASSIGN node, Object data) {
@@ -250,11 +207,6 @@ public class FunctionVisitor implements Visitor {
 
     @Override
     public Object visit(ASTWHILE_STATEMENT node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTFOR_STATEMENT node, Object data) {
         return defaultVisit(node, data);
     }
 
@@ -278,20 +230,6 @@ public class FunctionVisitor implements Visitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTCOLLECTION_ADT node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTELEMENT_LIST node, Object data) {
-        return defaultVisit(node, data);
-    }
 
     @Override
     public Object visit(ASTMAP_ADT node, Object data) {
@@ -395,8 +333,4 @@ public class FunctionVisitor implements Visitor {
         return defaultVisit(node, data);
     }
 
-    @Override
-    public Object visit(ASTINITIALIZATION node, Object data) {
-        return defaultVisit(node, data);
-    }
 }
