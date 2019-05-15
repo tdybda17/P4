@@ -52,17 +52,4 @@ class TreeOptimizerVisitorTest {
         System.out.println("\n\nAfter:");
         root.jjtAccept(new PrintVisitor(), null);
     }
-
-    @Test
-    void test() {
-        Symbol o = new Symbol("A");
-        method(o);
-        System.out.println(o.getName());
-    }
-
-    void method(Symbol p) {
-        p.setName("C");
-        p = new Symbol("B");
-    }
-
 }
