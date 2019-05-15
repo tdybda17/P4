@@ -5,13 +5,22 @@ function main()
      create DiGraph XYZ end
      XYZ = testGraph
      */
-     create DiGraph testGraph
+
+     create Graph g
+        a -- b
+     end
+
+     Vertex a
+     a.label = "a"
+     testGraph.addVertex(a)
+
+     /*create DiGraph testGraph
          a -- {b[0.3],c}
          b -- d
      end
 
      //OMSKRIVES TIL:
-     /*create DiGraph testGraph end
+     create DiGraph testGraph end
      Vertex a
      Vertex b
      Vertex c

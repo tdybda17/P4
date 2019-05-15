@@ -119,7 +119,7 @@ TOKEN : /* OPERATORS */
 | < DCL : "dcl" >
 | < MAP : "Map" >
 | < COLOR : "Color" >
-| < LABEL : "label" >
+| < LABEL : "Label" >
 }
 
 TOKEN :
