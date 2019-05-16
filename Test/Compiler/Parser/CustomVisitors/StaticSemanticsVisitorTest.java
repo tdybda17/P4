@@ -26,7 +26,6 @@ class StaticSemanticsVisitorTest {
         staticSemanticsVisitor = new StaticSemanticsVisitor(symbolTable);
     }
 
-
     private ASTDCL createDclNode(String type, String id) {
         ASTDCL dclNode = new ASTDCL(TestParserTreeConstants.JJTDCL);
 
@@ -67,7 +66,7 @@ class StaticSemanticsVisitorTest {
 
     //Testing that trying to add an initialization should give an error, because we do not allow this after optimization
     @Test
-    void visitSimpleDeclarationNodeTest2() {
+    void visitDCLNodeTest2() {
         ASTDCL realDclNode = createDclNode("real", "r");
         ASTFNUM_VAL initialValue = new ASTFNUM_VAL(TestParserTreeConstants.JJTFNUM_VAL);
         initialValue.jjtSetValue("7.8");
@@ -75,66 +74,6 @@ class StaticSemanticsVisitorTest {
         realDclNode.jjtAddChild(initialValue, 2);
 
         assertThrows(WrongAmountOfChildrenException.class, ()-> staticSemanticsVisitor.visit(realDclNode, null));
-    }
-
-    //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
-    @Test
-    void visitAssignNodeTest1(){
-        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
-        String identifierName = "x";
-        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
-        identifierNode.jjtSetValue(identifierName);
-        leftNode.jjtAddChild(identifierNode, 0);
-        symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
-
-
-        ASTINUM_VAL rightNode = new ASTINUM_VAL(TestParserTreeConstants.JJTINUM_VAL);
-        rightNode.jjtSetValue("6");
-
-        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
-
-    //We test that we cannot assign the wrong value type to an identifier
-    @Test
-    void visitAssignNodeTest2(){
-        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
-        String identifierName = "x";
-        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
-        identifierNode.jjtSetValue(identifierName);
-        leftNode.jjtAddChild(identifierNode, 0);
-        symbolTable.enterSymbol(identifierName, new IdentifierAttributes(new IntegerTypeDescriptor()));
-
-        ASTFNUM_VAL rightNode = new ASTFNUM_VAL(TestParserTreeConstants.JJTFNUM_VAL);
-        rightNode.jjtSetValue("6.5");
-
-        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
-
-    //We test that if our left node is not entered in the symbol table then the assignment throws an exception
-    @Test
-    void visitAssignNodeTest3(){
-        ASTVARIABLE leftNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
-        String identifierName = "x";
-        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
-        identifierNode.jjtSetValue(identifierName);
-        leftNode.jjtAddChild(identifierNode, 0);
-
-        ASTINUM_VAL rightNode = new ASTINUM_VAL(TestParserTreeConstants.JJTINUM_VAL);
-        rightNode.jjtSetValue("6");
-
-        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
-        assertThrows(NoSuchSymbolError.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
-    }
-
-
-    private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
-        ASTASSIGN assignmentNode = new ASTASSIGN(0);
-        assignmentNode.jjtAddChild(leftNode, 0);
-        assignmentNode.jjtAddChild(rightNode, 1);
-
-        return assignmentNode;
     }
 
     @Test
@@ -156,6 +95,69 @@ class StaticSemanticsVisitorTest {
 
         staticSemanticsVisitor.visit(block1, null);
         assertDoesNotThrow(()-> staticSemanticsVisitor.visit(block2, null));
+    }
+
+
+    //We test that we are allowed to assign an integer value to an identifier entered in our symbol table.
+    @Test
+    void visitAssignNodeTest1(){
+        String id = "i";
+        ASTDCL dclNode = createDclNode("int", id);
+        //We visit the dcl node to enter the symbol into our symbol table
+        staticSemanticsVisitor.visit(dclNode, symbolTable);
+
+        ASTVARIABLE leftNode = createVariableNode(id);
+        ASTINUM_VAL rightNode = new ASTINUM_VAL(TestParserTreeConstants.JJTINUM_VAL);
+        rightNode.jjtSetValue("6");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertDoesNotThrow(() -> staticSemanticsVisitor.visit(assignmentNode, null));
+    }
+
+    //We test that we cannot assign the wrong value type to an identifier
+    @Test
+    void incorrectTypeAssignmentTest(){
+        String id = "b";
+        ASTDCL dclNode = createDclNode("boolean", id);
+        //We visit the dcl node to enter the symbol into our symbol table
+        staticSemanticsVisitor.visit(dclNode, null);
+
+
+        ASTVARIABLE leftNode = createVariableNode(id);
+        ASTFNUM_VAL rightNode = new ASTFNUM_VAL(TestParserTreeConstants.JJTFNUM_VAL);
+        rightNode.jjtSetValue("6.5");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertThrows(IncorrectTypeException.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
+    }
+
+    //We test that if our left node is not entered in the symbol table then the assignment throws an exception
+    @Test
+    void incorrectReferenceTest(){
+        ASTVARIABLE leftNode = createVariableNode("x");
+
+        ASTINUM_VAL rightNode = new ASTINUM_VAL(TestParserTreeConstants.JJTINUM_VAL);
+        rightNode.jjtSetValue("6");
+
+        ASTASSIGN assignmentNode = createAssignNode(leftNode, rightNode);
+        assertThrows(NoSuchSymbolError.class,() -> staticSemanticsVisitor.visit(assignmentNode, null));
+    }
+
+
+    private ASTVARIABLE createVariableNode(String identifierName) {
+        ASTVARIABLE variableNode = new ASTVARIABLE(TestParserTreeConstants.JJTVARIABLE);
+        ASTIDENTIFIER identifierNode = new ASTIDENTIFIER(TestParserTreeConstants.JJTIDENTIFIER);
+        identifierNode.jjtSetValue(identifierName);
+        variableNode.jjtAddChild(identifierNode, 0);
+        return variableNode;
+    }
+
+    private ASTASSIGN createAssignNode(Node leftNode, Node rightNode){
+        ASTASSIGN assignmentNode = new ASTASSIGN(0);
+        assignmentNode.jjtAddChild(leftNode, 0);
+        assignmentNode.jjtAddChild(rightNode, 1);
+
+        return assignmentNode;
     }
 
     @Test
