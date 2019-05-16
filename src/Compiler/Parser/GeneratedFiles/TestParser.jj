@@ -34,8 +34,8 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants/*@ege
 //            System.out.println("\n\n\n");
             SymbolTable st = new SymbolTable();
             st.openScope();
-            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new FunctionVisitor(), new TreeOptimizerVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
-            System.out.println(TreePrinter.createDotOutput(root));
+            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new TreeOptimizerVisitor(), new FunctionVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
+//            System.out.println(TreePrinter.createDotOutput(root));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,8 +132,6 @@ TOKEN :
 | < #GRAPH : "Graph" | "DiGraph" >
 | < CONSTANTS : (< CONSTANT >) >
 | < #CONSTANT : "INF" | "NEG_INF" | "\u00c3\u02dc" >
-| < ADD_SUB : (< addsub >) >
-| < #addsub : "+" | "-" >
 | < MUL_DIV_MOD : (< muldiv >) >
 | < #muldiv : "*" | "/" | "%" >
 | < EQUALITY_OP : (< equality_ope >) >
@@ -146,12 +144,14 @@ TOKEN :
 | < #collection : "Set" | "Queue" | "MinQueue" | "MaxQueue" | "Stack" >
 | < COLOR_VAL : "GRAY" | "BLACK" | "WHITE" | "RED" | "GREEN" | "BLUE" | "YELLOW" >
 | < INUM_VAL : (< DIGIT >) >
-| < #DIGIT : "0" | ["1"-"9"](["0"-"9"])* >
+| < #DIGIT : ("-" | "") ("0" | ["1"-"9"](["0"-"9"])*) >
 | < FNUM_VAL : (< DIGITF >) >
-| < #DIGITF : ("0" | ["1"-"9"](["0"-"9"])*)"."(["0"-"9"])+ >
+| < #DIGITF : ("-" | "") (("0" | ["1"-"9"](["0"-"9"])*)"."(["0"-"9"])+) >
 | < IDENTIFIER : (< ID >) >
 | < #ID : ["a"-"z", "A"-"Z"](["a"-"z", "A"-"Z"] | ["0"-"9"])* >
 | < LABEL_VAL : "\"" (["a"-"z", "A"-"Z"] | ["0"-"9"])+ "\"" >
+| < ADD_SUB : (< addsub >) >
+| < #addsub : "+" | "-" >
 
 
 }

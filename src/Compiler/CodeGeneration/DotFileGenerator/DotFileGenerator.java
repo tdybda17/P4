@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DotFileGenerator {
-    public static final String DOT_FILES_DIR = "src/Compiler/CodeGeneration/DotFiles/";
+    public static final String DOT_FILES_DIR = "src/Compiler/CodeGeneration/DotFileGenerator/DotFiles/";
 
     public static void createDotFile(String dotString, int printIndex) {
         String filename = "dotOutput" + printIndex;
