@@ -13,26 +13,33 @@ function main()
         f -- l[2]
         g -- l[3]
     end
-    Dijkstra(g, g.getVertex("a"))
+    Dijkstra(g, g.getVertex("a"), g.getVertex("l"))
 end
 
-function Dijkstra(DiGraph g, Vertex source)
+function Dijkstra(DiGraph g, Vertex source, Vertex dest)
     foreach v in g.vertices do
         v.distance = 10000
+        v.isVisited = false
     end
     source.distance = 0
 
     create MinQueue<Vertex> Q end
-    foreach v in g.vertices do
-        Q.insert(v)
-    end
+    Q.insert(source)
 
     while Q.isEmpty() == false do
         Vertex u = Q.extractMin()
-        u.color = GRAY
+        if u == dest then
+            u.color = BLUE
+            g.print()
+            u.color = BLACK
+            g.print()
+            return
+        end
+        u.color = BLUE
         g.print()
         u.isVisited = true
 
+        boolean print = false
         foreach v in g.getNeighbours(u) do
             if v.isVisited == false then
                 real alt = u.distance + g.getEdge(u, v).weight
@@ -40,7 +47,15 @@ function Dijkstra(DiGraph g, Vertex source)
                     v.distance = alt
                     v.previous = u
                 end
+                if v.color != GRAY then
+                    print = true
+                end
+                v.color = GRAY
+                Q.insert(v)
             end
+        end
+        if print then
+            g.print()
         end
         u.color = BLACK
         g.print()

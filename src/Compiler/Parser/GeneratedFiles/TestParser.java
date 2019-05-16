@@ -16,7 +16,7 @@ public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, Test
 //            System.out.println("\n\n\n");
             SymbolTable st = new SymbolTable();
             st.openScope();
-            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new FunctionVisitor(), new TreeOptimizerVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
+            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new TreeOptimizerVisitor(), new FunctionVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
 //            System.out.println(TreePrinter.createDotOutput(root));
         } catch (Exception e) {
             e.printStackTrace();
