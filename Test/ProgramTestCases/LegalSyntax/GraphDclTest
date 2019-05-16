@@ -3,5 +3,6 @@ function main()
         a -- {b}
         b -- {c,d}
         c -- d
+        e
     end
 end

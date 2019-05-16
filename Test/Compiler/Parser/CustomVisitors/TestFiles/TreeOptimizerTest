@@ -10,7 +10,6 @@ function main()
         a -- b
      end
 
-     int x = 0-8
      create Queue<int> q
         5
         7
