@@ -43,7 +43,9 @@ public class EdgeInformationHandler {
 
     private List<EdgeInformation> getEdgeInformation(ASTGRAPH_VERTEX_DCL node) {
         List<EdgeInformation> edgeInformations = new ArrayList<>();
-        if(node.jjtGetNumChildren() == 2) {
+        if (node.jjtGetNumChildren() == 1) {
+            return edgeInformations;
+        } else if(node.jjtGetNumChildren() == 2) {
             String firstVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
 
             Node vertexList = node.jjtGetChild(1);
@@ -58,6 +60,7 @@ public class EdgeInformationHandler {
                     throw new WrongNodeTypeException("The second child of an " + vertexNode.getClass().getSimpleName() + " node was not an weight node");
                 }
             }
+            return edgeInformations;
         } else if (node.jjtGetNumChildren() == 3) {
             String firstVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(0));
             String secondVertex = prefix + treeOptimizerVisitor.getIdentifierName(node.jjtGetChild(1));
@@ -67,11 +70,10 @@ public class EdgeInformationHandler {
             } else {
                 throw new WrongNodeTypeException("The third child of an " + node.getClass().getSimpleName() + " node was not an weight node");
             }
+            return edgeInformations;
         } else {
-            throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 2 or 3 children");
+            throw new WrongAmountOfChildrenException("An " + node.getClass().getSimpleName() + " node in the AST had neither 1, 2 or 3 children");
         }
-
-        return edgeInformations;
     }
 
 

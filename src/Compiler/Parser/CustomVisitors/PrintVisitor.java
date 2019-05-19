@@ -2,7 +2,7 @@ package Compiler.Parser.CustomVisitors;
 
 import Compiler.Parser.GeneratedFiles.*;
 
-public class PrintVisitor implements TestParserVisitor {
+public class PrintVisitor implements Visitor {
     private int amtOfTabs = 0;
 
     private Object defaultVisit(SimpleNode node, Object data){
@@ -228,6 +228,10 @@ public class PrintVisitor implements TestParserVisitor {
     @Override
     public Object visit(ASTBLOCK node, Object data){
         int numChildren = node.jjtGetNumChildren();
+        if(node.jjtGetParent() instanceof ASTBLOCK){
+            printAmtOfTabs();
+            System.out.println("begin block");
+        }
         amtOfTabs++;
         for(int i = 0; i < numChildren; i++) {
             Node childNode = node.jjtGetChild(i);
@@ -237,6 +241,10 @@ public class PrintVisitor implements TestParserVisitor {
             childNode.jjtAccept(this, data);
         }
         amtOfTabs--;
+        if(node.jjtGetParent() instanceof ASTBLOCK){
+            printAmtOfTabs();
+            System.out.println("end");
+        }
         return data;
     }
 

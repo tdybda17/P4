@@ -10,9 +10,14 @@ function main()
         a -- b
      end
 
-     Vertex a
-     a.label = "a"
-     testGraph.addVertex(a)
+     create Queue<int> q
+        5
+        7
+     end
+     int x
+     for i = 1 to 10 do
+        x = x + i
+     end
 
      /*create DiGraph testGraph
          a -- {b[0.3],c}

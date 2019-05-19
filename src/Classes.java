@@ -1,3 +1,4 @@
+/*
 
 import Compiler.CodeGeneration.DotFileGenerator.DotFileGenerator;
 
@@ -31,32 +32,102 @@ class Queue<T> implements Collection {
     }
 }
 
-class MinQueue<T> implements Collection {
-    PriorityQueue<T> p;
+
+class VertexMinComparator implements Comparator<Vertex> {
+    @Override
+    public int compare(Vertex o1, Vertex o2) {
+        double diff = o1.distance - o2.distance;
+        if (diff > 0)
+            return 1;
+        else if (diff < 0)
+            return -1;
+        else
+            return 0;
+    }
+}
+
+class VertexMaxComparator implements Comparator<Vertex> {
+    @Override
+    public int compare(Vertex o1, Vertex o2) {
+        double diff = o1.distance - o2.distance;
+        if (diff > 0)
+            return -1;
+        else if (diff < 0)
+            return 1;
+        else
+            return 0;
+    }
+}
+
+class EdgeMinComparator implements Comparator<Edge> {
+    @Override
+    public int compare(Edge o1, Edge o2) {
+        double diff = o1.weight - o2.weight;
+        if (diff > 0)
+            return 1;
+        else if (diff < 0)
+            return -1;
+        else
+            return 0;
+    }
+}
+
+class EdgeMaxComparator implements Comparator<Edge> {
+    @Override
+    public int compare(Edge o1, Edge o2) {
+        double diff = o1.weight - o2.weight;
+        if (diff > 0)
+            return -1;
+        else if (diff < 0)
+            return 1;
+        else
+            return 0;
+    }
+}
+
+class MinQueue<T> implements Collection<T> {
+    List<T> p;
 
     MinQueue() {
-        p = new PriorityQueue<>();
+        p = new ArrayList<>();
     }
 
     boolean insert(T p0) {
-        return p.add(p0);
+        p.add(p0);
+        if (p0 instanceof Vertex)
+            ((List<Vertex>) p).sort(new VertexMinComparator());
+        else if (p0 instanceof Edge)
+            ((List<Edge>) p).sort(new EdgeMinComparator());
+        else
+            return false;
+        return true;
     }
 
     T minimum() {
-        return p.peek();
+        return p.get(0);
     }
 
     T extractMin() {
-        return p.poll();
+        T t =  p.remove(0);
+        if (t instanceof Vertex)
+            ((List<Vertex>) p).sort(new VertexMinComparator());
+        else if (t instanceof Edge)
+            ((List<Edge>) p).sort(new EdgeMinComparator());
+        else
+            throw new IllegalArgumentException("Cannot extract from MinQueue with element type " + t);
+        return t;
     }
 
     boolean decreaseKey(T p0, double p1) {
         if (p0 instanceof Edge) {
             ((Edge) p0).weight -= p1;
+            ((List<Edge>) p).sort(new EdgeMinComparator());
             return true;
         }
         else if (p0 instanceof Vertex) {
             ((Vertex) p0).distance -= p1;
+            ((List<Vertex>) p).sort(new VertexMinComparator());
+            return true;
         }
         return false;
     }
@@ -68,31 +139,48 @@ class MinQueue<T> implements Collection {
 }
 
 class MaxQueue<T> implements Collection {
-    PriorityQueue<T> p;
+    List<T> p;
 
     MaxQueue() {
-        p = new PriorityQueue<>();
+        p = new ArrayList<>();
     }
 
     boolean insert(T p0) {
-        return p.add(p0);
+        p.add(p0);
+        if (p0 instanceof Vertex)
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
+        else if (p0 instanceof Edge)
+            ((List<Edge>) p).sort(new EdgeMaxComparator());
+        else
+            return false;
+        return true;
     }
 
     T maximum() {
-        return p.peek();
+        return p.get(0);
     }
 
     T extractMax() {
-        return p.poll();
+        T t =  p.remove(0);
+        if (t instanceof Vertex)
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
+        else if (t instanceof Edge)
+            ((List<Edge>) p).sort(new EdgeMaxComparator());
+        else
+            throw new IllegalArgumentException("Cannot extract from MaxQueue with element type " + t);
+        return t;
     }
 
     boolean increaseKey(T p0, double p1) {
-        if (p0 instanceof DirectedEdge || p0 instanceof UndirectedEdge) {
+        if (p0 instanceof Edge) {
             ((Edge) p0).weight += p1;
+            ((List<Edge>) p).sort(new EdgeMaxComparator());
             return true;
         }
         else if (p0 instanceof Vertex) {
             ((Vertex) p0).distance += p1;
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
+            return true;
         }
         return false;
     }
@@ -102,22 +190,11 @@ class MaxQueue<T> implements Collection {
     }
 }
 
-class Vertex implements Comparable<Vertex> {
+class Vertex {
     Color color = Color.WHITE;
-    String label = new String("");
+    String label = "";
     double distance;
     // insert vertex attributes here
-
-    @Override
-    public int compareTo(Vertex o) {
-        double diff = this.distance - o.distance;
-        if (diff > 0)
-            return 1;
-        else if (diff < 0)
-            return -1;
-        else
-            return 0;
-    }
 }
 
 abstract class Edge {
@@ -320,3 +397,4 @@ class Main {
 
 
 
+*/
