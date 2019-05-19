@@ -1,23 +1,36 @@
 package Compiler.CodeGeneration.JavaFileBuilder.InterfaceBuilder;
 
-import Compiler.CodeGeneration.JavaFileBuilder.IJavaFileBuilder;
+import Compiler.CodeGeneration.JavaFileBuilder.JavaFileBuilder;
+import Compiler.CodeGeneration.JavaFileBuilder.Method;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class InterfaceBuilder implements IJavaFileBuilder {
+public class InterfaceBuilder extends JavaFileBuilder {
 
-    private String accessModifier;
-    private String identifier;
+    public InterfaceBuilder(String identifier) {
+        super("", identifier, new ArrayList<>());
+    }
 
     public InterfaceBuilder(String accessModifier, String identifier) {
-        this.accessModifier = accessModifier;
-        this.identifier = identifier;
+        super(accessModifier, identifier, new ArrayList<>());
     }
 
+    public InterfaceBuilder(String accessModifier, String identifier, String ... genericVariables) {
+        super(accessModifier, identifier, genericVariables);
+    }
 
+    public InterfaceBuilder appendMethod(Method method) {
+        super.appendMethod(method);
+        return this;
+    }
 
     @Override
-    public String getFile() {
-        return null;
+    public String getFileContent() {
+        return super.createAccessModifier() +
+                "interface " +
+                super.createIdentifier() +
+                super.createGenericVariables() +
+                " {" + super.createMethods() + "}";
     }
+
 }
