@@ -1,0 +1,11 @@
+function main()
+    test()
+end
+
+
+int function test()
+    if true then
+        return 0
+    else
+    end
+end

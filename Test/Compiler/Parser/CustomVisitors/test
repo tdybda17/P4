@@ -26,6 +26,11 @@ function main()
 end
 
 int function test()
+    if true then
+        return 2
+    end
+
+    return 3
 end
 
 int function foo(real a, real b)
@@ -33,6 +38,11 @@ int function foo(real a, real b)
 end
 
 function bar()
+    if true then
+        return
+    else
+    end
+    return
 end
 
 Edge function edg(int a, real b)

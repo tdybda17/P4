@@ -89,7 +89,4 @@ class TestParserTest {
     void testGetEdge() {
         assertDoesNotThrow(() -> TestParser.parseTextFile(absPath + "GetEdgeTest"));
     }
-
-
-
 }

@@ -1,0 +1,9 @@
+function main()
+    test()
+end
+
+
+int function test()
+    return 0
+    int i
+end

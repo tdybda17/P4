@@ -1,0 +1,10 @@
+function main()
+    test()
+end
+
+
+int function test()
+    while true do
+        return 1
+    end
+end

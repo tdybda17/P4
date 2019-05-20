@@ -1,0 +1,12 @@
+function main()
+    test()
+end
+
+
+int function test()
+    if true then
+        int i
+    else
+        return 0
+    end
+end
