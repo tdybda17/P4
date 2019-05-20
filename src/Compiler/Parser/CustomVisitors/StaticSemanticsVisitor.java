@@ -646,14 +646,6 @@ public class StaticSemanticsVisitor implements Visitor {
     }
 
     @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
-        MapTypeDescriptor expectedType = (MapTypeDescriptor) data;
-        TypeDescriptor actualType = convertToTypeDescriptor(node.jjtGetChild(0).jjtAccept(this, symbolTable));
-        typeCheck(expectedType, actualType);
-        return data;
-    }
-
-    @Override
     public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
         return defaultVisit(node, data);
     }

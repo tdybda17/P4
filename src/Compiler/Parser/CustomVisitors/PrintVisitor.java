@@ -273,13 +273,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(node.jjtGetValue());
         return data;
     }
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data){
-        System.out.print(" = ");
-        node.childrenAccept(this, data);
-        System.out.print(" ");
-        return data;
-    }
+
     @Override
     public Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data){
         System.out.print("\n");
@@ -403,14 +397,6 @@ public class PrintVisitor implements Visitor {
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        System.out.print(" = ");
-        node.childrenAccept(this, data);
-        System.out.print(" ");
-        return data;
-    }
-
-    @Override
     public Object visit(ASTELEMENT_LIST node, Object data){
         System.out.print("\n");
         amtOfTabs++;
@@ -425,11 +411,6 @@ public class PrintVisitor implements Visitor {
 
     @Override
     public Object visit(ASTMAP_ADT node, Object data) {
-        return null; //TODO: fix
-    }
-
-    @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
         return null; //TODO: fix
     }
 

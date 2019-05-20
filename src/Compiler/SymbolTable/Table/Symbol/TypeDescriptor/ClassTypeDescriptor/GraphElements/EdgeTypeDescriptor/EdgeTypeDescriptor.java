@@ -41,12 +41,12 @@ public abstract class EdgeTypeDescriptor extends GraphElementTypeDescriptors {
         return new HashSet<>();
     }
 
-    private static Field color(){
-        return new Field("color", new ColorTypeDescriptor());
-    }
-
     private static Field weight(){
         return new Field("weight", new RealTypeDescriptor());
+    }
+
+    private static Field color(){
+        return new Field("color", new ColorTypeDescriptor());
     }
 
     public static void addUserAttribute(Field userAttribute) throws TypeDescriptorException {

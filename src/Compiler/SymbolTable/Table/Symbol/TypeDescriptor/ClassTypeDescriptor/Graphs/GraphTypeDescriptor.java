@@ -39,6 +39,24 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         this.addMethod(getOutgoingEdges());
     }
 
+    private Method addVertex() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(new VertexTypeDescriptor());
+        return new Method("addVertex", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method removeVertex() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(new VertexTypeDescriptor());
+        return new Method("removeVertex", new BooleanTypeDescriptor(), parameters);
+    }
+
+    private Method getVertex() {
+        List<TypeDescriptor> parameters = new ArrayList<>();
+        parameters.add(new LabelTypeDescriptor());
+        return new Method("getVertex", new VertexTypeDescriptor(), parameters);
+    }
+
     private Method addEdge(){
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new VertexTypeDescriptor());
@@ -59,26 +77,11 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         return new Method("getEdge", edgeType, parameters);
     }
 
-    private Method getVertex() {
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(new LabelTypeDescriptor());
-        return new Method("getVertex", new VertexTypeDescriptor(), parameters);
-    }
-
-    private Method print() {
-        return new Method("print", new VoidTypeDescriptor(), new ArrayList<>());
-    }
-
-    private Method addVertex() {
+    private Method getNeighbours(){
+        TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
         List<TypeDescriptor> parameters = new ArrayList<>();
         parameters.add(new VertexTypeDescriptor());
-        return new Method("addVertex", new BooleanTypeDescriptor(), parameters);
-    }
-
-    private Method removeVertex() {
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(new VertexTypeDescriptor());
-        return new Method("removeVertex", new BooleanTypeDescriptor(), parameters);
+        return new Method("getNeighbours", returnType, parameters);
     }
 
     private Method getOutgoingEdges() {
@@ -88,11 +91,8 @@ public abstract class GraphTypeDescriptor extends ClassTypeDescriptor {
         return new Method("getOutgoingEdges", returnType, parameters);
     }
 
-    private Method getNeighbours(){
-        TypeDescriptor returnType = new SetTypeDescriptor(new VertexTypeDescriptor());
-        List<TypeDescriptor> parameters = new ArrayList<>();
-        parameters.add(new VertexTypeDescriptor());
-        return new Method("getNeighbours", returnType, parameters);
+    private Method print() {
+        return new Method("print", new VoidTypeDescriptor(), new ArrayList<>());
     }
 
     private void addFields() {

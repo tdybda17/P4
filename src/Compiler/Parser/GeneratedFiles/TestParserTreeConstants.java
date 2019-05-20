@@ -39,31 +39,28 @@ public interface TestParserTreeConstants
   public int JJTDCL = 33;
   public int JJTGRAPH_DCL = 34;
   public int JJTGRAPH_TYPE = 35;
-  public int JJTGRAPH_ASSIGN = 36;
-  public int JJTGRAPH_DCL_ELEMENTS = 37;
-  public int JJTGRAPH_VERTEX_DCL = 38;
-  public int JJTVERTEX_LIST = 39;
-  public int JJTVERTEX = 40;
-  public int JJTWEIGHT = 41;
-  public int JJTASSIGN = 42;
-  public int JJTFUNCTION_CALL_STMT = 43;
-  public int JJTWHILE_STATEMENT = 44;
-  public int JJTFOR_STATEMENT = 45;
-  public int JJTFOREACH_STATEMENT = 46;
-  public int JJTIF_STATEMENT = 47;
-  public int JJTELSE_STATEMENT = 48;
-  public int JJTRETURN_STMT = 49;
-  public int JJTCOLLECTION_ADT = 50;
-  public int JJTCOLLECTION_ASSIGN = 51;
-  public int JJTELEMENT_LIST = 52;
-  public int JJTMAP_ADT = 53;
-  public int JJTMAP_ASSIGN = 54;
-  public int JJTMAP_ELEMENT_LIST = 55;
-  public int JJTKEY_VALUE_PAIR = 56;
-  public int JJTFUNC_DCL = 57;
-  public int JJTRETURN_TYPE = 58;
-  public int JJTFORMAL_PARAMETERS = 59;
-  public int JJTFORMAL_PARAMETER = 60;
+  public int JJTGRAPH_DCL_ELEMENTS = 36;
+  public int JJTGRAPH_VERTEX_DCL = 37;
+  public int JJTVERTEX_LIST = 38;
+  public int JJTVERTEX = 39;
+  public int JJTWEIGHT = 40;
+  public int JJTASSIGN = 41;
+  public int JJTFUNCTION_CALL_STMT = 42;
+  public int JJTWHILE_STATEMENT = 43;
+  public int JJTFOR_STATEMENT = 44;
+  public int JJTFOREACH_STATEMENT = 45;
+  public int JJTIF_STATEMENT = 46;
+  public int JJTELSE_STATEMENT = 47;
+  public int JJTRETURN_STMT = 48;
+  public int JJTCOLLECTION_ADT = 49;
+  public int JJTELEMENT_LIST = 50;
+  public int JJTMAP_ADT = 51;
+  public int JJTMAP_ELEMENT_LIST = 52;
+  public int JJTKEY_VALUE_PAIR = 53;
+  public int JJTFUNC_DCL = 54;
+  public int JJTRETURN_TYPE = 55;
+  public int JJTFORMAL_PARAMETERS = 56;
+  public int JJTFORMAL_PARAMETER = 57;
 
 
   public String[] jjtNodeName = {
@@ -103,7 +100,6 @@ public interface TestParserTreeConstants
     "DCL",
     "GRAPH_DCL",
     "GRAPH_TYPE",
-    "GRAPH_ASSIGN",
     "GRAPH_DCL_ELEMENTS",
     "GRAPH_VERTEX_DCL",
     "VERTEX_LIST",
@@ -118,10 +114,8 @@ public interface TestParserTreeConstants
     "ELSE_STATEMENT",
     "RETURN_STMT",
     "COLLECTION_ADT",
-    "COLLECTION_ASSIGN",
     "ELEMENT_LIST",
     "MAP_ADT",
-    "MAP_ASSIGN",
     "MAP_ELEMENT_LIST",
     "KEY_VALUE_PAIR",
     "FUNC_DCL",
@@ -130,4 +124,4 @@ public interface TestParserTreeConstants
     "FORMAL_PARAMETER",
   };
 }
-/* JavaCC - OriginalChecksum=510e8a7a2ec939ceae255e3d1c1898f8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=25cfec727d71fc4810f24852616cb6fc (do not edit this line) */

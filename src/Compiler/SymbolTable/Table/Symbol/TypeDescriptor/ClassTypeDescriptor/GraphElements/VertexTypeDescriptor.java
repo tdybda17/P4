@@ -51,12 +51,12 @@ public class VertexTypeDescriptor extends GraphElementTypeDescriptors {
         return standardFields;
     }
 
-    private static Field color(){
-        return new Field("color", new ColorTypeDescriptor());
-    }
-
     private static Field label(){
         return new Field("label", new LabelTypeDescriptor());
+    }
+
+    private static Field color(){
+        return new Field("color", new ColorTypeDescriptor());
     }
 
     private static Field distance() {

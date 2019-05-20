@@ -237,11 +237,6 @@ public class FunctionVisitor implements Visitor {
     }
 
     @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
         return defaultVisit(node, data);
     }

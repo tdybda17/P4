@@ -144,11 +144,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
 
                 // transform third child
                 Node thirdChild = node.jjtGetChild(childIndex);
-                if(thirdChild instanceof ASTGRAPH_ASSIGN) {
-                    //Creating an assign node to replace the graph assign node
-                    Node assignNode = createAssignNodeFromInitialization(getIdentifierName(node.jjtGetChild(1)), thirdChild);
-                    newChildren.add(assignNode);
-                } else if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
+                if (thirdChild instanceof ASTGRAPH_DCL_ELEMENTS) {
                     newChildren.addAll(convertResultToNodeList(thirdChild.jjtAccept(this, childIndex)));
                 } else {
                     throw new WrongNodeTypeException(node.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTGRAPH_DCL_ELEMENTS.class.getSimpleName());
@@ -165,13 +161,8 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
         dclNode.insertChildren(0, typeNode, identifierNode);
     }
 
-    @Override
-    public Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
     private ASTASSIGN createAssignNodeFromInitialization(String leftId, Node rightNode){
-        if(rightNode instanceof ASTGRAPH_ASSIGN | rightNode instanceof ASTCOLLECTION_ASSIGN | rightNode instanceof ASTINITIALIZATION) {
+        if(rightNode instanceof ASTINITIALIZATION) {
             ASTASSIGN assignNode = new ASTASSIGN(TestParserTreeConstants.JJTASSIGN);
 
             ASTVARIABLE leftNode = createVariableFromId(leftId);
@@ -181,7 +172,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             assignNode.jjtAddChild(rightNode.jjtGetChild(0), 1);
             return assignNode;
         } else {
-            throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTGRAPH_ASSIGN.class.getSimpleName(), ASTCOLLECTION_ASSIGN.class.getSimpleName(), ASTINITIALIZATION.class.getSimpleName());
+            throw new WrongNodeTypeException(rightNode.getClass().getSimpleName(), ASTINITIALIZATION.class.getSimpleName());
         }
     }
 
@@ -696,12 +687,7 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
             moveTypeAndIdentifierToDclNode(dclNode, node.jjtGetChild(0), node.jjtGetChild(1));
             if(node.jjtGetNumChildren() == 3) {
                 Node thirdChild = node.jjtGetChild(2);
-                if (thirdChild instanceof ASTCOLLECTION_ASSIGN) {
-                    String leftId = getIdentifierName(node.jjtGetChild(1));
-
-                    ASTASSIGN assignNode = createAssignNodeFromInitialization(leftId, thirdChild);
-                    newChildren.add(assignNode);
-                } else if (thirdChild instanceof ASTELEMENT_LIST) {
+                if (thirdChild instanceof ASTELEMENT_LIST) {
                     List<Node> newNodesForBlock = new ArrayList<>();
                     // Create function_call_stmt node for each child of element_list and add to list of new children
                     ASTCOLLECTION_TYPE collectionTypeNode = (ASTCOLLECTION_TYPE) node.jjtGetChild(0);
@@ -758,22 +744,12 @@ public class TreeOptimizerVisitor implements TestParserVisitor {
     }
 
     @Override
-    public Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
     public Object visit(ASTELEMENT_LIST node, Object data) {
         return defaultVisit(node, data);
     }
 
     @Override
     public Object visit(ASTMAP_ADT node, Object data) {
-        return defaultVisit(node, data);
-    }
-
-    @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
         return defaultVisit(node, data);
     }
 

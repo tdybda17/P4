@@ -250,10 +250,10 @@ void attribute_dcl() #void :
     (type() identifier()) #ATTRIBUTES_DCL newlines_plus() attribute_dcl() | empty()
 }
 
-void simple_types_dcl() #SIMPLE_DCL :
+void simple_dcl() #SIMPLE_DCL :
 {}
 {
-    simple_types() identifier() initialization()
+    type() identifier() initialization()
 }
 
 void simple_types() #SIMPLE_TYPES :
@@ -493,7 +493,7 @@ void block_content() #void :
 void dcl() #DCL :
 {}
 {
-    simple_types_dcl() | create()
+    simple_dcl() | create()
 }
 
 void create() #void :
@@ -523,7 +523,7 @@ void graph_type() #GRAPH_TYPE :
 void graph_dcl() #void :
 {}
 {
-    (< ASSIGN > variable_or_function()) #GRAPH_ASSIGN | (newlines_plus() graph_vertex_dcl() newlines_plus() graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
+    (newlines_plus() graph_vertex_dcl() newlines_plus() graph_elements()) #GRAPH_DCL_ELEMENTS | empty()
 }
 
 void graph_elements() #void :
@@ -649,7 +649,7 @@ void collection_adt() #COLLECTION_ADT :
 void collection_dcl() #void :
 {}
 {
-   < ASSIGN > variable_or_function() #COLLECTION_ASSIGN | newlines_plus() element_list() #ELEMENT_LIST | empty()
+   newlines_plus() element_list() #ELEMENT_LIST | empty()
 }
 
 void element_list() #void :
@@ -667,13 +667,13 @@ void element_list_continuous() #void :
 void map_adt() #MAP_ADT :
 {}
 {
-    <MAP> <LANGLE> type() <COMMA> type() <RANGLE> identifier() map_dcl()
+    <MAP> <LANGLE> simple_types() <COMMA> simple_types() <RANGLE> identifier() map_dcl()
 }
 
 void map_dcl() #void :
 {}
 {
-    <ASSIGN> variable_or_function() #MAP_ASSIGN | newlines_plus() map_element_list() #MAP_ELEMENT_LIST | empty()
+    newlines_plus() map_element_list() #MAP_ELEMENT_LIST | empty()
 }
 
 void map_element_list() #void :

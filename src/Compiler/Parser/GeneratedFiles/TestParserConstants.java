@@ -101,45 +101,45 @@ public interface TestParserConstants {
   /** RegularExpression Id. */
   int CONSTANT = 52;
   /** RegularExpression Id. */
-  int MUL_DIV_MOD = 53;
+  int ADD_SUB = 53;
   /** RegularExpression Id. */
-  int muldiv = 54;
+  int addsub = 54;
   /** RegularExpression Id. */
-  int EQUALITY_OP = 55;
+  int MUL_DIV_MOD = 55;
   /** RegularExpression Id. */
-  int equality_ope = 56;
+  int muldiv = 56;
   /** RegularExpression Id. */
-  int RELATIONAL_OP = 57;
+  int EQUALITY_OP = 57;
   /** RegularExpression Id. */
-  int relational_ope = 58;
+  int equality_ope = 58;
   /** RegularExpression Id. */
-  int LANGLE = 59;
+  int RELATIONAL_OP = 59;
   /** RegularExpression Id. */
-  int RANGLE = 60;
+  int relational_ope = 60;
   /** RegularExpression Id. */
-  int COLLECTION_TYPE = 61;
+  int LANGLE = 61;
   /** RegularExpression Id. */
-  int collection = 62;
+  int RANGLE = 62;
   /** RegularExpression Id. */
-  int COLOR_VAL = 63;
+  int COLLECTION_TYPE = 63;
   /** RegularExpression Id. */
-  int INUM_VAL = 64;
+  int collection = 64;
   /** RegularExpression Id. */
-  int DIGIT = 65;
+  int COLOR_VAL = 65;
   /** RegularExpression Id. */
-  int FNUM_VAL = 66;
+  int INUM_VAL = 66;
   /** RegularExpression Id. */
-  int DIGITF = 67;
+  int DIGIT = 67;
   /** RegularExpression Id. */
-  int IDENTIFIER = 68;
+  int FNUM_VAL = 68;
   /** RegularExpression Id. */
-  int ID = 69;
+  int DIGITF = 69;
   /** RegularExpression Id. */
-  int LABEL_VAL = 70;
+  int IDENTIFIER = 70;
   /** RegularExpression Id. */
-  int ADD_SUB = 71;
+  int ID = 71;
   /** RegularExpression Id. */
-  int addsub = 72;
+  int LABEL_VAL = 72;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -201,6 +201,8 @@ public interface TestParserConstants {
     "<GRAPH>",
     "<CONSTANTS>",
     "<CONSTANT>",
+    "<ADD_SUB>",
+    "<addsub>",
     "<MUL_DIV_MOD>",
     "<muldiv>",
     "<EQUALITY_OP>",
@@ -219,8 +221,6 @@ public interface TestParserConstants {
     "<IDENTIFIER>",
     "<ID>",
     "<LABEL_VAL>",
-    "<ADD_SUB>",
-    "<addsub>",
   };
 
 }

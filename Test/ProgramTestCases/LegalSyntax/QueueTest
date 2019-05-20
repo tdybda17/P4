@@ -8,7 +8,7 @@ function main()
         88.89
     end
 
-    create Queue<real> q2 = q end
+    Queue<real> q2 = q
 
     q2.enqueue(78.0)
 end

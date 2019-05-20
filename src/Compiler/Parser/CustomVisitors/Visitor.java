@@ -29,11 +29,6 @@ public interface Visitor extends TestParserVisitor {
     }
 
     @Override
-    default Object visit(ASTGRAPH_ASSIGN node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
     default Object visit(ASTGRAPH_DCL_ELEMENTS node, Object data) {
         return illegalVisit(node);
     }
@@ -60,11 +55,6 @@ public interface Visitor extends TestParserVisitor {
 
     @Override
     default Object visit(ASTCOLLECTION_ADT node, Object data) {
-        return illegalVisit(node);
-    }
-
-    @Override
-    default Object visit(ASTCOLLECTION_ASSIGN node, Object data) {
         return illegalVisit(node);
     }
 

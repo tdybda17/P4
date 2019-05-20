@@ -3,5 +3,11 @@ function main()
         a -- b
     end
 
-    create Set<Vertex> s = g.vertices end
+    Set<Vertex> s = g.vertices
+
+    create Set<int> si
+        1
+        2
+        3
+    end
 end

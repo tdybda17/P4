@@ -339,11 +339,6 @@ public class CodeGenerationVisitor implements Visitor {
     }
 
     @Override
-    public Object visit(ASTMAP_ASSIGN node, Object data) {
-        return null; // TODO: if we include map, this node should be removed in optimizer
-    }
-
-    @Override
     public Object visit(ASTMAP_ELEMENT_LIST node, Object data) {
         return null; // TODO: if we include map, this node should be removed in optimizer
     }
