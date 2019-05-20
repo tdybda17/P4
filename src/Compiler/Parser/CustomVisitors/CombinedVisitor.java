@@ -13,6 +13,9 @@ public class CombinedVisitor {
         FunctionVisitor functionVisitor = new FunctionVisitor();
         root.jjtAccept(functionVisitor, symbolTable);
 
+        ReachabilityVisitor reachabilityVisitor = new ReachabilityVisitor();
+        root.jjtAccept(reachabilityVisitor, null);
+
         StaticSemanticsVisitor staticSemanticsVisitor = new StaticSemanticsVisitor(symbolTable);
         root.jjtAccept(staticSemanticsVisitor, symbolTable);
         return root;

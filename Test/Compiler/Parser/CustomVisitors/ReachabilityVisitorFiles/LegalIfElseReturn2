@@ -1,0 +1,20 @@
+function main()
+    test()
+end
+
+
+int function test()
+    if true then
+        if true then
+                return 0
+            else
+                return 1
+        end
+    else
+        if true then
+                return 2
+            else
+                return 3
+        end
+    end
+end

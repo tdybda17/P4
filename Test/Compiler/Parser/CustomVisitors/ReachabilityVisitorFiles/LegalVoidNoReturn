@@ -1,0 +1,8 @@
+function main()
+    test()
+end
+
+
+function test()
+    int i
+end
