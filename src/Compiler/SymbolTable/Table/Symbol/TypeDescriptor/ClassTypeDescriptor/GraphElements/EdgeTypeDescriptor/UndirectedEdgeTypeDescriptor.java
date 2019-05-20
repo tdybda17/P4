@@ -41,6 +41,6 @@ public class UndirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
 
     @Override
     public String getTypeName() {
-        return "UndirectedEdge";
+        return "UndirectedEdgeClassFile";
     }
 }

@@ -31,4 +31,7 @@ class ClassBuilderTest {
                 .appendField(new Attribute("T", "hej").withValue("\"hej\""));
         assertEquals(simpleClass, builder.getFileContent());
     }
+
+
+
 }

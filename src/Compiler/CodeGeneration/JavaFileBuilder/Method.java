@@ -72,7 +72,7 @@ public class Method {
         else return "";
     }
 
-    private String createAttributes() {
+    protected String createAttributes() {
         StringBuilder sb = new StringBuilder("(");
         attributes.forEach(attr -> {
             sb.append(attr.getAttribute());
