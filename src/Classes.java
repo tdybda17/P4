@@ -148,7 +148,7 @@ class MaxQueue<T> implements Collection {
     boolean insert(T p0) {
         p.add(p0);
         if (p0 instanceof Vertex)
-            ((List<Vertex>) p).sort(new VertexMaxComparatorClassFile());
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
         else if (p0 instanceof Edge)
             ((List<Edge>) p).sort(new EdgeMaxComparator());
         else
@@ -163,7 +163,7 @@ class MaxQueue<T> implements Collection {
     T extractMax() {
         T t =  p.remove(0);
         if (t instanceof Vertex)
-            ((List<Vertex>) p).sort(new VertexMaxComparatorClassFile());
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
         else if (t instanceof Edge)
             ((List<Edge>) p).sort(new EdgeMaxComparator());
         else
@@ -179,7 +179,7 @@ class MaxQueue<T> implements Collection {
         }
         else if (p0 instanceof Vertex) {
             ((Vertex) p0).distance += p1;
-            ((List<Vertex>) p).sort(new VertexMaxComparatorClassFile());
+            ((List<Vertex>) p).sort(new VertexMaxComparator());
             return true;
         }
         return false;
@@ -204,19 +204,19 @@ abstract class Edge {
 }
 
 class DirectedEdge extends Edge {
-    Vertex startVertex;
-    Vertex endVertex;
+    Vertex source;
+    Vertex target;
 
-    DirectedEdge(Vertex startVertex, Vertex endVertex) {
-        this.startVertex = startVertex;
-        this.endVertex = endVertex;
+    DirectedEdge(Vertex source, Vertex target) {
+        this.source = source;
+        this.target = target;
     }
 }
 
 class UndirectedEdge extends Edge {
     Set<Vertex> vertices;
 
-    UndirectedEdgeClassFile(Vertex v1, Vertex v2) {
+    UndirectedEdge(Vertex v1, Vertex v2) {
         vertices = new HashSet<>();
         vertices.add(v1);
         vertices.add(v2);
@@ -245,7 +245,7 @@ class DiGraph {
 
     DirectedEdge getEdge(Vertex v1, Vertex v2) {
         for (DirectedEdge edge : edges) {
-            if ((edge.startVertex.equals(v1) && edge.endVertex.equals(v2)) || (edge.endVertex.equals(v1) && edge.startVertex.equals(v2)))
+            if ((edge.source.equals(v1) && edge.target.equals(v2)) || (edge.target.equals(v1) && edge.source.equals(v2)))
                 return edge;
         }
         throw new RuntimeException("Tried to get nonexistent edge between two vertices, '" + v1.label + "' and '" + v2.label + "'");
@@ -270,7 +270,7 @@ class DiGraph {
     Set<DirectedEdge> getOutgoingEdges(Vertex v) {
         Set<DirectedEdge> outgoingEdges = new HashSet<>();
         for (DirectedEdge edge : edges) {
-            if (edge.startVertex.equals(v))
+            if (edge.source.equals(v))
                 outgoingEdges.add(edge);
         }
         return outgoingEdges;
@@ -279,8 +279,8 @@ class DiGraph {
     Set<Vertex> getNeighbours(Vertex v) {
         Set<Vertex> neighbours = new HashSet<>();
         for (DirectedEdge edge : edges) {
-            if (edge.startVertex.equals(v))
-                neighbours.add(edge.endVertex);
+            if (edge.source.equals(v))
+                neighbours.add(edge.target);
         }
         return neighbours;
     }
@@ -292,7 +292,7 @@ class DiGraph {
             sb.append(vertex.label).append(" [style=\"filled\", fillcolor=").append(vertex.color.name()).append("]\n");
 
         for (DirectedEdge edge : edges) {
-            sb.append(edge.startVertex.label).append(" -> ").append(edge.endVertex.label);
+            sb.append(edge.source.label).append(" -> ").append(edge.target.label);
             sb.append(" [color=\"").append(edge.color.name()).append("\", label=\"").append(edge.weight).append("\"]\n");
         }
         sb.append("}\n");
@@ -315,7 +315,7 @@ class Graph {
     boolean addEdge(Vertex p0, Vertex p1) {
         vertices.add(p0);
         vertices.add(p1);
-        return edges.add(new UndirectedEdgeClassFile(p0, p1));
+        return edges.add(new UndirectedEdge(p0, p1));
     }
 
     boolean removeEdge(UndirectedEdge edge) {
@@ -323,7 +323,7 @@ class Graph {
     }
 
     UndirectedEdge getEdge(Vertex v1, Vertex v2) {
-        for (UndirectedEdgeClassFile edge : edges) {
+        for (UndirectedEdge edge : edges) {
             if (edge.vertices.contains(v1) && edge.vertices.contains(v2) && !v1.equals(v2))
                 return edge;
         }
@@ -347,8 +347,8 @@ class Graph {
     }
 
     Set<UndirectedEdge> getOutgoingEdges(Vertex v) {
-        Set<UndirectedEdgeClassFile> outgoingEdges = new HashSet<>();
-        for (UndirectedEdgeClassFile edge : edges) {
+        Set<UndirectedEdge> outgoingEdges = new HashSet<>();
+        for (UndirectedEdge edge : edges) {
             if (edge.vertices.contains(v))
                 outgoingEdges.add(edge);
         }
@@ -357,7 +357,7 @@ class Graph {
 
     Set<Vertex> getNeighbours(Vertex v) {
         Set<Vertex> neighbours = new HashSet<>();
-        for (UndirectedEdgeClassFile edge : edges) {
+        for (UndirectedEdge edge : edges) {
             if (edge.vertices.contains(v)) {
                 for (Vertex vertex : edge.vertices) {
                     if (!vertex.equals(v))
@@ -374,7 +374,7 @@ class Graph {
         for (Vertex vertex : vertices)
             sb.append(vertex.label).append(" [style=\"filled\", fillcolor=").append(vertex.color.name()).append("]\n");
 
-        for (UndirectedEdgeClassFile edge : edges) {
+        for (UndirectedEdge edge : edges) {
             Iterator<Vertex> vertexIterator = edge.vertices.iterator();
             sb.append(vertexIterator.next().label).append(" -- ").append(vertexIterator.next().label);
             sb.append(" [color=\"").append(edge.color.name()).append("\", label=\"").append(edge.weight).append("\"]\n");

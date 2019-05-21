@@ -37,7 +37,7 @@ public class DiGraphClassFile implements ClassFile {
                         .appendAttribute(new Attribute("Vertex", "v1"))
                         .appendAttribute(new Attribute("Vertex", "v2"))
                         .appendBody("for (DirectedEdge edge : edges) {\n" +
-                                "            if ((edge.startVertex.equals(v1) && edge.endVertex.equals(v2)) || (edge.endVertex.equals(v1) && edge.startVertex.equals(v2)))\n" +
+                                "            if ((edge.source.equals(v1) && edge.target.equals(v2)) || (edge.target.equals(v1) && edge.source.equals(v2)))\n" +
                                 "                return edge;\n" +
                                 "        }\n" +
                                 "        throw new RuntimeException(\"Tried to get nonexistent edge between two vertices, '\" + v1.label + \"' and '\" + v2.label + \"'\");"))
@@ -55,7 +55,7 @@ public class DiGraphClassFile implements ClassFile {
                         .appendAttribute(new Attribute("Vertex", "v"))
                         .appendBody("Set<DirectedEdge> outgoingEdges = new HashSet<>();\n" +
                                 "        for (DirectedEdge edge : edges) {\n" +
-                                "            if (edge.startVertex.equals(v))\n" +
+                                "            if (edge.source.equals(v))\n" +
                                 "                outgoingEdges.add(edge);\n" +
                                 "        }\n" +
                                 "        return outgoingEdges;"))
@@ -63,8 +63,8 @@ public class DiGraphClassFile implements ClassFile {
                         .appendAttribute(new Attribute("Vertex", "v"))
                         .appendBody("Set<Vertex> neighbours = new HashSet<>();\n" +
                                 "        for (DirectedEdge edge : edges) {\n" +
-                                "            if (edge.startVertex.equals(v))\n" +
-                                "                neighbours.add(edge.endVertex);\n" +
+                                "            if (edge.source.equals(v))\n" +
+                                "                neighbours.add(edge.target);\n" +
                                 "        }\n" +
                                 "        return neighbours;"))
                 .appendMethod(new Method("void", "print")
@@ -74,7 +74,7 @@ public class DiGraphClassFile implements ClassFile {
                                 "            sb.append(vertex.label).append(\" [style=\\\"filled\\\", fillcolor=\").append(vertex.color.name()).append(\"]\\n\");\n" +
                                 "\n" +
                                 "        for (DirectedEdge edge : edges) {\n" +
-                                "            sb.append(edge.startVertex.label).append(\" -> \").append(edge.endVertex.label);\n" +
+                                "            sb.append(edge.source.label).append(\" -> \").append(edge.target.label);\n" +
                                 "            sb.append(\" [color=\\\"\").append(edge.color.name()).append(\"\\\", label=\\\"\").append(edge.weight).append(\"\\\"]\\n\");\n" +
                                 "        }\n" +
                                 "        sb.append(\"}\\n\");\n" +

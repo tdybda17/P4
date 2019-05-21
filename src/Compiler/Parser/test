@@ -27,7 +27,7 @@ function Dijkstra(DiGraph g, Vertex source, Vertex dest)
     end
     source.distance = 0
 
-    create MinQueue<Vertex> Q end
+    MinQueue<Vertex> Q
     Q.insert(source)
 
     while Q.isEmpty() == false do
