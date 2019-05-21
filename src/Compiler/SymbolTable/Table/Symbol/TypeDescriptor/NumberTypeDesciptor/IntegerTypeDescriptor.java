@@ -10,6 +10,6 @@ public class IntegerTypeDescriptor extends NumberTypeDescriptor {
 
     @Override
     public String getJavaName() {
-        return "int";
+        return "Integer";
     }
 }
