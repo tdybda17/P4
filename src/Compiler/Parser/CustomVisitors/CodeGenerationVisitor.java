@@ -298,11 +298,13 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public Object visit(ASTFOREACH_STATEMENT node, Object data) {
         String identifier = getIdentifierName(node.jjtGetChild(0));
-        String elementType = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
+        String collectionType = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
+        String elementType = convertToString(node.jjtGetChild(1).jjtGetChild(0).jjtAccept(this, data));
+
         String collection = convertToString(node.jjtGetChild(2).jjtAccept(this, data));
         String block = convertToString(node.jjtGetChild(3).jjtAccept(this, data));
 
-        return "for (" + elementType + " " + identifier + " : " + collection + ") " + block;
+        return "for (" + elementType + " " + identifier + " : new " + collectionType + "(" + collection + ")) " + block;
     }
 
     @Override

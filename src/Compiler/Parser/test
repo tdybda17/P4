@@ -4,6 +4,10 @@ Vertex dcl
 end
 
 function main()
+
+    create MinQueue<int> min end
+    min.insert(1)
+
     create DiGraph g
         a -- {b[2], c[3], d[4]}
         b -- e[7]
