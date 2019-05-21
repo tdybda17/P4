@@ -8,6 +8,6 @@ public class BooleanTypeDescriptor extends TypeDescriptor {
 
     @Override
     public String getJavaName() {
-        return "boolean";
+        return "Boolean";
     }
 }

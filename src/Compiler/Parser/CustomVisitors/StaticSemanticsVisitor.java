@@ -374,9 +374,8 @@ public class StaticSemanticsVisitor implements Visitor {
         if (!(type instanceof CollectionTypeDescriptor))
             throw new IllegalTypeException("Error: Tried to iterate through non-collection type '" + type.getTypeName() + "' in foreach loop");
 
-        // add collection's element type node as second child
-        TypeDescriptor elementType = ((CollectionTypeDescriptor) type).getElementType();
-        node.insertChildren(1, createTypeNodeFromTypeDescriptor(elementType));
+        // add collection type node as second child
+        node.insertChildren(1, createTypeNodeFromTypeDescriptor(type));
 
         // open node scope, add id to symbol table, accept all of fourth child's (block's) children, close node scope
         symbolTable.openScope();
