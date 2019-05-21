@@ -31,16 +31,16 @@ public class DirectedEdgeTypeDescriptor extends EdgeTypeDescriptor {
     }
 
     private void addDirectedFields(Set<Field> fields) {
-        fields.add(startVertex());
-        fields.add(endVertex());
+        fields.add(source());
+        fields.add(target());
     }
 
-    private Field startVertex() {
-        return new Field("startVertex", new VertexTypeDescriptor());
+    private Field source() {
+        return new Field("source", new VertexTypeDescriptor());
     }
 
-    private Field endVertex() {
-        return new Field("endVertex", new VertexTypeDescriptor());
+    private Field target() {
+        return new Field("target", new VertexTypeDescriptor());
     }
 
     @Override

@@ -1,46 +1,30 @@
 package Compiler.Parser.CustomVisitors;
 
-import Compiler.Exceptions.Visitor.IllegalVisitException;
-import Compiler.Exceptions.Visitor.WrongNodeTypeException;
-import Compiler.FileOperations.FileOperations;
-import Compiler.FileOperations.FileWriter;
+import Compiler.CodeGeneration.CGClassLibrary.CGClassLib;
+import Compiler.CodeGeneration.JavaFileBuilder.Attribute;
+import Compiler.CodeGeneration.JavaFileBuilder.ClassBuilder.ClassBuilder;
+import Compiler.CodeGeneration.JavaFileBuilder.Method;
+import Compiler.CodeGeneration.JavaFileBuilder.Writer.FileWriter;
 import Compiler.Parser.GeneratedFiles.*;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.ClassTypeDescriptor.ClassTypeDescriptor;
 import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptor;
-import Compiler.SymbolTable.Table.Symbol.TypeDescriptor.TypeDescriptorFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static Compiler.Parser.CustomVisitors.VisitorOperations.*;
 
 public class CodeGenerationVisitor implements Visitor {
-    private List<String> vertexAttributes;
-    private List<String> edgeAttributes;
-    private String main;
-    private List<String> funcs;
-
-    public List<String> getVertexAttributes() {
-        return vertexAttributes;
-    }
-
-    public List<String> getEdgeAttributes() {
-        return edgeAttributes;
-    }
-
-    public String getMain() {
-        return main;
-    }
-
-    public List<String> getFuncs() {
-        return funcs;
-    }
+    private List<Attribute> vertexAttributes;
+    private List<Attribute> edgeAttributes;
+    private Method mainMethod;
+    private List<Method> funcs;
 
     public CodeGenerationVisitor() {
         vertexAttributes = new ArrayList<>();
         edgeAttributes = new ArrayList<>();
-        main = "";
         funcs = new ArrayList<>();
     }
 
@@ -57,8 +41,29 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public Object visit(ASTSTART node, Object data) {
         defaultVisit(node, data);
-        FileWriter.createCodeFile(this);
+        createCodeFile();
         return data;
+    }
+
+    private void createCodeFile() {
+        CGClassLib classLib = new CGClassLib();
+        ClassBuilder vertexClass = (ClassBuilder) classLib.getBuilder("Vertex");
+        for (Attribute vertexAttr : vertexAttributes)
+            vertexClass.appendField(vertexAttr);
+
+        ClassBuilder edgeClass = (ClassBuilder) classLib.getBuilder("Edge");
+        for (Attribute edgeAttr : edgeAttributes)
+            edgeClass.appendField(edgeAttr);
+
+        ClassBuilder mainClass = (ClassBuilder) classLib.getBuilder("Main");
+        mainClass.appendMethod(mainMethod);
+
+        for (Method method : funcs)
+            mainClass.appendMethod(method);
+
+        Path dest = Paths.get("src/GeneratedCode.java");
+        FileWriter fileWriter = new FileWriter(classLib.getLibrary());
+        fileWriter.writeFile(dest);
     }
 
     @Override
@@ -78,9 +83,9 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public Object visit(ASTVERTEX_ATTRIBUTES node, Object data) {
-        List<String> vertexAttr = new ArrayList<>();
+        List<Attribute> vertexAttr = new ArrayList<>();
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            vertexAttr.add((String) node.jjtGetChild(i).jjtAccept(this, data));
+            vertexAttr.add((Attribute) node.jjtGetChild(i).jjtAccept(this, data));
         }
         this.vertexAttributes = vertexAttr;
         return data;
@@ -88,9 +93,9 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public Object visit(ASTEDGE_ATTRIBUTES node, Object data) {
-        List<String> edgeAttr = new ArrayList<>();
+        List<Attribute> edgeAttr = new ArrayList<>();
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            edgeAttr.add(convertToString(node.jjtGetChild(i).jjtAccept(this, data)));
+            edgeAttr.add((Attribute) node.jjtGetChild(i).jjtAccept(this, data));
         }
         this.edgeAttributes = edgeAttr;
         return data;
@@ -100,7 +105,7 @@ public class CodeGenerationVisitor implements Visitor {
     public Object visit(ASTATTRIBUTES_DCL node, Object data) {
         String attributeType = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
         String identifier = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
-        return attributeType + " " + identifier + ";";
+        return new Attribute(attributeType, identifier);
     }
 
     @Override
@@ -242,7 +247,9 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public Object visit(ASTMAIN node, Object data) {
-        this.main = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
+        String body = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
+        Method main = new Method("void", "main").asPublic().asStatic().appendAttribute(new Attribute("String[]", "args")).appendBody(body);
+        mainMethod = main;
         return data;
     }
 
@@ -354,10 +361,15 @@ public class CodeGenerationVisitor implements Visitor {
     public Object visit(ASTFUNC_DCL node, Object data) {
         String returnType = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
         String identifier = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
-        String formalParameters = convertToString(node.jjtGetChild(2).jjtAccept(this, data));
+        List<Attribute> formalParameters = (List<Attribute>) node.jjtGetChild(2).jjtAccept(this, data);
         String block = convertToString(node.jjtGetChild(3).jjtAccept(this, data));
 
-        funcs.add("static " + returnType + " " + identifier + formalParameters + " " + block);
+        Method method = new Method(returnType, identifier).asStatic();
+        for (Attribute parameter : formalParameters)
+            method.appendAttribute(parameter);
+        method.appendBody(block);
+        funcs.add(method);
+
         return data;
     }
 
@@ -371,20 +383,17 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public Object visit(ASTFORMAL_PARAMETERS node, Object data) {
-        StringBuilder sb = new StringBuilder("(");
+        List<Attribute> parameters = new ArrayList<>();
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            sb.append(node.jjtGetChild(i).jjtAccept(this, data));
-            if (i < node.jjtGetNumChildren() - 1)
-                sb.append(", ");
+            parameters.add((Attribute) node.jjtGetChild(i).jjtAccept(this, data));
         }
-        sb.append(")");
-        return sb.toString();
+        return parameters;
     }
 
     @Override
     public Object visit(ASTFORMAL_PARAMETER node, Object data) {
         String type = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
         String identifier = convertToString(node.jjtGetChild(1).jjtAccept(this, data));
-        return type + " " + identifier;
+        return new Attribute(type, identifier);
     }
 }

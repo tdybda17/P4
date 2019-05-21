@@ -15,8 +15,8 @@ public class DirectedEdgeClassFile implements ClassFile {
     public DirectedEdgeClassFile() {
         this.builder = new ClassBuilder("", "DirectedEdge")
                 .appendExtendClass("Edge")
-                .appendField(new Attribute("Vertex", "startVertex"))
-                .appendField(new Attribute("Vertex", "endVertex"));
+                .appendField(new Attribute("Vertex", "source"))
+                .appendField(new Attribute("Vertex", "target"));
         appendMethods();
     }
 
@@ -28,9 +28,9 @@ public class DirectedEdgeClassFile implements ClassFile {
     private void appendMethods() {
         builder.appendConstructor(
                 new Constructor(List.of(
-                    new Attribute("Vertex", "startVertex"),
-                    new Attribute("Vertex", "endVertex")
-                ), "this.startVertex = startVertex;this.endVertex = endVertex;"));
+                    new Attribute("Vertex", "source"),
+                    new Attribute("Vertex", "target")
+                ), "this.source = source;this.target = target;"));
     }
 
     @Override
