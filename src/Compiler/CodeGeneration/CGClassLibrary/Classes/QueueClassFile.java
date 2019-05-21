@@ -9,21 +9,25 @@ import java.util.List;
 
 public class QueueClassFile implements ClassFile {
 
+    private ClassBuilder builder;
+
+    public QueueClassFile() {
+        this.builder = new ClassBuilder("", "Queue", "T")
+                .appendImplementation(new InterfaceBuilder("Collection"));
+        appendFields();
+        appendMethods();
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder =
-                new ClassBuilder("", "Queue", "T")
-                .appendImplementation(new InterfaceBuilder("Collection"));
-        appendFields(builder);
-        appendMethods(builder);
         return builder;
     }
 
-    private void appendFields(ClassBuilder builder) {
+    private void appendFields() {
         builder.appendField(new Attribute("LinkedList<T>", "p"));
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendConstructor(new Constructor(List.of(), "p = new LinkedList<>();"))
                 .appendMethod(new Method("boolean", "isEmpty").asPublic()
                         .appendBody("return p.isEmpty();"))

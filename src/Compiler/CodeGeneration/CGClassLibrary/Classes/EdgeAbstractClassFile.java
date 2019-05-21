@@ -7,11 +7,17 @@ import Compiler.CodeGeneration.JavaFileBuilder.IJavaFileBuilder;
 
 public class EdgeAbstractClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        return new ClassBuilder("", "Edge").asAbstract()
+    private ClassBuilder builder;
+
+    public EdgeAbstractClassFile() {
+        builder = new ClassBuilder("", "Edge").asAbstract()
                 .appendField(new Attribute("double", "weight").withValue("1.0"))
                 .appendField(new Attribute("Color", "color").withValue("Color.BLACK"));
+    }
+
+    @Override
+    public IJavaFileBuilder getBuilder() {
+        return builder;
     }
 
     @Override

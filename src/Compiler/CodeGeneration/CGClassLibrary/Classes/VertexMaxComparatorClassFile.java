@@ -9,16 +9,20 @@ import Compiler.CodeGeneration.JavaFileBuilder.Method;
 
 public class VertexMaxComparatorClassFile implements ClassFile {
 
+    private ClassBuilder builder;
+
+    public VertexMaxComparatorClassFile() {
+        this.builder = new ClassBuilder("", "VertexMaxComparator")
+                .appendImplementation(new InterfaceBuilder("Comparator<Vertex>"));
+        appendMethods();
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "VertexMaxComparator")
-                .appendImplementation(new InterfaceBuilder("Comparator<Vertex>"));
-        appendMethods(builder);
-
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendMethod(new Method("int", "compare").asPublic()
                     .appendAttribute(new Attribute("Vertex", "o1"))
                     .appendAttribute(new Attribute("Vertex", "o2"))

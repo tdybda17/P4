@@ -9,17 +9,21 @@ import java.util.List;
 
 public class MaxQueueClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "MaxQueue", "T")
+    private ClassBuilder builder;
+
+    public MaxQueueClassFile() {
+        this.builder = new ClassBuilder("", "MaxQueue", "T")
                 .appendImplementation(new InterfaceBuilder("Collection"))
                 .appendField(new Attribute("List<T>", "p"));
-        appendMethods(builder);
+        appendMethods();
+    }
 
+    @Override
+    public IJavaFileBuilder getBuilder() {
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendConstructor(new Constructor(List.of(), "p = new ArrayList<>();"))
                 .appendMethod(new Method("boolean", "insert")
                         .appendAttribute(new Attribute("T", "p0"))

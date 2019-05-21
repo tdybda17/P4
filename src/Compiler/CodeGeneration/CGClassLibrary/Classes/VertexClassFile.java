@@ -7,12 +7,18 @@ import Compiler.CodeGeneration.JavaFileBuilder.IJavaFileBuilder;
 
 public class VertexClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        return new ClassBuilder("", "Vertex")
+    private ClassBuilder builder;
+
+    public VertexClassFile() {
+        this.builder = new ClassBuilder("", "Vertex")
                 .appendField(new Attribute("Color", "color").withValue("Color.WHITE"))
                 .appendField(new Attribute("String", "label").withValue("\"\""))
                 .appendField(new Attribute("double", "distance"));
+    }
+
+    @Override
+    public IJavaFileBuilder getBuilder() {
+        return builder;
     }
 
     @Override

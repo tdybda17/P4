@@ -1,5 +1,6 @@
 package Compiler.CodeGeneration;
 
+import Compiler.CodeGeneration.CGClassLibrary.CGClassLib;
 import Compiler.CodeGeneration.CGClassLibrary.ClassFile;
 import Compiler.CodeGeneration.CGClassLibrary.Classes.*;
 import Compiler.CodeGeneration.JavaFileBuilder.Attribute;
@@ -22,7 +23,6 @@ class FileWriterTest {
 
     @BeforeEach
     void setUp() {
-
     }
 
     @Disabled
@@ -52,25 +52,11 @@ class FileWriterTest {
     @Disabled
     @Test
     void testWriteTheFile01() throws IOException {
-        List<ClassFile> classFileList = List.of(
-                new CollectionInterfaceFile(),
-                new ColorEnumFile(),
-                new EdgeAbstractClassFile(),
-                new EdgeMaxComparatorClassFile(),
-                new EdgeMinComparatorClassFile(),
-                new MaxQueueClassFile(),
-                new MinQueueClassFile(),
-                new QueueClassFile(),
-                new VertexClassFile(),
-                new VertexMaxComparatorClassFile(),
-                new VertexMinComparatorClassFile(),
-                new DirectedEdgeClassFile(),
-                new UndirectedEdgeClassFile(),
-                new DiGraphClassFile(),
-                new GraphClassFile(),
-                new MainClassFile()
-        );
-        fw = new FileWriter(classFileList);
+        CGClassLib lib = new CGClassLib();
+
+        ((ClassBuilder) lib.getBuilder("Main")).appendMethod(new Method("void", "main"));
+
+        fw = new FileWriter(lib.getLibrary());
         fw.writeFile(Paths.get(PATH + "Classes.java"));
     }
 }

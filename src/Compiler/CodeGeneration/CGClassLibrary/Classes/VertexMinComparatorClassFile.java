@@ -9,15 +9,20 @@ import Compiler.CodeGeneration.JavaFileBuilder.Method;
 
 public class VertexMinComparatorClassFile implements ClassFile {
 
+    private ClassBuilder builder;
+
+    public VertexMinComparatorClassFile() {
+        this.builder = new ClassBuilder("", "VertexMinComparator")
+                .appendImplementation(new InterfaceBuilder("Comparator<Vertex>"));
+        appendMethods();
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "VertexMinComparator")
-                .appendImplementation(new InterfaceBuilder("Comparator<Vertex>"));
-        appendMethods(builder);
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendMethod(new Method("int", "compare").asPublic()
                     .appendAttribute(new Attribute("Vertex", "o1"))
                     .appendAttribute(new Attribute("Vertex", "o2"))

@@ -8,19 +8,23 @@ import java.util.List;
 
 public class DiGraphClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        var builder = new ClassBuilder("", "DiGraph")
+    private ClassBuilder builder;
+
+    public DiGraphClassFile() {
+        this.builder = new ClassBuilder("", "DiGraph")
                 .appendField(new Attribute("private", "int", "printIndex").withValue("0"))
                 .appendField(new Attribute("Set<Vertex>", "vertices"))
                 .appendField(new Attribute("Set<DirectedEdge>", "edges"));
 
-        appendMethods(builder);
+        appendMethods();
+    }
 
+    @Override
+    public IJavaFileBuilder getBuilder() {
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendConstructor(new Constructor(List.of(), "vertices = new HashSet<>();edges = new HashSet<>();"))
                 .appendMethod(new Method("boolean", "addEdge")
                         .appendAttribute(new Attribute("Vertex", "p0"))

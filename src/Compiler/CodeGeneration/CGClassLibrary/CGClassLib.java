@@ -38,4 +38,7 @@ public class CGClassLib {
         throw new NoSuchClassException("No class with identifier: " + identifier);
     }
 
+    public List<ClassFile> getLibrary() {
+        return library;
+    }
 }

@@ -10,18 +10,22 @@ import java.util.List;
 
 public class DirectedEdgeClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "DirectedEdge")
+    private ClassBuilder builder;
+
+    public DirectedEdgeClassFile() {
+        this.builder = new ClassBuilder("", "DirectedEdge")
                 .appendExtendClass("Edge")
                 .appendField(new Attribute("Vertex", "startVertex"))
                 .appendField(new Attribute("Vertex", "endVertex"));
-        appendMethods(builder);
+        appendMethods();
+    }
 
+    @Override
+    public IJavaFileBuilder getBuilder() {
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendConstructor(
                 new Constructor(List.of(
                     new Attribute("Vertex", "startVertex"),

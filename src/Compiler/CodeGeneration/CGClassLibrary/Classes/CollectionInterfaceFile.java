@@ -7,10 +7,16 @@ import Compiler.CodeGeneration.JavaFileBuilder.Method;
 
 public class CollectionInterfaceFile implements ClassFile {
 
+    private IJavaFileBuilder builder;
+
+    public CollectionInterfaceFile() {
+        this.builder = new InterfaceBuilder("", "Collection", "T")
+                            .appendMethod(new Method("boolean", "isEmpty"));
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        return new InterfaceBuilder("", "Collection", "T")
-                .appendMethod(new Method("boolean", "isEmpty"));
+        return builder;
     }
 
     @Override

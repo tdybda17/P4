@@ -7,9 +7,10 @@ import Compiler.CodeGeneration.JavaFileBuilder.JavaFileBuilder;
 
 public class ColorEnumFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        return new EnumBuilder("Color")
+    private EnumBuilder builder;
+
+    public ColorEnumFile() {
+        this.builder = new EnumBuilder("Color")
                 .appendEnum("GRAY")
                 .appendEnum("BLACK")
                 .appendEnum("WHITE")
@@ -17,6 +18,11 @@ public class ColorEnumFile implements ClassFile {
                 .appendEnum("GREEN")
                 .appendEnum("BLUE")
                 .appendEnum("YELLOW");
+    }
+
+    @Override
+    public IJavaFileBuilder getBuilder() {
+        return builder;
     }
 
     @Override

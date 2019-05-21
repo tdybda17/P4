@@ -10,17 +10,21 @@ import java.util.List;
 
 public class UndirectedEdgeClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        var builder = new ClassBuilder("", "UndirectedEdge")
+    private ClassBuilder builder;
+
+    public UndirectedEdgeClassFile() {
+        this.builder = new ClassBuilder("", "UndirectedEdge")
                 .appendExtendClass("Edge")
                 .appendField(new Attribute("Set<Vertex>", "vertices"));
-        appendMethods(builder);
+        appendMethods();
+    }
 
+    @Override
+    public IJavaFileBuilder getBuilder() {
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendConstructor(new Constructor(List.of(
                 new Attribute("Vertex", "v1"),
                 new Attribute("Vertex", "v2")

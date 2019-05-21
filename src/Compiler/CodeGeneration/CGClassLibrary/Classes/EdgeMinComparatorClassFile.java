@@ -9,16 +9,20 @@ import Compiler.CodeGeneration.JavaFileBuilder.Method;
 
 public class EdgeMinComparatorClassFile implements ClassFile {
 
+    private ClassBuilder builder;
+
+    public EdgeMinComparatorClassFile() {
+        this.builder = new ClassBuilder("", "EdgeMinComparator")
+                .appendImplementation(new InterfaceBuilder("Comparator<Edge>"));
+        appendMethods();
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "EdgeMinComparator")
-                .appendImplementation(new InterfaceBuilder("Comparator<Edge>"));
-        appendMethods(builder);
-
         return builder;
     }
 
-    private void appendMethods(ClassBuilder builder) {
+    private void appendMethods() {
         builder.appendMethod(new Method("int", "compare").asPublic()
                     .appendAttribute(new Attribute("Edge", "o1"))
                     .appendAttribute(new Attribute("Edge", "o2"))

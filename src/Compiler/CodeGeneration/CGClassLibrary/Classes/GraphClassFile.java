@@ -8,19 +8,23 @@ import java.util.List;
 
 public class GraphClassFile implements ClassFile {
 
-    @Override
-    public IJavaFileBuilder getBuilder() {
-        ClassBuilder builder = new ClassBuilder("", "Graph")
+    private ClassBuilder builder;
+
+    public GraphClassFile() {
+        builder = new ClassBuilder("", "Graph")
                 .appendField(new Attribute("private", "int", "printIndex").withValue("0"))
                 .appendField(new Attribute("Set<Vertex>", "vertices"))
                 .appendField(new Attribute("Set<UndirectedEdge>", "edges"));
 
-        appendMethod(builder);
+        appendMethod();
+    }
 
+    @Override
+    public IJavaFileBuilder getBuilder() {
         return builder;
     }
 
-    private void appendMethod(ClassBuilder builder) {
+    private void appendMethod() {
         builder.appendConstructor(new Constructor(List.of(), "vertices = new HashSet<>();edges = new HashSet<>();"))
                 .appendMethod(new Method("boolean", "addEdge")
                         .appendAttribute(new Attribute("Vertex", "p0"))

@@ -6,9 +6,15 @@ import Compiler.CodeGeneration.JavaFileBuilder.IJavaFileBuilder;
 
 public class MainClassFile implements ClassFile {
 
+    private ClassBuilder builder;
+
+    public MainClassFile() {
+        this.builder = new ClassBuilder("", "Main");
+    }
+
     @Override
     public IJavaFileBuilder getBuilder() {
-        return new ClassBuilder("", "Main");
+        return builder;
     }
 
     @Override
