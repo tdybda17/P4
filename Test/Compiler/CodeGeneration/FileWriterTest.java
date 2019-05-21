@@ -49,6 +49,7 @@ class FileWriterTest {
         fw.writeFile(Paths.get(PATH + "Classes.java"));
     }
 
+    @Disabled
     @Test
     void testWriteTheFile01() throws IOException {
         List<ClassFile> classFileList = List.of(
