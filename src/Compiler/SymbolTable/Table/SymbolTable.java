@@ -88,11 +88,6 @@ public class SymbolTable implements ISymbolTable {
         return symbol != null;
     }
 
-    @Override
-    public boolean declaredLocally(String name) {
-        return false;
-    }
-
     /* Method for testing */
     Map<String, Symbol> getHashMap() {
         return hashMap;

@@ -9,6 +9,4 @@ public interface ISymbolTable {
     void closeScope();
     void enterSymbol(String name, Attributes attributes);
     Symbol retrieveSymbol(String name);
-    boolean declaredLocally(String name);
-
 }
