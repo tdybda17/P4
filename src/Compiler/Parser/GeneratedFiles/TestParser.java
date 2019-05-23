@@ -103,37 +103,36 @@ if (jjtc000) {
   jjtree.openNodeScope(jjtn000);
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
-      skip_to_first_dcl();
+      newlines_star();
       vertex_edge_attributes();
       main();
-      newlines_plus();
+      newlines_star();
 ASTFUNCS_DCL jjtn001 = new ASTFUNCS_DCL(JJTFUNCS_DCL);
-                                                                          boolean jjtc001 = true;
-                                                                          jjtree.openNodeScope(jjtn001);
-                                                                          jjtn001.jjtSetFirstToken(getToken(1));
+                                                                      boolean jjtc001 = true;
+                                                                      jjtree.openNodeScope(jjtn001);
+                                                                      jjtn001.jjtSetFirstToken(getToken(1));
       try {
         funcs_dcl();
       } catch (Throwable jjte001) {
 if (jjtc001) {
-                                                                            jjtree.clearNodeScope(jjtn001);
-                                                                            jjtc001 = false;
-                                                                          } else {
-                                                                            jjtree.popNode();
-                                                                          }
-                                                                          if (jjte001 instanceof RuntimeException) {
-                                                                            {if (true) throw (RuntimeException)jjte001;}
-                                                                          }
-                                                                          if (jjte001 instanceof ParseException) {
-                                                                            {if (true) throw (ParseException)jjte001;}
-                                                                          }
-                                                                          {if (true) throw (Error)jjte001;}
+                                                                        jjtree.clearNodeScope(jjtn001);
+                                                                        jjtc001 = false;
+                                                                      } else {
+                                                                        jjtree.popNode();
+                                                                      }
+                                                                      if (jjte001 instanceof RuntimeException) {
+                                                                        {if (true) throw (RuntimeException)jjte001;}
+                                                                      }
+                                                                      if (jjte001 instanceof ParseException) {
+                                                                        {if (true) throw (ParseException)jjte001;}
+                                                                      }
+                                                                      {if (true) throw (Error)jjte001;}
       } finally {
 if (jjtc001) {
-                                                                            jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
-                                                                            jjtn001.jjtSetLastToken(getToken(0));
-                                                                          }
+                                                                        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+                                                                        jjtn001.jjtSetLastToken(getToken(0));
+                                                                      }
       }
-      skip_to_EOF();
       jj_consume_token(0);
     } catch (Throwable jjte000) {
 if (jjtc000) {
@@ -192,7 +191,7 @@ if (jjtc000) {
         }
       default:
         jj_la1[1] = jj_gen;
-        newlines_star();
+        empty();
       }
     } catch (Throwable jjte000) {
 if (jjtc000) {
@@ -2599,7 +2598,7 @@ if (jjtc001) {
     case GRAPH_TYPE:
     case COLLECTION_TYPE:{
       func_dcl();
-      newlines_plus();
+      newlines_star();
       funcs_dcl();
       break;
       }
