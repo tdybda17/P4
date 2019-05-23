@@ -187,7 +187,7 @@ SimpleNode start() #START :
 void prog() #PROG(>1) :
 {}
 {
-    skip_to_first_dcl() vertex_edge_attributes() main() newlines_plus() funcs_dcl() #FUNCS_DCL(>1) skip_to_EOF() <EOF>
+    newlines_star() vertex_edge_attributes() main() newlines_star() funcs_dcl() #FUNCS_DCL(>1) <EOF>
 }
 
 void newlines_plus() #void :
@@ -205,7 +205,7 @@ void newlines_star() #void :
 void vertex_edge_attributes() #VERTEX_EDGE_ATTR(>1) :
 {}
 {
-    vertex_attributes() | edge_attributes() | newlines_star()
+    vertex_attributes() | edge_attributes() | empty()
 }
 
 void vertex_attributes() #void :
@@ -691,7 +691,7 @@ void map_element_list_continuous() #void :
 void funcs_dcl() #void :
 {}
 {
-    func_dcl() newlines_plus() funcs_dcl() | empty()
+    func_dcl() newlines_star() funcs_dcl() | empty()
 }
 
 void func_dcl() #FUNC_DCL :
