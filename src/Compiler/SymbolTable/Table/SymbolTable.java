@@ -88,13 +88,9 @@ public class SymbolTable implements ISymbolTable {
         return symbol != null;
     }
 
-    /* Method for testing */
-    Map<String, Symbol> getHashMap() {
-        return hashMap;
-    }
 
     /* Method for testing */
-    SymbolList getCurrentScopeDisplay() {
+    SymbolList getSymbolListForDepth(int depth) {
         return scopeDisplay.get(depth);
     }
 

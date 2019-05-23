@@ -2,6 +2,7 @@ package Compiler.SymbolTable.Table;
 
 import Compiler.Exceptions.SymbolTable.ScopeError.DuplicateSymbolError;
 import Compiler.Exceptions.SymbolTable.ScopeError.GettingFromClosedScopeDisplayError;
+import Compiler.Exceptions.SymbolTable.ScopeError.NoSuchSymbolError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -83,11 +84,11 @@ class SymbolTableTest {
 
     @Test
     void testSymbolsAreRemovedFromHashMap01() {
-        String name1 = "firstSymbol";
+        String name = "firstSymbol";
         symbolTable.openScope();
-        symbolTable.enterSymbol(name1, null);
+        symbolTable.enterSymbol(name, null);
         symbolTable.closeScope();
-        assertTrue(symbolTable.getHashMap().isEmpty());
+        assertThrows(NoSuchSymbolError.class, ()-> symbolTable.retrieveSymbol(name));
     }
 
     @Test
@@ -106,7 +107,9 @@ class SymbolTableTest {
         symbolTable.closeScope();
         symbolTable.enterSymbol(name2, null);
         symbolTable.closeScope();
-        assertTrue(symbolTable.getHashMap().isEmpty());
+        assertThrows(NoSuchSymbolError.class, ()-> symbolTable.retrieveSymbol(name1));
+        assertThrows(NoSuchSymbolError.class, ()-> symbolTable.retrieveSymbol(name2));
+        assertThrows(NoSuchSymbolError.class, ()-> symbolTable.retrieveSymbol(name3));
     }
 
     @Test
@@ -115,8 +118,9 @@ class SymbolTableTest {
         String name2 = "secondSymbol";
         symbolTable.openScope();
         symbolTable.enterSymbol(name1, null);
+        symbolTable.openScope();
         symbolTable.enterSymbol(name2, null);
         symbolTable.closeScope();
-        assertThrows(GettingFromClosedScopeDisplayError.class,()->symbolTable.getCurrentScopeDisplay());
+        assertThrows(GettingFromClosedScopeDisplayError.class,()->symbolTable.getSymbolListForDepth(2));
     }
 }
