@@ -47,14 +47,14 @@ class DirectedEdgeTypeDescriptorTest {
     }
 
     @Test
-    void getFieldStartVertex() {
-        Field expected = new Field("startVertex", new VertexTypeDescriptor());
+    void getFieldSource() {
+        Field expected = new Field("source", new VertexTypeDescriptor());
         assertTrue(directedEdgeTypeDescriptor.getFields().contains(expected));
     }
 
     @Test
-    void getFieldEndVertex() {
-        Field expected = new Field("endVertex", new VertexTypeDescriptor());
+    void getFieldTarget() {
+        Field expected = new Field("target", new VertexTypeDescriptor());
         assertTrue(directedEdgeTypeDescriptor.getFields().contains(expected));
     }
 

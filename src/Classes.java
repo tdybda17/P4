@@ -204,12 +204,12 @@ abstract class Edge {
 }
 
 class DirectedEdge extends Edge {
-    Vertex startVertex;
-    Vertex endVertex;
+    Vertex source;
+    Vertex target;
 
-    DirectedEdge(Vertex startVertex, Vertex endVertex) {
-        this.startVertex = startVertex;
-        this.endVertex = endVertex;
+    DirectedEdge(Vertex source, Vertex target) {
+        this.source = source;
+        this.target = target;
     }
 }
 
@@ -245,7 +245,7 @@ class DiGraph {
 
     DirectedEdge getEdge(Vertex v1, Vertex v2) {
         for (DirectedEdge edge : edges) {
-            if ((edge.startVertex.equals(v1) && edge.endVertex.equals(v2)) || (edge.endVertex.equals(v1) && edge.startVertex.equals(v2)))
+            if ((edge.source.equals(v1) && edge.target.equals(v2)) || (edge.target.equals(v1) && edge.source.equals(v2)))
                 return edge;
         }
         throw new RuntimeException("Tried to get nonexistent edge between two vertices, '" + v1.label + "' and '" + v2.label + "'");
@@ -270,7 +270,7 @@ class DiGraph {
     Set<DirectedEdge> getOutgoingEdges(Vertex v) {
         Set<DirectedEdge> outgoingEdges = new HashSet<>();
         for (DirectedEdge edge : edges) {
-            if (edge.startVertex.equals(v))
+            if (edge.source.equals(v))
                 outgoingEdges.add(edge);
         }
         return outgoingEdges;
@@ -279,8 +279,8 @@ class DiGraph {
     Set<Vertex> getNeighbours(Vertex v) {
         Set<Vertex> neighbours = new HashSet<>();
         for (DirectedEdge edge : edges) {
-            if (edge.startVertex.equals(v))
-                neighbours.add(edge.endVertex);
+            if (edge.source.equals(v))
+                neighbours.add(edge.target);
         }
         return neighbours;
     }
@@ -292,7 +292,7 @@ class DiGraph {
             sb.append(vertex.label).append(" [style=\"filled\", fillcolor=").append(vertex.color.name()).append("]\n");
 
         for (DirectedEdge edge : edges) {
-            sb.append(edge.startVertex.label).append(" -> ").append(edge.endVertex.label);
+            sb.append(edge.source.label).append(" -> ").append(edge.target.label);
             sb.append(" [color=\"").append(edge.color.name()).append("\", label=\"").append(edge.weight).append("\"]\n");
         }
         sb.append("}\n");

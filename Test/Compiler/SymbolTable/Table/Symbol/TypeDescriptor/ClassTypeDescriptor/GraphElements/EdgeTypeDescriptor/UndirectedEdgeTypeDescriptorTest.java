@@ -26,7 +26,7 @@ class UndirectedEdgeTypeDescriptorTest {
 
     @Test
     void getTypeName() {
-        assertEquals("UndirectedEdge", undirectedEdgeTypeDescriptor.getTypeName());
+        assertEquals("UndirectedEdgeClassFile", undirectedEdgeTypeDescriptor.getTypeName());
     }
 
     @Test
