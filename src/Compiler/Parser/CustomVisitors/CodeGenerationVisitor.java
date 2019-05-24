@@ -22,6 +22,22 @@ public class CodeGenerationVisitor implements Visitor {
     private Method mainMethod;
     private List<Method> funcs;
 
+    public List<Attribute> getVertexAttributes() {
+        return vertexAttributes;
+    }
+
+    public List<Attribute> getEdgeAttributes() {
+        return edgeAttributes;
+    }
+
+    public Method getMainMethod() {
+        return mainMethod;
+    }
+
+    public List<Method> getFuncs() {
+        return funcs;
+    }
+
     public CodeGenerationVisitor() {
         vertexAttributes = new ArrayList<>();
         edgeAttributes = new ArrayList<>();
@@ -256,11 +272,11 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public Object visit(ASTBLOCK node, Object data) {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
+        sb.append("{");
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            sb.append(convertToString(node.jjtGetChild(i).jjtAccept(this, data))).append("\n");
+            sb.append(convertToString(node.jjtGetChild(i).jjtAccept(this, data)));
         }
-        sb.append("}\n");
+        sb.append("}");
         return sb.toString();
     }
 
@@ -335,7 +351,7 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public Object visit(ASTRETURN_STMT node, Object data) {
         if (node.jjtGetNumChildren() == 0)
-            return "return;\n";
+            return "return;";
         else {
             String returnValue = convertToString(node.jjtGetChild(0).jjtAccept(this, data));
             return "return " + returnValue + ";";
