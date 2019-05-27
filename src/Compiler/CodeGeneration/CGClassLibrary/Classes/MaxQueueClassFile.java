@@ -40,6 +40,8 @@ public class MaxQueueClassFile implements ClassFile {
                                 "            ((List<String>) p).sort(new LabelMaxComparator());\n" +
                                 "        else if (p0 instanceof Color)\n" +
                                 "            ((List<Color>) p).sort(new ColorMaxComparator());\n" +
+                                "        else if (p0 instanceof Boolean)\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMaxComparator());\n" +
                                 "        else\n" +
                                 "            return false;\n" +
                                 "        return true;"))
@@ -59,6 +61,8 @@ public class MaxQueueClassFile implements ClassFile {
                                 "            ((List<String>) p).sort(new LabelMaxComparator());\n" +
                                 "        else if (t instanceof Color)\n" +
                                 "            ((List<Color>) p).sort(new ColorMaxComparator());\n" +
+                                "        else if (t instanceof Boolean)\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMaxComparator());\n" +
                                 "        else\n" +
                                 "            throw new IllegalArgumentException(\"Cannot extract from MaxQueue with element type \" + t);\n" +
                                 "        return t;"))
@@ -98,6 +102,12 @@ public class MaxQueueClassFile implements ClassFile {
                                 "            if (p.remove(p0))\n" +
                                 "                p.add((T) p1);\n" +
                                 "            ((List<Color>) p).sort(new ColorMaxComparator());\n" +
+                                "            return true;\n" +
+                                "        }\n" +
+                                "        else if (p0 instanceof Boolean) {\n" +
+                                "            if (p.remove(p0))\n" +
+                                "                p.add((T) p1);\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMaxComparator());\n" +
                                 "            return true;\n" +
                                 "        }\n" +
                                 "        return false;"))

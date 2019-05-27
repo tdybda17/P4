@@ -36,7 +36,8 @@ public class CGClassLib {
         this.library.add(new LabelMaxComparatorClassFile());
         this.library.add(new ColorMinComparatorClassFile());
         this.library.add(new ColorMaxComparatorClassFile());
-
+        this.library.add(new BooleanMinComparatorClassFile());
+        this.library.add(new BooleanMaxComparatorClassFile());
     }
 
     public IJavaFileBuilder getBuilder(String identifier) {
