@@ -43,6 +43,8 @@ public class MinQueueClassFile implements ClassFile {
                                 "            ((List<String>) p).sort(new LabelMinComparator());\n" +
                                 "        else if (p0 instanceof Color)\n" +
                                 "            ((List<Color>) p).sort(new ColorMinComparator());\n" +
+                                "        else if (p0 instanceof Boolean)\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMinComparator());\n" +
                                 "        else\n" +
                                 "            return false;\n" +
                                 "        return true;"))
@@ -62,6 +64,8 @@ public class MinQueueClassFile implements ClassFile {
                                 "            ((List<String>) p).sort(new LabelMinComparator());\n" +
                                 "        else if (t instanceof Color)\n" +
                                 "            ((List<Color>) p).sort(new ColorMinComparator());\n" +
+                                "        else if (t instanceof Boolean)\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMinComparator());\n" +
                                 "        else\n" +
                                 "            throw new IllegalArgumentException(\"Cannot extract from MinQueue with element type \" + t);\n" +
                                 "        return t;"))
@@ -101,6 +105,12 @@ public class MinQueueClassFile implements ClassFile {
                                 "            if (p.remove(p0))\n" +
                                 "                p.add((T) p1);\n" +
                                 "            ((List<Color>) p).sort(new ColorMinComparator());\n" +
+                                "            return true;\n" +
+                                "        }\n" +
+                                "        else if (p0 instanceof Boolean) {\n" +
+                                "            if (p.remove(p0))\n" +
+                                "                p.add((T) p1);\n" +
+                                "            ((List<Boolean>) p).sort(new BooleanMinComparator());\n" +
                                 "            return true;\n" +
                                 "        }\n" +
                                 "        return false;"))
