@@ -12,12 +12,9 @@ import java.io.FileReader;
 public class TestParser/*@bgen(jjtree)*/implements TestParserTreeConstants, TestParserConstants {/*@bgen(jjtree)*/
   protected JJTTestParserState jjtree = new JJTTestParserState();public static void main(String[] args) {
         try {
-//            System.out.println(parseTextFile("src/Compiler/Parser/test"));
-//            System.out.println("\n\n\n");
             SymbolTable st = new SymbolTable();
             st.openScope();
-            Node root = useVisitorMethods("src/Compiler/Parser/test", st, new TreeOptimizerVisitor(), new FunctionVisitor(), new ReachabilityVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
-//            System.out.println(TreePrinter.createDotOutput(root));
+            useVisitorMethods("src/Compiler/Parser/test", st, new TreeOptimizerVisitor(), new FunctionVisitor(), new ReachabilityVisitor(), new StaticSemanticsVisitor(st), new CodeGenerationVisitor());
         } catch (Exception e) {
             e.printStackTrace();
         }
