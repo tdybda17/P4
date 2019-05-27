@@ -4,10 +4,6 @@ Vertex dcl
 end
 
 function main()
-
-    create MinQueue<int> min end
-    min.insert(1)
-
     create DiGraph g
         a -- {b[2], c[3], d[4]}
         b -- e[7]
@@ -27,7 +23,7 @@ function Dijkstra(DiGraph g, Vertex source, Vertex dest)
     end
     source.distance = 0
 
-    MinQueue<Vertex> Q
+    create MinQueue<Vertex> Q end
     Q.insert(source)
 
     while Q.isEmpty() == false do
