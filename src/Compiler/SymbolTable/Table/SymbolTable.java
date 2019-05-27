@@ -25,7 +25,7 @@ public class SymbolTable implements ISymbolTable {
     @Override
     public void openScope() {
         depth += 1; // First scope will be 1
-        scopeDisplay.open(depth);
+        scopeDisplay.open();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SymbolTable implements ISymbolTable {
     }
 
     private void deleteSymbolsInCurrentDepth() {
-        List<Symbol> symbolsToRemove = scopeDisplay.remove(depth);
+        List<Symbol> symbolsToRemove = scopeDisplay.close();
         for (Symbol symbol : symbolsToRemove)
             hashMap.remove(symbol.getName());
     }
@@ -48,7 +48,7 @@ public class SymbolTable implements ISymbolTable {
         Symbol oldSymbol = hashMap.get(name);
         if(oldSymbol == null) {
             Symbol newSymbol = new Symbol(name, attributes);
-            scopeDisplay.add(newSymbol, depth);
+            scopeDisplay.add(newSymbol);
             addToHashTable(newSymbol);
         } else {
             throw new DuplicateSymbolError(oldSymbol);
@@ -86,12 +86,6 @@ public class SymbolTable implements ISymbolTable {
     public boolean containsSymbol(String name) {
         Symbol symbol = hashMap.get(name);
         return symbol != null;
-    }
-
-
-    /* Method for testing */
-    SymbolList getSymbolListForDepth(int depth) {
-        return scopeDisplay.get(depth);
     }
 
     @Override

@@ -121,6 +121,7 @@ class SymbolTableTest {
         symbolTable.openScope();
         symbolTable.enterSymbol(name2, null);
         symbolTable.closeScope();
-        assertThrows(GettingFromClosedScopeDisplayError.class,()->symbolTable.getSymbolListForDepth(2));
+        assertDoesNotThrow(() -> symbolTable.retrieveSymbol(name1));
+        assertThrows(NoSuchSymbolError.class, ()-> symbolTable.retrieveSymbol(name2));
     }
 }

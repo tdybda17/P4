@@ -8,49 +8,45 @@ import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 import java.util.*;
 
 public class ScopeDisplay {
-    private Map<Integer, SymbolList> symbolMap;
+    private Stack<SymbolList> symbolStack;
 
     public ScopeDisplay() {
-        this.symbolMap = new HashMap<>();
+        this.symbolStack = new Stack<>();
     }
 
-    public SymbolList get(final int depth) {
-        SymbolList symbolList = symbolMap.get(depth);
-        if(symbolList == null) {
-            throw new GettingFromClosedScopeDisplayError("You tried to get the symbol list of a closed scope");
-        } else {
-            return symbolMap.get(depth);
+    public SymbolList getCurrentSymbolList() {
+        if(symbolStack.isEmpty()) {
+            throw new GettingFromClosedScopeDisplayError("You tried to get the symbol list of an empty scope display");
         }
+        return symbolStack.peek();
     }
 
-    public void open(final int depth) {
-        symbolMap.put(depth, new SymbolList());
+    public void open() {
+        symbolStack.push(new SymbolList());
     }
 
-    public void add(Symbol symbol, int depth) {
-        SymbolList symbolList = symbolMap.get(depth);
-        if(symbolList == null) {
-            throw new AddingToClosedScopeDisplayError("The depth: " + depth + ", was already closed.");
-        } else {
-            symbolMap.get(depth).add(symbol);
+    public void add(Symbol symbol) {
+        if(symbolStack.isEmpty()) {
+            throw new AddingToClosedScopeDisplayError("You tried to add a symbol to a closed scope display");
         }
+
+        SymbolList temp = symbolStack.pop();
+        temp.add(symbol);
+        symbolStack.push(temp);
     }
 
-    public List<Symbol> remove(int depth) {
-        List<Symbol> symbolsToRemove = symbolMap.get(depth).asList();
-        symbolMap.remove(depth);
-        return symbolsToRemove;
+    public List<Symbol> close() {
+        return symbolStack.pop().asList();
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("ScopeDisplay {\n");
-        for(Integer key : symbolMap.keySet()) {
-            stringBuilder.append('\t').append(key).append(": ").append(symbolMap.get(key)).append('\n');
+        for(SymbolList list : symbolStack) {
+            stringBuilder.append('\t').append(list).append('\n');
         }
         stringBuilder.append('}');
-
         return stringBuilder.toString();
     }
 
@@ -59,11 +55,11 @@ public class ScopeDisplay {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScopeDisplay that = (ScopeDisplay) o;
-        return Objects.equals(symbolMap, that.symbolMap);
+        return Objects.equals(symbolStack, that.symbolStack);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(symbolMap);
+        return Objects.hash(symbolStack);
     }
 }
