@@ -20,7 +20,7 @@ For Mac (not as straightforward but explained under the Mac section on this site
 
 
 When dot has been installed, an environment variable must be specified for dot. 
-This variable should be added to the Path variable and should look somewhat like this: "C:\Program Files (x86)\Graphviz2.38\bin"
+This variable should be added to the Path variable and should look something like this: "C:\Program Files (x86)\Graphviz2.38\bin"
 
 
 Now, when running the generated main method, any prints on a graph should result in a PNG file located in folder: 
