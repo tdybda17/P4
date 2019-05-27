@@ -28,6 +28,15 @@ public class CGClassLib {
         this.library.add(new VertexClassFile());
         this.library.add(new VertexMaxComparatorClassFile());
         this.library.add(new VertexMinComparatorClassFile());
+        this.library.add(new IntegerMinComparatorClassFile());
+        this.library.add(new IntegerMaxComparatorClassFile());
+        this.library.add(new RealMinComparatorClassFile());
+        this.library.add(new RealMaxComparatorClassFile());
+        this.library.add(new LabelMinComparatorClassFile());
+        this.library.add(new LabelMaxComparatorClassFile());
+        this.library.add(new ColorMinComparatorClassFile());
+        this.library.add(new ColorMaxComparatorClassFile());
+
     }
 
     public IJavaFileBuilder getBuilder(String identifier) {

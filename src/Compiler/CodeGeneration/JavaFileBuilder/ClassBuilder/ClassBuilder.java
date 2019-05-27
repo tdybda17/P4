@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassBuilder extends JavaFileBuilder {
-
     private List<Attribute> fields;
     private String extendClass;
     private List<InterfaceBuilder> implementations;

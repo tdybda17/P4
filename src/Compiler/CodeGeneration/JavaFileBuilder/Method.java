@@ -12,6 +12,7 @@ public class Method {
     private StringBuilder body;
     private boolean isStatic;
     private boolean isFinal;
+    private boolean isGeneric;
 
     public Method(String returnType, String identifier) {
         this.returnType = returnType;
@@ -20,6 +21,7 @@ public class Method {
         this.attributes = new ArrayList<>();
         isStatic = false;
         isFinal = false;
+        isGeneric = false;
     }
 
     public Method appendAttribute(Attribute attribute) {
@@ -57,8 +59,13 @@ public class Method {
         return this;
     }
 
+    public Method asGeneric() {
+        this.isGeneric = true;
+        return this;
+    }
+
     public String createMethod() {
-        return createAccessModifier() +  createStatic() + returnType + " " + identifier + createAttributes() + createBody();
+        return createAccessModifier() +  createStatic() + (isGeneric ? "<E> " : "") + returnType + " " + identifier + createAttributes() + createBody();
     }
 
     private String createAccessModifier() {
