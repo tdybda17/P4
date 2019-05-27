@@ -12,19 +12,16 @@ import Compiler.SymbolTable.Table.Symbol.SymbolList.SymbolList;
 import java.util.*;
 
 public class SymbolTable implements ISymbolTable {
-    private int depth;
     private ScopeDisplay scopeDisplay;
     private Map<String, Symbol> hashMap;
 
     public SymbolTable() {
-        this.depth = 0;
         this.hashMap = new HashMap<>();
         this.scopeDisplay = new ScopeDisplay();
     }
 
     @Override
     public void openScope() {
-        depth += 1; // First scope will be 1
         scopeDisplay.open();
     }
 
@@ -32,7 +29,6 @@ public class SymbolTable implements ISymbolTable {
     public void closeScope() {
         // Delete symbols currently in scope
         deleteSymbolsInCurrentDepth();
-        depth -= 1;
     }
 
     private void deleteSymbolsInCurrentDepth() {
@@ -90,8 +86,7 @@ public class SymbolTable implements ISymbolTable {
 
     @Override
     public String toString() {
-        return "currDepth = " + depth + "\n" +
-                scopeDisplay.toString() + "\n" +
+        return  scopeDisplay.toString() + "\n" +
                 "hashMap = " + hashMap + "\n";
     }
 
@@ -100,13 +95,12 @@ public class SymbolTable implements ISymbolTable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SymbolTable that = (SymbolTable) o;
-        return depth == that.depth &&
-                Objects.equals(scopeDisplay, that.scopeDisplay) &&
+        return  Objects.equals(scopeDisplay, that.scopeDisplay) &&
                 Objects.equals(hashMap, that.hashMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(depth, scopeDisplay, hashMap);
+        return Objects.hash(scopeDisplay, hashMap);
     }
 }
